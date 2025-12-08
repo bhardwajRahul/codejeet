@@ -76,11 +76,13 @@ interface Question {
 interface LeetCodeDashboardProps {
   questions: Question[];
   companies: string[];
+  loading?: boolean;
 }
 
 const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   questions = [],
   companies = [],
+  loading = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<string[]>([]);
@@ -457,7 +459,116 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
               />
             </div>
 
-            {filteredQuestions.length === 0 ? (
+            {loading ? (
+              <>
+                <div className="rounded-md border hidden md:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-4"></TableHead>
+                        <TableHead>Title</TableHead>
+                        <TableHead>Company</TableHead>
+                        <TableHead>Difficulty</TableHead>
+                        <TableHead>Topics</TableHead>
+                        <TableHead className="text-center">Acceptance</TableHead>
+                        <TableHead className="text-center">Frequency</TableHead>
+                        <TableHead className="w-14" aria-hidden="true"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {[...Array(itemsPerPage)].map((_, i) => (
+                        <TableRow key={`skeleton-${i}`}>
+                          <TableCell className="w-4">
+                            <div className="w-4 h-4 bg-muted animate-pulse rounded" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="w-32 h-4 bg-muted animate-pulse rounded" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="w-20 h-4 bg-muted animate-pulse rounded" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="w-16 h-6 bg-muted animate-pulse rounded-full" />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-1">
+                              <div className="w-16 h-5 bg-muted animate-pulse rounded-full" />
+                              <div className="w-20 h-5 bg-muted animate-pulse rounded-full" />
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="w-12 h-4 bg-muted animate-pulse rounded mx-auto" />
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="w-12 h-4 bg-muted animate-pulse rounded mx-auto" />
+                          </TableCell>
+                          <TableCell className="flex items-center gap-2" aria-hidden="true">
+                            <div className="h-9 w-9 opacity-0" />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <div className="hidden md:flex flex-col sm:flex-row items-center justify-between py-4 px-2 gap-4">
+                    <div className="flex items-center space-x-2 w-full sm:w-auto">
+                      <p className="text-sm text-muted-foreground whitespace-nowrap">
+                        Items per page
+                      </p>
+                      <Select
+                        value={itemsPerPage.toString()}
+                        onValueChange={handleItemsPerPageChange}
+                      >
+                        <SelectTrigger className="w-[70px]">
+                          <SelectValue placeholder={itemsPerPage} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[5, 10, 20, 50, 100].map((size) => (
+                            <SelectItem key={size} value={size.toString()}>
+                              {size}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex items-center space-x-2 w-full sm:w-auto justify-center">
+                      <div className="w-8 h-8 bg-muted animate-pulse rounded" />
+                      <div className="w-8 h-8 bg-muted animate-pulse rounded" />
+                      <div className="w-16 h-4 bg-muted animate-pulse rounded" />
+                      <div className="w-8 h-8 bg-muted animate-pulse rounded" />
+                      <div className="w-8 h-8 bg-muted animate-pulse rounded" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:hidden">
+                  {[...Array(itemsPerPage)].map((_, i) => (
+                    <Card key={`skeleton-mobile-${i}`} className="p-4 bg-background/50 border">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-muted animate-pulse rounded" />
+                          <div>
+                            <div className="w-32 h-4 bg-muted animate-pulse rounded mb-2" />
+                            <div className="w-20 h-3 bg-muted animate-pulse rounded" />
+                          </div>
+                        </div>
+                        <div className="w-16 h-6 bg-muted animate-pulse rounded-full" />
+                      </div>
+                      <div className="mt-3 flex gap-1">
+                        <div className="w-16 h-5 bg-muted animate-pulse rounded-full" />
+                        <div className="w-20 h-5 bg-muted animate-pulse rounded-full" />
+                      </div>
+                    </Card>
+                  ))}
+                  <div className="flex md:hidden items-center justify-center py-4 px-2 gap-4 w-full">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-muted animate-pulse rounded" />
+                      <div className="w-16 h-4 bg-muted animate-pulse rounded" />
+                      <div className="w-8 h-8 bg-muted animate-pulse rounded" />
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : filteredQuestions.length === 0 ? (
               <div className="p-4 text-center text-muted-foreground">
                 No questions found , try some other filters?
               </div>
