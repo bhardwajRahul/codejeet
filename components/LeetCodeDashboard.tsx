@@ -82,11 +82,23 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   questions = [],
   companies = [],
 }) => {
-  const [isClient, setIsClient] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<string[]>([]);
   const [selectedCompany] = useState("");
-  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(() => {
+    if (typeof window === "undefined") return {};
+
+    const savedItems = localStorage.getItem("leetcode-checked-items");
+    if (!savedItems) return {};
+
+    try {
+      const parsed = JSON.parse(savedItems);
+      return typeof parsed === "object" && parsed !== null ? parsed : {};
+    } catch {
+      localStorage.removeItem("leetcode-checked-items");
+      return {};
+    }
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -101,31 +113,8 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   });
 
   useEffect(() => {
-    setIsClient(true);
-    const savedItems = localStorage.getItem("leetcode-checked-items");
-    if (savedItems) {
-      try {
-        const parsed = JSON.parse(savedItems);
-        if (typeof parsed === "object" && parsed !== null) {
-          setCheckedItems(parsed);
-        } else {
-          setCheckedItems({});
-        }
-      } catch (err) {
-        console.error("Error parsing localStorage data:", err);
-        setCheckedItems({});
-        localStorage.removeItem("leetcode-checked-items");
-      }
-    } else {
-      setCheckedItems({});
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
-      localStorage.setItem("leetcode-checked-items", JSON.stringify(checkedItems));
-    }
-  }, [checkedItems, isClient]);
+    localStorage.setItem("leetcode-checked-items", JSON.stringify(checkedItems));
+  }, [checkedItems]);
 
   const handleCheckboxChange = async (id: string, value: boolean) => {
     setCheckedItems((prev) => ({
@@ -188,7 +177,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   }, [questions, searchQuery, difficultyFilter, selectedCompany, selectedTopics, timeframeFilter]);
 
   const filteredAndSortedQuestions = useMemo(() => {
-    let result = [...filteredQuestions];
+    const result = [...filteredQuestions];
 
     result.sort((a, b) => {
       if (frequencySort) {
@@ -277,16 +266,32 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     };
   }, [filteredQuestions, checkedItems]);
 
-  const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredQuestions.length / itemsPerPage));
+  const currentPageToUse = Math.min(currentPage, totalPages);
 
   const currentItems = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
+    const startIndex = (currentPageToUse - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredAndSortedQuestions.slice(startIndex, endIndex);
-  }, [filteredAndSortedQuestions, currentPage, itemsPerPage]);
+  }, [filteredAndSortedQuestions, currentPageToUse, itemsPerPage]);
 
   const goToFirstPage = () => setCurrentPage(1);
   const goToLastPage = () => setCurrentPage(totalPages);
+
+  const handleDifficultyChange = (options: string[]) => {
+    setDifficultyFilter(options);
+    setCurrentPage(1);
+  };
+
+  const handleTopicChange = (options: string[]) => {
+    setSelectedTopics(options);
+    setCurrentPage(1);
+  };
+
+  const handleTimeframeChange = (value: string) => {
+    setTimeframeFilter(value);
+    setCurrentPage(1);
+  };
 
   const handleItemsPerPageChange = (value: string) => {
     const newItemsPerPage = parseInt(value);
@@ -296,28 +301,14 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
 
   const goToNextPage = () => {
     setCurrentPage((prev) => {
-      const nextPage = Math.min(prev + 1, totalPages);
-      return nextPage > totalPages ? totalPages : nextPage;
+      const base = Math.min(prev, totalPages);
+      return Math.min(base + 1, totalPages);
     });
   };
 
   const goToPreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
+    setCurrentPage((prev) => Math.max(Math.min(prev, totalPages) - 1, 1));
   };
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [totalPages]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filteredQuestions]);
-
-  if (!isClient) {
-    return null;
-  }
 
   return (
     <div className="p-6">
@@ -342,7 +333,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                   <div className="mt-2">
                     <Progress
                       value={(statistics.totalSolved / statistics.total) * 100}
-                      className="h-2"
+                      className="h-2 bg-muted [&>div]:bg-primary"
                     />
                   </div>
                 </CardContent>
@@ -441,11 +432,11 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
               <TopicDropdown
                 options={["Easy", "Medium", "Hard"]}
                 selectedOptions={difficultyFilter}
-                setSelectedOptions={setDifficultyFilter}
+                setSelectedOptions={handleDifficultyChange}
                 placeholder="Difficulty"
               />
 
-              <Select value={timeframeFilter} onValueChange={setTimeframeFilter}>
+              <Select value={timeframeFilter} onValueChange={handleTimeframeChange}>
                 <SelectTrigger className="w-full md:w-56">
                   <SelectValue placeholder="Last Appeared" />
                 </SelectTrigger>
@@ -461,7 +452,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
               <TopicDropdown
                 options={uniqueTopics}
                 selectedOptions={selectedTopics}
-                setSelectedOptions={setSelectedTopics}
+                setSelectedOptions={handleTopicChange}
                 placeholder="Topics"
               />
             </div>
@@ -511,55 +502,67 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {currentItems.map((question) => (
-                        <TableRow
-                          key={`${question.id}-${question.company}-${question.timeframe || "unknown"}`}
-                        >
-                          <TableCell className="w-4">
-                            <Checkbox
-                              checked={checkedItems[question.ID] || false}
-                              onCheckedChange={(value) =>
-                                handleCheckboxChange(question.ID, Boolean(value))
-                              }
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <a
-                              href={`${LEETCODE_BASE_URL}${question.URL}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-foreground hover:text-primary hover:underline"
-                            >
-                              {question.Title}
-                            </a>
-                          </TableCell>
-                          <TableCell>
-                            <div className="capitalize">{capitalizeWords(question.company)}</div>
-                          </TableCell>
-                          <TableCell>
-                            <DifficultyBadge
-                              difficulty={question.Difficulty as "Easy" | "Medium" | "Hard"}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1">
-                              {question.Topics.split(",").map((topic, index) => (
-                                <span
-                                  key={index}
-                                  className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
-                                >
-                                  {topic.trim()}
-                                </span>
-                              ))}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center">{question["Acceptance %"]}</TableCell>
-                          <TableCell className="text-center">{question["Frequency %"]}</TableCell>
-                          <TableCell className="flex items-center gap-2" aria-hidden="true">
-                            <div className="h-9 w-9 opacity-0" />
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {currentItems.map((question) => {
+                        const topics = question.Topics.split(",")
+                          .map((topic) => topic.trim())
+                          .filter(Boolean);
+
+                        return (
+                          <TableRow
+                            key={`${question.id}-${question.company}-${question.timeframe || "unknown"}`}
+                          >
+                            <TableCell className="w-4">
+                              <Checkbox
+                                checked={checkedItems[question.ID] || false}
+                                onCheckedChange={(value) =>
+                                  handleCheckboxChange(question.ID, Boolean(value))
+                                }
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <a
+                                href={`${LEETCODE_BASE_URL}${question.URL}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-foreground hover:text-primary hover:underline"
+                              >
+                                {question.Title}
+                              </a>
+                            </TableCell>
+                            <TableCell>
+                              <div className="capitalize">{capitalizeWords(question.company)}</div>
+                            </TableCell>
+                            <TableCell>
+                              <DifficultyBadge
+                                difficulty={question.Difficulty as "Easy" | "Medium" | "Hard"}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {topics.length === 0 ? (
+                                  <span className="text-muted-foreground">-</span>
+                                ) : (
+                                  topics.map((topic, index) => (
+                                    <span
+                                      key={index}
+                                      className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
+                                    >
+                                      {topic}
+                                    </span>
+                                  ))
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              {question["Acceptance %"]}
+                            </TableCell>
+                            <TableCell className="text-center">{question["Frequency %"]}</TableCell>
+                            <TableCell className="flex items-center gap-2" aria-hidden="true">
+                              <div className="h-9 w-9 opacity-0" />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                   <div className="hidden md:flex flex-col sm:flex-row items-center justify-between py-4 px-2 gap-4">
@@ -589,7 +592,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                         variant="outline"
                         size="sm"
                         onClick={goToFirstPage}
-                        disabled={currentPage === 1}
+                        disabled={currentPageToUse === 1}
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
@@ -597,19 +600,19 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                         variant="outline"
                         size="sm"
                         onClick={goToPreviousPage}
-                        disabled={currentPage === 1}
+                        disabled={currentPageToUse === 1}
                       >
                         <ChevronLeft className="h-4 w-4" />
                         <span className="hidden sm:inline ml-2">Previous</span>
                       </Button>
                       <div className="text-sm font-medium whitespace-nowrap">
-                        {currentPage} / {totalPages}
+                        {currentPageToUse} / {totalPages}
                       </div>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={goToNextPage}
-                        disabled={currentPage === totalPages}
+                        disabled={currentPageToUse === totalPages}
                       >
                         <span className="hidden sm:inline mr-2">Next</span>
                         <ChevronRight className="h-4 w-4" />
@@ -618,7 +621,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                         variant="outline"
                         size="sm"
                         onClick={goToLastPage}
-                        disabled={currentPage === totalPages}
+                        disabled={currentPageToUse === totalPages}
                       >
                         <ChevronRight className="h-4 w-4" />
                       </Button>
@@ -627,52 +630,60 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                 </div>
 
                 <div className="grid gap-4 md:hidden">
-                  {currentItems.map((question) => (
-                    <Card
-                      key={`${question.id}-${question.company}-${question.timeframe || "unknown"}`}
-                      className="p-4 bg-background/50 border"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                          <Checkbox
-                            checked={checkedItems[question.ID] || false}
-                            onCheckedChange={(value) =>
-                              handleCheckboxChange(question.ID, Boolean(value))
-                            }
-                          />
-                          <div>
-                            <a
-                              href={`${LEETCODE_BASE_URL}${question.URL}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-medium hover:underline"
-                            >
-                              {question.Title}
-                            </a>
-                            <div className="capitalize text-xs text-muted-foreground">
-                              {capitalizeWords(question.company)}
+                  {currentItems.map((question) => {
+                    const topics = question.Topics.split(",")
+                      .map((topic) => topic.trim())
+                      .filter(Boolean);
+
+                    return (
+                      <Card
+                        key={`${question.id}-${question.company}-${question.timeframe || "unknown"}`}
+                        className="p-4 bg-background/50 border"
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              checked={checkedItems[question.ID] || false}
+                              onCheckedChange={(value) =>
+                                handleCheckboxChange(question.ID, Boolean(value))
+                              }
+                            />
+                            <div>
+                              <a
+                                href={`${LEETCODE_BASE_URL}${question.URL}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium hover:underline"
+                              >
+                                {question.Title}
+                              </a>
+                              <div className="capitalize text-xs text-muted-foreground">
+                                {capitalizeWords(question.company)}
+                              </div>
                             </div>
                           </div>
+                          <DifficultyBadge
+                            difficulty={question.Difficulty as "Easy" | "Medium" | "Hard"}
+                          />
                         </div>
-                        <DifficultyBadge
-                          difficulty={question.Difficulty as "Easy" | "Medium" | "Hard"}
-                        />
-                      </div>
 
-                      <div className="mt-3 flex flex-wrap gap-1">
-                        {question.Topics.split(",").map((topic, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
-                          >
-                            {topic.trim()}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="mt-3 h-9" aria-hidden="true" />
-                    </Card>
-                  ))}
+                        <div className="mt-3 flex flex-wrap gap-1">
+                          {topics.length === 0 ? (
+                            <span className="text-muted-foreground">-</span>
+                          ) : (
+                            topics.map((topic, index) => (
+                              <span
+                                key={index}
+                                className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
+                              >
+                                {topic}
+                              </span>
+                            ))
+                          )}
+                        </div>
+                      </Card>
+                    );
+                  })}
 
                   <div className="flex md:hidden items-center justify-center py-4 px-2 gap-4 w-full">
                     <div className="flex items-center space-x-2">
@@ -680,18 +691,18 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                         variant="outline"
                         size="sm"
                         onClick={goToPreviousPage}
-                        disabled={currentPage === 1}
+                        disabled={currentPageToUse === 1}
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
                       <div className="text-sm font-medium whitespace-nowrap">
-                        {currentPage} / {totalPages}
+                        {currentPageToUse} / {totalPages}
                       </div>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={goToNextPage}
-                        disabled={currentPage === totalPages}
+                        disabled={currentPageToUse === totalPages}
                       >
                         <ChevronRight className="h-4 w-4" />
                       </Button>

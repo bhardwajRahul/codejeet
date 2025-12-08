@@ -7,7 +7,7 @@ import { Github } from "lucide-react";
 
 const Navbar = () => {
   const handleStarProject = () => {
-    window.open("https://github.com/shydevcorp/codejeet", "_blank");
+    window.open("https://github.com/ayush-that/codejeet", "_blank");
   };
 
   return (
