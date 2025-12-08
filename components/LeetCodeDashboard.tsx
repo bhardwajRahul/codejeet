@@ -23,7 +23,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { capitalizeWords } from "@/utils/utils";
-import { VideoDialog } from "@/components/VideoDialog";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import TopicDropdown from "@/components/TopicDropdown";
 
@@ -508,7 +507,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                             )}
                           </div>
                         </TableHead>
-                        <TableHead className="text-left">Solution</TableHead>
+                        <TableHead className="w-14" aria-hidden="true"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -556,8 +555,8 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                           </TableCell>
                           <TableCell className="text-center">{question["Acceptance %"]}</TableCell>
                           <TableCell className="text-center">{question["Frequency %"]}</TableCell>
-                          <TableCell className="flex items-center gap-2">
-                            <VideoDialog id={question.ID} title={question.Title} />
+                          <TableCell className="flex items-center gap-2" aria-hidden="true">
+                            <div className="h-9 w-9 opacity-0" />
                           </TableCell>
                         </TableRow>
                       ))}
@@ -671,9 +670,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                         ))}
                       </div>
 
-                      <div className="mt-3 flex gap-2">
-                        <VideoDialog id={question.ID} title={question.Title} />
-                      </div>
+                      <div className="mt-3 h-9" aria-hidden="true" />
                     </Card>
                   ))}
 

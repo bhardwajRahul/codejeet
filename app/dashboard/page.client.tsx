@@ -93,7 +93,7 @@ export default function DashboardClient() {
                   "Acceptance",
                   "Frequency",
                   "Premium",
-                  "Solution",
+                  "",
                 ].map((header) => (
                   <div key={header} className="w-16 h-4 bg-muted animate-pulse rounded" />
                 ))}
@@ -117,7 +117,7 @@ export default function DashboardClient() {
                   <div className="w-12 h-4 bg-muted animate-pulse rounded" />
                   <div className="w-12 h-4 bg-muted animate-pulse rounded" />
                   <div className="w-4 h-4 bg-muted animate-pulse rounded" />
-                  <div className="flex gap-2">
+                  <div className="flex gap-2" aria-hidden="true">
                     <div className="w-4 h-4 bg-muted animate-pulse rounded" />
                     <div className="w-4 h-4 bg-muted animate-pulse rounded" />
                   </div>

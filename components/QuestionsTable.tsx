@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { VideoDialog } from "./VideoDialog";
 
 interface Question {
   id: string;
@@ -27,7 +26,6 @@ export function QuestionsTable({ questions }: { questions: Question[] }) {
           <TableHead>Title</TableHead>
           <TableHead>Difficulty</TableHead>
           <TableHead>Acceptance</TableHead>
-          <TableHead>Video</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -37,9 +35,6 @@ export function QuestionsTable({ questions }: { questions: Question[] }) {
             <TableCell>{question.title}</TableCell>
             <TableCell>{question.difficulty}</TableCell>
             <TableCell>{question.acceptance}</TableCell>
-            <TableCell>
-              <VideoDialog id={question.id} title={question.title} />
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>
