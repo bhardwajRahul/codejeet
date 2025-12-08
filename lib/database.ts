@@ -13,6 +13,8 @@ export interface QuestionFilters {
   offset?: number;
 }
 
+type Timeframe = NonNullable<QuestionFilters["timeframes"]>[number];
+
 export interface QuestionWithDetails {
   id: number;
   slug: string;
@@ -88,7 +90,7 @@ export async function getQuestionsFromDatabase(
 
     if (filters.timeframes && filters.timeframes.length > 0) {
       filteredResults = filteredResults.filter((r) =>
-        filters.timeframes!.includes(r.timeframe as any)
+        filters.timeframes!.includes(r.timeframe as Timeframe)
       );
     }
 
