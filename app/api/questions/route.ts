@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getQuestionsFromDatabase } from "@/lib/database";
 
+const CACHE_FOREVER = "public, s-maxage=31536000, max-age=31536000, immutable";
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -44,7 +46,7 @@ export async function GET(request: Request) {
       {
         status: 200,
         headers: {
-          "Cache-Control": "public, max-age=3600, stale-while-revalidate=60",
+          "Cache-Control": CACHE_FOREVER,
         },
       }
     );
