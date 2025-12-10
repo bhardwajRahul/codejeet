@@ -37,6 +37,8 @@ export async function GET(request: Request) {
       offset,
     });
 
+    const shouldCache = result.questions.length > 0;
+
     return NextResponse.json(
       {
         questions: result.questions,
@@ -45,9 +47,13 @@ export async function GET(request: Request) {
       },
       {
         status: 200,
-        headers: {
-          "Cache-Control": CACHE_FOREVER,
-        },
+        headers: shouldCache
+          ? {
+              "Cache-Control": CACHE_FOREVER,
+            }
+          : {
+              "Cache-Control": "no-store",
+            },
       }
     );
   } catch (error) {
