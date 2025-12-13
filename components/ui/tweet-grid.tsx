@@ -20,29 +20,13 @@ const tweetGridVariants = cva("max-w-4xl md:max-w-6xl px-2", {
   },
 });
 
-const tweetItemVariants = cva("", {
-  variants: {
-    spacing: {
-      sm: "",
-      md: "",
-      lg: "",
-    },
-  },
-  defaultVariants: {
-    spacing: "md",
-  },
-});
-
-export interface TweetGridProps
-  extends VariantProps<typeof tweetGridVariants>,
-    VariantProps<typeof tweetItemVariants> {
+export interface TweetGridProps extends VariantProps<typeof tweetGridVariants> {
   tweets: string[];
-  spacing?: "sm" | "md" | "lg";
   columns?: 1 | 2 | 3 | 4 | 5;
   className?: string;
 }
 
-export const TweetGrid: React.FC<TweetGridProps> = ({ tweets, columns, spacing, className }) => {
+export const TweetGrid: React.FC<TweetGridProps> = ({ tweets, columns, className }) => {
   const numColumns = columns === 3 ? 3 : columns || 3;
 
   const columns_array = Array.from({ length: numColumns }, (_, colIndex) =>

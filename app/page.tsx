@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NumberTicker from "@/components/magic-ui/number-ticker";
@@ -8,11 +8,9 @@ import { Button } from "@/components/ui/button";
 import { DotPattern } from "@/components/magic-ui/dot-pattern";
 
 export default function Home() {
-  const [focusLabel, setFocusLabel] = useState<"DSA" | "System Design">("DSA");
-
-  useEffect(() => {
-    setFocusLabel(Math.random() < 0.5 ? "DSA" : "System Design");
-  }, []);
+  const [focusLabel] = useState<"DSA" | "System Design">(() =>
+    Math.random() < 0.5 ? "DSA" : "System Design"
+  );
 
   return (
     <div>

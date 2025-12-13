@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -294,10 +295,11 @@ export default async function SystemDesignDetailPage({
                   ? rawSrc
                   : `/system-design/${encodeURIComponent(folder)}/${normalized}`;
                 return (
-                  <img
-                    {...props}
+                  <Image
                     src={finalSrc}
                     alt={props.alt ?? ""}
+                    width={800}
+                    height={600}
                     className="rounded-lg border my-4"
                   />
                 );
