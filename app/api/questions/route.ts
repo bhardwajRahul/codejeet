@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getQuestionsFromDatabase } from "@/lib/database";
+import { getQuestions } from "@/lib/data";
 
 const CACHE_FOREVER = "public, s-maxage=31536000, max-age=31536000, immutable";
 
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!) : undefined;
     const offset = searchParams.get("offset") ? parseInt(searchParams.get("offset")!) : undefined;
 
-    const result = await getQuestionsFromDatabase({
+    const result = await getQuestions({
       companies,
       difficulties,
       topics,
@@ -58,6 +58,6 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     console.error("Error fetching questions:", error);
-    return NextResponse.json({ error: "Failed to load questions from database" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to load questions" }, { status: 500 });
   }
 }

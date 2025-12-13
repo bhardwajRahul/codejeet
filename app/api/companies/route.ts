@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCompanies } from "@/lib/database";
+import { getCompanies } from "@/lib/data";
 
 const CACHE_FOREVER = "public, s-maxage=31536000, max-age=31536000, immutable";
 
@@ -9,7 +9,7 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        companies: companies.map((c) => c.name),
+        companies: companies,
       },
       {
         status: 200,
@@ -20,6 +20,6 @@ export async function GET() {
     );
   } catch (error) {
     console.error("Error fetching companies:", error);
-    return NextResponse.json({ error: "Failed to load companies from database" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to load companies" }, { status: 500 });
   }
 }

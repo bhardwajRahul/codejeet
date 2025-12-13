@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getTopics } from "@/lib/database";
+import { getTopics } from "@/lib/data";
 
 const CACHE_FOREVER = "public, s-maxage=31536000, max-age=31536000, immutable";
 
@@ -20,6 +20,6 @@ export async function GET() {
     );
   } catch (error) {
     console.error("Error fetching topics:", error);
-    return NextResponse.json({ error: "Failed to load topics from database" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to load topics" }, { status: 500 });
   }
 }
