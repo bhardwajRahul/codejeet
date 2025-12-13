@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";

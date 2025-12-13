@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import LeetCodeDashboard from "@/components/LeetCodeDashboard";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { CACHE_VERSION } from "@/lib/cache-version";
 
 function getCachedData() {
   try {
-    const cached = localStorage.getItem("dashboard-cache-v1");
+    const cached = localStorage.getItem(`dashboard-cache-${CACHE_VERSION}`);
     if (cached) {
       const parsed = JSON.parse(cached);
       if (parsed && Array.isArray(parsed.questions) && Array.isArray(parsed.companies)) {
@@ -38,7 +39,7 @@ export default function DashboardClient() {
       return;
     }
 
-    fetch("/api/questions")
+    fetch(`/api/questions?v=${CACHE_VERSION}`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
@@ -46,7 +47,7 @@ export default function DashboardClient() {
         setLoading(false);
         try {
           localStorage.setItem(
-            "dashboard-cache-v1",
+            `dashboard-cache-${CACHE_VERSION}`,
             JSON.stringify({ questions: data.questions, companies: data.companies })
           );
         } catch {}
