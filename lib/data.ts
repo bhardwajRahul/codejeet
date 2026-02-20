@@ -1,5 +1,3 @@
-import "server-only";
-
 import fs from "fs/promises";
 import path from "path";
 import { parse } from "csv-parse/sync";
@@ -126,7 +124,7 @@ const normalizeUrl = (url?: string, slug?: string) => {
   return slug ? `/problems/${slug}` : "/";
 };
 
-async function loadAllQuestions(): Promise<{
+export async function loadAllQuestions(): Promise<{
   questions: QuestionWithDetails[];
   companies: string[];
 }> {

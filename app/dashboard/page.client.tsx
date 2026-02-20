@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import LeetCodeDashboard from "@/components/LeetCodeDashboard";
-import { useAuth } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import { CACHE_VERSION } from "@/lib/cache-version";
 
 function getCachedData() {
@@ -20,15 +18,11 @@ function getCachedData() {
 }
 
 export default function DashboardClient() {
-  const { userId } = useAuth();
-  const router = useRouter();
   const [questions, setQuestions] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId) return;
-
     const cached = getCachedData();
     if (cached) {
       queueMicrotask(() => {
@@ -39,7 +33,7 @@ export default function DashboardClient() {
       return;
     }
 
-    fetch(`/api/questions?v=${CACHE_VERSION}`)
+    fetch("/data/questions.json")
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
@@ -56,17 +50,11 @@ export default function DashboardClient() {
         console.error("Error loading questions:", error);
         setLoading(false);
       });
-  }, [userId]);
-
-  useEffect(() => {
-    if (!userId && !loading) {
-      router.push("/");
-    }
-  }, [userId, loading, router]);
+  }, []);
 
   return (
     <div className="container mx-auto py-8">
-      <LeetCodeDashboard questions={questions} companies={companies} loading={loading || !userId} />
+      <LeetCodeDashboard questions={questions} companies={companies} loading={loading} />
     </div>
   );
 }

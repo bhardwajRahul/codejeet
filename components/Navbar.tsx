@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { UserButton, SignedIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { Github } from "lucide-react";
 
@@ -27,9 +26,6 @@ const Navbar = () => {
           >
             <Github className="h-4 w-4 mr-1" /> Star Project
           </Button>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
         </div>
       </div>
     </div>

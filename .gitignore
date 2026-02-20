@@ -41,6 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# clerk configuration (can include secrets)
-/.clerk/
+# generated data (built from CSVs at build time)
+/public/data/
+
 firebase-debug.log
