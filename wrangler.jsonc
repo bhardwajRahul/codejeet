@@ -3,6 +3,6 @@
   "name": "codejeet",
   "compatibility_date": "2026-02-20",
   "assets": {
-    "directory": "./out"
-  }
+    "directory": "./out",
+  },
 }

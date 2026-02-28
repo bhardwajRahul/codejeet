@@ -36,10 +36,8 @@ export default function Home() {
                 />
               </div>
             </div>
-            <h1 className="text-center text-5xl md:text-7xl font-bold break-words w-full max-w-[92vw] md:max-w-[1200px] px-2 mx-auto -z-10 leading-tight">
-              <span className="md:whitespace-nowrap">Padhle {focusLabel} kahin se, </span>
-              <br className="hidden md:block" />
-              <span>selection hogi yahi se.</span>
+            <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold break-words w-full max-w-[92vw] md:max-w-[1200px] px-2 mx-auto -z-10 leading-tight">
+              Padhle {focusLabel} kahin se, selection hogi yahi se.
             </h1>
             <h2 className="text-xl text-opacity-60 tracking-normal text-center max-w-2xl mx-auto z-10">
               Suffer from <NumberTicker value={8000} />+ company-wise DSA questions like a true
