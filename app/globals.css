@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Hack";
+  src: url("/fonts/hack-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hack";
+  src: url("/fonts/hack-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hack";
+  src: url("/fonts/hack-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hack";
+  src: url("/fonts/hack-bolditalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --color-1: 0 100% 63%;
   --color-2: 270 100% 63%;
@@ -44,10 +73,6 @@
     --sidebar-accent-foreground: 0.21 0.01 285.93;
     --sidebar-border: 0.92 0 286.61;
     --sidebar-ring: 0.71 0.01 286.09;
-
-    --font-sans: var(--font-sans);
-    --font-serif: var(--font-sans);
-    --font-mono: var(--font-mono);
 
     --radius: 0.625rem;
 
