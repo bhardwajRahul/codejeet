@@ -1,17 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NumberTicker from "@/components/magic-ui/number-ticker";
 import { Button } from "@/components/ui/button";
 import { DotPattern } from "@/components/magic-ui/dot-pattern";
 
-export default function Home() {
-  const [focusLabel] = useState<"DSA" | "System Design">(() =>
-    Math.random() < 0.5 ? "DSA" : "System Design"
-  );
+const focusLabel: "DSA" | "System Design" = Math.random() < 0.5 ? "DSA" : "System Design";
 
+export default function Home() {
   return (
     <div>
       <main>
@@ -40,7 +37,7 @@ export default function Home() {
               Padhle {focusLabel} kahin se, selection hogi yahi se.
             </h1>
             <h2 className="text-xl text-opacity-60 tracking-normal text-center max-w-2xl mx-auto z-10">
-              Suffer from <NumberTicker value={8000} />+ company-wise DSA questions like a true
+              Suffer from <NumberTicker value={17000} />+ company-wise DSA questions like a true
               Codejeet. Kyunki naukri ke liye sab kuch chalega!
             </h2>
             <div className="z-20 flex gap-3">

@@ -1,22 +1,20 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-43,Multiply Strings,/problems/multiply-strings,N,38.8%,Medium,50.00%,"Math, String, Simulation"
-1339,Maximum Product of Splitted Binary Tree,/problems/maximum-product-of-splitted-binary-tree,N,43.4%,Medium,100.00%,"Tree, Depth-First Search, Binary Tree"
-547,Friend Circles,/problems/friend-circles,N,58.6%,Medium,3.45%,"Depth-First Search, Breadth-First Search, Union Find, Graph"
-1048,Longest String Chain,/problems/longest-string-chain,N,54.7%,Medium,2.62%,"Array, Hash Table, Two Pointers, String, Dynamic Programming, Sorting"
-918,Maximum Sum Circular Subarray,/problems/maximum-sum-circular-subarray,N,33.7%,Medium,1.79%,"Array, Divide and Conquer, Dynamic Programming, Queue, Monotonic Queue"
-146,LRU Cache,/problems/lru-cache,N,33.2%,Medium,1.01%,"Hash Table, Linked List, Design, Doubly-Linked List"
-123,Best Time to Buy and Sell Stock III,/problems/best-time-to-buy-and-sell-stock-iii,N,37.5%,Hard,0.81%,"Array, Dynamic Programming"
-44,Wildcard Matching,/problems/wildcard-matching,N,24.7%,Hard,0.81%,"String, Dynamic Programming, Greedy, Recursion"
-342,Power of Four,/problems/power-of-four,N,41.6%,Easy,0.51%,"Math, Bit Manipulation, Recursion"
-528,Random Pick with Weight,/problems/random-pick-with-weight,N,43.9%,Medium,0.37%,"Array, Math, Binary Search, Prefix Sum, Randomized"
-380,Insert Delete GetRandom O(1),/problems/insert-delete-getrandom-o1,N,47.5%,Medium,0.35%,"Array, Hash Table, Math, Design, Randomized"
-710,Random Pick with Blacklist,/problems/random-pick-with-blacklist,N,32.5%,Hard,0.32%,"Array, Hash Table, Math, Binary Search, Sorting, Randomized"
-289,Game of Life,/problems/game-of-life,N,54.5%,Medium,0.25%,"Array, Matrix, Simulation"
-1163,Last Substring in Lexicographical Order,/problems/last-substring-in-lexicographical-order,N,33.9%,Hard,0.11%,"Two Pointers, String"
-4,Median of Two Sorted Arrays,/problems/median-of-two-sorted-arrays,N,29.6%,Hard,0.09%,"Array, Binary Search, Divide and Conquer"
-53,Maximum Subarray,/problems/maximum-subarray,N,46.5%,Easy,0.04%,"Array, Divide and Conquer, Dynamic Programming"
-56,Merge Intervals,/problems/merge-intervals,N,39.3%,Medium,0.02%,"Array, Sorting"
-384,Shuffle an Array,/problems/shuffle-an-array,N,52.8%,Medium,0.02%,No Topics Found
-221,Maximal Square,/problems/maximal-square,N,37.7%,Medium,0.01%,"Array, Dynamic Programming, Matrix"
-349,Intersection of Two Arrays,/problems/intersection-of-two-arrays,N,62.5%,Easy,0.01%,"Array, Hash Table, Two Pointers, Binary Search, Sorting"
-1186,Maximum Subarray Sum with One Deletion,/problems/maximum-subarray-sum-with-one-deletion,N,37.5%,Medium,0.00%,"Array, Dynamic Programming"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+23,https://leetcode.com/problems/merge-k-sorted-lists,Merge k Sorted Lists,Hard,58.8%,62.5%
+547,https://leetcode.com/problems/number-of-provinces,Number of Provinces,Medium,70.0%,100.0%
+43,https://leetcode.com/problems/multiply-strings,Multiply Strings,Medium,43.5%,75.0%
+44,https://leetcode.com/problems/wildcard-matching,Wildcard Matching,Hard,31.3%,87.5%
+1048,https://leetcode.com/problems/longest-string-chain,Longest String Chain,Medium,62.8%,87.5%
+2050,https://leetcode.com/problems/parallel-courses-iii,Parallel Courses III,Hard,66.8%,75.0%
+212,https://leetcode.com/problems/word-search-ii,Word Search II,Hard,38.1%,75.0%
+1186,https://leetcode.com/problems/maximum-subarray-sum-with-one-deletion,Maximum Subarray Sum with One Deletion,Medium,46.7%,100.0%
+289,https://leetcode.com/problems/game-of-life,Game of Life,Medium,72.3%,87.5%
+342,https://leetcode.com/problems/power-of-four,Power of Four,Easy,51.7%,87.5%
+349,https://leetcode.com/problems/intersection-of-two-arrays,Intersection of Two Arrays,Easy,77.5%,87.5%
+528,https://leetcode.com/problems/random-pick-with-weight,Random Pick with Weight,Medium,48.9%,100.0%
+918,https://leetcode.com/problems/maximum-sum-circular-subarray,Maximum Sum Circular Subarray,Medium,49.4%,87.5%
+1889,https://leetcode.com/problems/minimum-space-wasted-from-packaging,Minimum Space Wasted From Packaging,Hard,33.4%,62.5%
+489,https://leetcode.com/problems/robot-room-cleaner,Robot Room Cleaner,Hard,77.9%,50.0%
+2502,https://leetcode.com/problems/design-memory-allocator,Design Memory Allocator,Medium,49.7%,62.5%
+253,https://leetcode.com/problems/meeting-rooms-ii,Meeting Rooms II,Medium,52.5%,50.0%
+200,https://leetcode.com/problems/number-of-islands,Number of Islands,Medium,63.8%,50.0%
+20,https://leetcode.com/problems/valid-parentheses,Valid Parentheses,Easy,43.7%,62.5%

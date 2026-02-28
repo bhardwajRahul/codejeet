@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1326,Minimum Number of Taps to Open to Water a Garden,/problems/minimum-number-of-taps-to-open-to-water-a-garden,N,47.7%,Hard,100.00%,"Array, Dynamic Programming, Greedy"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+2381,https://leetcode.com/problems/shifting-letters-ii,Shifting Letters II,Medium,53.5%,100.0%

@@ -1,36 +1,70 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1,Two Sum,/problems/two-sum,N,49.1%,Easy,1.24%,"Array, Hash Table"
-34,Find First and Last Position of Element in Sorted Array,/problems/find-first-and-last-position-of-element-in-sorted-array,N,41.6%,Medium,9.43%,"Array, Binary Search"
-49,Group Anagrams,/problems/group-anagrams,N,66.5%,Medium,9.00%,"Array, Hash Table, String, Sorting"
-124,Binary Tree Maximum Path Sum,/problems/binary-tree-maximum-path-sum,N,38.5%,Hard,20.17%,"Dynamic Programming, Tree, Depth-First Search, Binary Tree"
-143,Reorder List,/problems/reorder-list,N,51.2%,Medium,26.35%,"Linked List, Two Pointers, Stack, Recursion"
-236,Lowest Common Ancestor of a Binary Tree,/problems/lowest-common-ancestor-of-a-binary-tree,N,58.1%,Medium,19.00%,"Tree, Depth-First Search, Binary Tree"
-304,Range Sum Query 2D - Immutable,/problems/range-sum-query-2d-immutable,N,52.2%,Medium,77.98%,"Array, Design, Matrix, Prefix Sum"
-312,Burst Balloons,/problems/burst-balloons,N,56.8%,Hard,99.64%,No Topics Found
-322,Coin Change,/problems/coin-change,N,41.6%,Medium,10.28%,"Array, Dynamic Programming, Breadth-First Search"
-329,Longest Increasing Path in a Matrix,/problems/longest-increasing-path-in-a-matrix,N,52.2%,Hard,42.69%,"Array, Dynamic Programming, Depth-First Search, Breadth-First Search, Graph, Topological Sort, Memoization, Matrix"
-407,Trapping Rain Water II,/problems/trapping-rain-water-ii,N,47.5%,Hard,100.00%,"Array, Breadth-First Search, Heap (Priority Queue), Matrix"
-1091,Shortest Path in Binary Matrix,/problems/shortest-path-in-binary-matrix,N,44.5%,Medium,56.33%,"Array, Breadth-First Search, Matrix"
-572,Subtree of Another Tree,/problems/subtree-of-another-tree,N,44.1%,Easy,0.09%,"Tree, Depth-First Search, String Matching, Binary Tree, Hash Function"
-31,Next Permutation,/problems/next-permutation,N,32.6%,Medium,0.05%,"Array, Two Pointers"
-85,Maximal Rectangle,/problems/maximal-rectangle,N,37.7%,Hard,0.05%,"Array, Dynamic Programming, Stack, Matrix, Monotonic Stack"
-20,Valid Parentheses,/problems/valid-parentheses,N,39.0%,Easy,0.04%,"String, Stack"
-32,Longest Valid Parentheses,/problems/longest-valid-parentheses,N,28.4%,Hard,0.03%,"String, Dynamic Programming, Stack"
-15,3Sum,/problems/3sum,N,26.8%,Medium,0.03%,"Array, Two Pointers, Sorting"
-18,4Sum,/problems/4sum,N,33.7%,Medium,0.02%,"Array, Two Pointers, Sorting"
-33,Search in Rotated Sorted Array,/problems/search-in-rotated-sorted-array,N,34.5%,Medium,0.02%,"Array, Binary Search"
-22,Generate Parentheses,/problems/generate-parentheses,N,62.7%,Medium,0.02%,"String, Dynamic Programming, Backtracking"
-876,Middle of the Linked List,/problems/middle-of-the-linked-list,N,68.4%,Easy,0.02%,"Linked List, Two Pointers"
-5,Longest Palindromic Substring,/problems/longest-palindromic-substring,N,29.5%,Medium,0.01%,"Two Pointers, String, Dynamic Programming"
-3,Longest Substring Without Repeating Characters,/problems/longest-substring-without-repeating-characters,N,30.4%,Medium,0.01%,"Hash Table, String, Sliding Window"
-523,Continuous Subarray Sum,/problems/continuous-subarray-sum,N,24.6%,Medium,0.01%,"Array, Hash Table, Math, Prefix Sum"
-103,Binary Tree Zigzag Level Order Traversal,/problems/binary-tree-zigzag-level-order-traversal,N,48.3%,Medium,0.01%,"Tree, Breadth-First Search, Binary Tree"
-190,Reverse Bits,/problems/reverse-bits,N,39.8%,Easy,0.01%,"Divide and Conquer, Bit Manipulation"
-127,Word Ladder,/problems/word-ladder,N,29.6%,Medium,0.01%,"Hash Table, String, Breadth-First Search"
-21,Merge Two Sorted Lists,/problems/merge-two-sorted-lists,N,53.5%,Easy,0.00%,"Linked List, Recursion"
-653,Two Sum IV - Input is a BST,/problems/two-sum-iv-input-is-a-bst,N,55.5%,Easy,0.00%,"Hash Table, Two Pointers, Tree, Depth-First Search, Breadth-First Search, Binary Search Tree, Binary Tree"
-987,Vertical Order Traversal of a Binary Tree,/problems/vertical-order-traversal-of-a-binary-tree,N,36.6%,Medium,0.00%,"Hash Table, Tree, Depth-First Search, Breadth-First Search, Sorting, Binary Tree"
-1301,Number of Paths with Max Score,/problems/number-of-paths-with-max-score,N,37.3%,Hard,0.00%,"Array, Dynamic Programming, Matrix"
-1139,Largest 1-Bordered Square,/problems/largest-1-bordered-square,N,47.5%,Medium,0.00%,"Array, Dynamic Programming, Matrix"
-1464,Maximum Product of Two Elements in an Array,/problems/maximum-product-of-two-elements-in-an-array,N,78.1%,Easy,0.00%,"Array, Sorting, Heap (Priority Queue)"
-1519,Number of Nodes in the Sub-Tree With the Same Label,/problems/number-of-nodes-in-the-sub-tree-with-the-same-label,N,35.2%,Medium,0.00%,"Hash Table, Tree, Depth-First Search, Breadth-First Search, Counting"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1,https://leetcode.com/problems/two-sum,Two Sum,Easy,57.1%,75.0%
+2,https://leetcode.com/problems/add-two-numbers,Add Two Numbers,Medium,47.9%,50.0%
+9,https://leetcode.com/problems/palindrome-number,Palindrome Number,Easy,60.2%,50.0%
+15,https://leetcode.com/problems/3sum,3Sum,Medium,38.6%,62.5%
+20,https://leetcode.com/problems/valid-parentheses,Valid Parentheses,Easy,43.7%,50.0%
+33,https://leetcode.com/problems/search-in-rotated-sorted-array,Search in Rotated Sorted Array,Medium,44.1%,50.0%
+42,https://leetcode.com/problems/trapping-rain-water,Trapping Rain Water,Hard,66.8%,87.5%
+53,https://leetcode.com/problems/maximum-subarray,Maximum Subarray,Medium,53.0%,62.5%
+56,https://leetcode.com/problems/merge-intervals,Merge Intervals,Medium,51.1%,50.0%
+987,https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree,Vertical Order Traversal of a Binary Tree,Hard,53.2%,87.5%
+2029,https://leetcode.com/problems/stone-game-ix,Stone Game IX,Medium,29.8%,87.5%
+2035,https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference,Partition Array Into Two Arrays to Minimize Sum Difference,Hard,23.0%,87.5%
+121,https://leetcode.com/problems/best-time-to-buy-and-sell-stock,Best Time to Buy and Sell Stock,Easy,56.4%,75.0%
+141,https://leetcode.com/problems/linked-list-cycle,Linked List Cycle,Easy,53.9%,50.0%
+146,https://leetcode.com/problems/lru-cache,LRU Cache,Medium,46.8%,100.0%
+200,https://leetcode.com/problems/number-of-islands,Number of Islands,Medium,63.8%,100.0%
+1301,https://leetcode.com/problems/number-of-paths-with-max-score,Number of Paths with Max Score,Hard,42.0%,87.5%
+1139,https://leetcode.com/problems/largest-1-bordered-square,Largest 1-Bordered Square,Medium,52.0%,87.5%
+253,https://leetcode.com/problems/meeting-rooms-ii,Meeting Rooms II,Medium,52.5%,50.0%
+300,https://leetcode.com/problems/longest-increasing-subsequence,Longest Increasing Subsequence,Medium,59.0%,87.5%
+312,https://leetcode.com/problems/burst-balloons,Burst Balloons,Hard,62.9%,87.5%
+322,https://leetcode.com/problems/coin-change,Coin Change,Medium,47.9%,50.0%
+1691,https://leetcode.com/problems/maximum-height-by-stacking-cuboids,Maximum Height by Stacking Cuboids,Hard,61.7%,87.5%
+1464,https://leetcode.com/problems/maximum-product-of-two-elements-in-an-array,Maximum Product of Two Elements in an Array,Easy,83.5%,87.5%
+1519,https://leetcode.com/problems/number-of-nodes-in-the-sub-tree-with-the-same-label,Number of Nodes in the Sub-Tree With the Same Label,Medium,55.3%,87.5%
+2639,https://leetcode.com/problems/find-the-width-of-columns-of-a-grid,Find the Width of Columns of a Grid,Easy,70.4%,87.5%
+2642,https://leetcode.com/problems/design-graph-with-shortest-path-calculator,Design Graph With Shortest Path Calculator,Hard,64.8%,87.5%
+2662,https://leetcode.com/problems/minimum-cost-of-a-path-with-special-roads,Minimum Cost of a Path With Special Roads,Medium,42.4%,87.5%
+653,https://leetcode.com/problems/two-sum-iv-input-is-a-bst,Two Sum IV - Input is a BST,Easy,63.0%,87.5%
+1675,https://leetcode.com/problems/minimize-deviation-in-array,Minimize Deviation in Array,Hard,54.0%,87.5%
+785,https://leetcode.com/problems/is-graph-bipartite,Is Graph Bipartite?,Medium,58.9%,75.0%
+2810,https://leetcode.com/problems/faulty-keyboard,Faulty Keyboard,Easy,80.0%,87.5%
+1830,https://leetcode.com/problems/minimum-number-of-operations-to-make-string-sorted,Minimum Number of Operations to Make String Sorted,Hard,50.7%,87.5%
+1590,https://leetcode.com/problems/make-sum-divisible-by-p,Make Sum Divisible by P,Medium,42.6%,50.0%
+402,https://leetcode.com/problems/remove-k-digits,Remove K Digits,Medium,36.4%,50.0%
+849,https://leetcode.com/problems/maximize-distance-to-closest-person,Maximize Distance to Closest Person,Medium,49.6%,75.0%
+108,https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree,Convert Sorted Array to Binary Search Tree,Easy,75.2%,50.0%
+79,https://leetcode.com/problems/word-search,Word Search,Medium,46.8%,62.5%
+3045,https://leetcode.com/problems/count-prefix-and-suffix-pairs-ii,Count Prefix and Suffix Pairs II,Hard,28.0%,87.5%
+3080,https://leetcode.com/problems/mark-elements-on-array-by-performing-queries,Mark Elements on Array by Performing Queries,Medium,49.1%,87.5%
+295,https://leetcode.com/problems/find-median-from-data-stream,Find Median from Data Stream,Hard,54.2%,50.0%
+994,https://leetcode.com/problems/rotting-oranges,Rotting Oranges,Medium,58.1%,75.0%
+127,https://leetcode.com/problems/word-ladder,Word Ladder,Hard,44.9%,50.0%
+14,https://leetcode.com/problems/longest-common-prefix,Longest Common Prefix,Easy,47.1%,62.5%
+189,https://leetcode.com/problems/rotate-array,Rotate Array,Medium,44.4%,50.0%
+886,https://leetcode.com/problems/possible-bipartition,Possible Bipartition,Medium,52.3%,75.0%
+23,https://leetcode.com/problems/merge-k-sorted-lists,Merge k Sorted Lists,Hard,58.8%,62.5%
+713,https://leetcode.com/problems/subarray-product-less-than-k,Subarray Product Less Than K,Medium,53.9%,62.5%
+30,https://leetcode.com/problems/substring-with-concatenation-of-all-words,Substring with Concatenation of All Words,Hard,34.0%,87.5%
+374,https://leetcode.com/problems/guess-number-higher-or-lower,Guess Number Higher or Lower,Easy,57.1%,87.5%
+162,https://leetcode.com/problems/find-peak-element,Find Peak Element,Medium,46.8%,75.0%
+46,https://leetcode.com/problems/permutations,Permutations,Medium,81.6%,50.0%
+407,https://leetcode.com/problems/trapping-rain-water-ii,Trapping Rain Water II,Hard,64.0%,62.5%
+75,https://leetcode.com/problems/sort-colors,Sort Colors,Medium,69.1%,62.5%
+29,https://leetcode.com/problems/divide-two-integers,Divide Two Integers,Medium,19.4%,62.5%
+22,https://leetcode.com/problems/generate-parentheses,Generate Parentheses,Medium,78.2%,50.0%
+160,https://leetcode.com/problems/intersection-of-two-linked-lists,Intersection of Two Linked Lists,Easy,63.2%,62.5%
+1514,https://leetcode.com/problems/path-with-maximum-probability,Path with Maximum Probability,Medium,65.5%,50.0%
+88,https://leetcode.com/problems/merge-sorted-array,Merge Sorted Array,Easy,54.4%,50.0%
+283,https://leetcode.com/problems/move-zeroes,Move Zeroes,Easy,63.5%,50.0%
+31,https://leetcode.com/problems/next-permutation,Next Permutation,Medium,44.7%,50.0%
+45,https://leetcode.com/problems/jump-game-ii,Jump Game II,Medium,42.5%,50.0%
+410,https://leetcode.com/problems/split-array-largest-sum,Split Array Largest Sum,Hard,59.8%,50.0%
+3796,https://leetcode.com/problems/find-maximum-value-in-a-constrained-sequence,Find Maximum Value in a Constrained Sequence,Medium,62.3%,87.5%
+4,https://leetcode.com/problems/median-of-two-sorted-arrays,Median of Two Sorted Arrays,Hard,45.9%,50.0%
+5,https://leetcode.com/problems/longest-palindromic-substring,Longest Palindromic Substring,Medium,37.3%,50.0%
+48,https://leetcode.com/problems/rotate-image,Rotate Image,Medium,79.3%,50.0%
+72,https://leetcode.com/problems/edit-distance,Edit Distance,Medium,60.1%,50.0%
+855,https://leetcode.com/problems/exam-room,Exam Room,Medium,43.2%,50.0%

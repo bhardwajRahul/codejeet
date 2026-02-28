@@ -1,4 +1,6 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1,Two Sum,/problems/two-sum,N,49.1%,Easy,33.73%,"Array, Hash Table"
-70,Climbing Stairs,/problems/climbing-stairs,N,51.8%,Easy,100.00%,"Math, Dynamic Programming, Memoization"
-121,Best Time to Buy and Sell Stock,/problems/best-time-to-buy-and-sell-stock,N,54.4%,Easy,67.45%,"Array, Dynamic Programming"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+2000,https://leetcode.com/problems/reverse-prefix-of-word,Reverse Prefix of Word,Easy,86.5%,100.0%
+1555,https://leetcode.com/problems/bank-account-summary,Bank Account Summary,Medium,52.1%,100.0%
+1143,https://leetcode.com/problems/longest-common-subsequence,Longest Common Subsequence,Medium,58.9%,75.0%
+53,https://leetcode.com/problems/maximum-subarray,Maximum Subarray,Medium,53.0%,62.5%
+1,https://leetcode.com/problems/two-sum,Two Sum,Easy,57.1%,62.5%

@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-478,Generate Random Point in a Circle,/problems/generate-random-point-in-a-circle,N,39.6%,Medium,0.00%,"Math, Geometry, Rejection Sampling, Randomized"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+478,https://leetcode.com/problems/generate-random-point-in-a-circle,Generate Random Point in a Circle,Medium,42.4%,100.0%

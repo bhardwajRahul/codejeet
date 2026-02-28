@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1725,Number Of Rectangles That Can Form The Largest Square,/problems/number-of-rectangles-that-can-form-the-largest-square,N,78.7%,Easy,0.00%,Array
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1725,https://leetcode.com/problems/number-of-rectangles-that-can-form-the-largest-square,Number Of Rectangles That Can Form The Largest Square,Easy,79.3%,100.0%

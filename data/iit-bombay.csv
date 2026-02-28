@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-861,Score After Flipping Matrix,/problems/score-after-flipping-matrix,N,75.1%,Medium,0.00%,
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+861,https://leetcode.com/problems/score-after-flipping-matrix,Score After Flipping Matrix,Medium,80.3%,100.0%

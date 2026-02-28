@@ -1,4 +1,3 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-41,First Missing Positive,/problems/first-missing-positive,N,36.6%,Hard,100.00%,"Array, Hash Table"
-54,Spiral Matrix,/problems/spiral-matrix,N,43.8%,Medium,50.00%,"Array, Matrix, Simulation"
-1027,Longest Arithmetic Sequence,/problems/longest-arithmetic-sequence,N,53.4%,Medium,0.00%,"Array, Hash Table, Binary Search, Dynamic Programming"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1027,https://leetcode.com/problems/longest-arithmetic-subsequence,Longest Arithmetic Subsequence,Medium,49.9%,100.0%
+543,https://leetcode.com/problems/diameter-of-binary-tree,Diameter of Binary Tree,Easy,65.0%,62.5%

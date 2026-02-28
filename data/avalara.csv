@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-49,Group Anagrams,/problems/group-anagrams,N,66.5%,Medium,100.00%,"Array, Hash Table, String, Sorting"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+2117,https://leetcode.com/problems/abbreviating-the-product-of-a-range,Abbreviating the Product of a Range,Hard,24.8%,100.0%

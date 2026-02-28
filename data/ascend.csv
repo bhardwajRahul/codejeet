@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-2002,Maximum Product of the Length of Two Palindromic Subsequences,/problems/maximum-product-of-the-length-of-two-palindromic-subsequences,N,53.4%,Medium,0.00%,No Topics Found
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+2002,https://leetcode.com/problems/maximum-product-of-the-length-of-two-palindromic-subsequences,Maximum Product of the Length of Two Palindromic Subsequences,Medium,62.4%,100.0%

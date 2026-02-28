@@ -1,63 +1,63 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-49,Group Anagrams,/problems/group-anagrams,N,66.5%,Medium,0.85%,"Array, Hash Table, String, Sorting"
-153,Find Minimum in Rotated Sorted Array,/problems/find-minimum-in-rotated-sorted-array,N,48.5%,Medium,1.24%,"Array, Binary Search"
-353,Design Snake Game,/problems/design-snake-game,Y,39.1%,Medium,85.86%,No Topics Found
-359,Logger Rate Limiter,/problems/logger-rate-limiter,Y,75.5%,Easy,15.70%,No Topics Found
-441,Arranging Coins,/problems/arranging-coins,N,46.1%,Easy,8.85%,"Math, Binary Search"
-692,Top K Frequent Words,/problems/top-k-frequent-words,N,56.9%,Medium,7.59%,"Hash Table, String, Trie, Sorting, Heap (Priority Queue), Bucket Sort, Counting"
-730,Count Different Palindromic Subsequences,/problems/count-different-palindromic-subsequences,N,44.5%,Hard,41.92%,
-757,Set Intersection Size At Least Two,/problems/set-intersection-size-at-least-two,N,43.8%,Hard,92.64%,"Array, Greedy, Sorting"
-1334,Find the City With the Smallest Number of Neighbors at a Threshold Distance,/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance,N,53.2%,Medium,41.92%,"Dynamic Programming, Graph, Shortest Path"
-1366,Rank Teams by Votes,/problems/rank-teams-by-votes,N,58.6%,Medium,100.00%,"Array, Hash Table, String, Sorting, Counting"
-1381,Design a Stack With Increment Operation,/problems/design-a-stack-with-increment-operation,N,77.3%,Medium,19.50%,"Array, Stack, Design"
-1639,Number of Ways to Form a Target String Given a Dictionary,/problems/number-of-ways-to-form-a-target-string-given-a-dictionary,N,42.8%,Hard,64.34%,
-366,Find Leaves of Binary Tree,/problems/find-leaves-of-binary-tree,N,70.6%,Medium,0.53%,No Topics Found
-981,Time Based Key-Value Store,/problems/time-based-key-value-store,N,53.1%,Medium,0.40%,"Hash Table, String, Binary Search, Design"
-860,Lemonade Change,/problems/lemonade-change,N,51.6%,Easy,0.40%,"Array, Greedy"
-1120,Maximum Average Subtree,/problems/maximum-average-subtree,N,61.9%,Medium,0.27%,No Topics Found
-1071,Greatest Common Divisor of Strings,/problems/greatest-common-divisor-of-strings,N,52.9%,Easy,0.26%,"Math, String"
-821,Shortest Distance to a Character,/problems/shortest-distance-to-a-character,N,66.9%,Easy,0.24%,"Array, Two Pointers, String"
-17,Letter Combinations of a Phone Number,/problems/letter-combinations-of-a-phone-number,N,46.8%,Medium,0.22%,"Hash Table, String, Backtracking"
-362,Design Hit Counter,/problems/design-hit-counter,N,63.7%,Medium,0.21%,No Topics Found
-253,Meeting Rooms II,/problems/meeting-rooms-ii,N,45.7%,Medium,0.12%,No Topics Found
-284,Peeking Iterator,/problems/peeking-iterator,N,45.7%,Medium,0.12%,"Array, Design, Iterator"
-1223,Dice Roll Simulation,/problems/dice-roll-simulation,N,45.6%,Medium,0.10%,"Array, Dynamic Programming"
-300,Longest Increasing Subsequence,/problems/longest-increasing-subsequence,N,42.6%,Medium,0.10%,"Array, Binary Search, Dynamic Programming"
-23,Merge k Sorted Lists,/problems/merge-k-sorted-lists,N,40.2%,Hard,0.10%,"Linked List, Divide and Conquer, Heap (Priority Queue), Merge Sort"
-20,Valid Parentheses,/problems/valid-parentheses,N,39.0%,Easy,0.09%,"String, Stack"
-200,Number of Islands,/problems/number-of-islands,N,46.8%,Medium,0.07%,"Array, Depth-First Search, Breadth-First Search, Union Find, Matrix"
-706,Design HashMap,/problems/design-hashmap,N,61.3%,Easy,0.07%,"Array, Hash Table, Linked List, Design, Hash Function"
-98,Validate Binary Search Tree,/problems/validate-binary-search-tree,N,27.8%,Medium,0.06%,"Tree, Depth-First Search, Binary Search Tree, Binary Tree"
-540,Single Element in a Sorted Array,/problems/single-element-in-a-sorted-array,N,57.9%,Medium,0.04%,"Array, Binary Search"
-844,Backspace String Compare,/problems/backspace-string-compare,N,46.4%,Easy,0.04%,"Two Pointers, String, Stack, Simulation"
-31,Next Permutation,/problems/next-permutation,N,32.6%,Medium,0.04%,"Array, Two Pointers"
-394,Decode String,/problems/decode-string,N,50.0%,Medium,0.03%,"String, Stack, Recursion"
-150,Evaluate Reverse Polish Notation,/problems/evaluate-reverse-polish-notation,N,36.3%,Medium,0.03%,"Array, Math, Stack"
-547,Friend Circles,/problems/friend-circles,N,58.6%,Medium,0.03%,"Depth-First Search, Breadth-First Search, Union Find, Graph"
-123,Best Time to Buy and Sell Stock III,/problems/best-time-to-buy-and-sell-stock-iii,N,37.5%,Hard,0.03%,"Array, Dynamic Programming"
-713,Subarray Product Less Than K,/problems/subarray-product-less-than-k,N,39.1%,Medium,0.02%,"Array, Binary Search, Sliding Window, Prefix Sum"
-647,Palindromic Substrings,/problems/palindromic-substrings,N,60.6%,Medium,0.02%,"Two Pointers, String, Dynamic Programming"
-199,Binary Tree Right Side View,/problems/binary-tree-right-side-view,N,54.1%,Medium,0.02%,"Tree, Depth-First Search, Breadth-First Search, Binary Tree"
-101,Symmetric Tree,/problems/symmetric-tree,N,46.8%,Easy,0.02%,"Tree, Depth-First Search, Breadth-First Search, Binary Tree"
-341,Flatten Nested List Iterator,/problems/flatten-nested-list-iterator,N,52.9%,Medium,0.02%,"Stack, Tree, Depth-First Search, Design, Queue, Iterator"
-53,Maximum Subarray,/problems/maximum-subarray,N,46.5%,Easy,0.02%,"Array, Divide and Conquer, Dynamic Programming"
-173,Binary Search Tree Iterator,/problems/binary-search-tree-iterator,N,56.6%,Medium,0.02%,"Stack, Tree, Design, Binary Search Tree, Binary Tree, Iterator"
-872,Leaf-Similar Trees,/problems/leaf-similar-trees,N,64.5%,Easy,0.02%,"Tree, Depth-First Search, Binary Tree"
-46,Permutations,/problems/permutations,N,63.5%,Medium,0.02%,"Array, Backtracking"
-680,Valid Palindrome II,/problems/valid-palindrome-ii,N,36.6%,Easy,0.02%,"Two Pointers, String, Greedy"
-701,Insert into a Binary Search Tree,/problems/insert-into-a-binary-search-tree,N,77.7%,Medium,0.02%,"Tree, Binary Search Tree, Binary Tree"
-528,Random Pick with Weight,/problems/random-pick-with-weight,N,43.9%,Medium,0.01%,"Array, Math, Binary Search, Prefix Sum, Randomized"
-227,Basic Calculator II,/problems/basic-calculator-ii,N,36.9%,Medium,0.01%,"Math, String, Stack"
-543,Diameter of Binary Tree,/problems/diameter-of-binary-tree,N,48.4%,Easy,0.01%,"Tree, Depth-First Search, Binary Tree"
-3,Longest Substring Without Repeating Characters,/problems/longest-substring-without-repeating-characters,N,30.4%,Medium,0.01%,"Hash Table, String, Sliding Window"
-295,Find Median from Data Stream,/problems/find-median-from-data-stream,N,44.3%,Hard,0.01%,"Two Pointers, Design, Sorting, Heap (Priority Queue), Data Stream"
-21,Merge Two Sorted Lists,/problems/merge-two-sorted-lists,N,53.5%,Easy,0.01%,"Linked List, Recursion"
-215,Kth Largest Element in an Array,/problems/kth-largest-element-in-an-array,N,55.4%,Medium,0.01%,"Array, Divide and Conquer, Sorting, Heap (Priority Queue), Quickselect"
-78,Subsets,/problems/subsets,N,62.0%,Medium,0.01%,"Array, Backtracking, Bit Manipulation"
-102,Binary Tree Level Order Traversal,/problems/binary-tree-level-order-traversal,N,54.6%,Medium,0.01%,"Tree, Breadth-First Search, Binary Tree"
-136,Single Number,/problems/single-number,N,65.5%,Easy,0.01%,"Array, Bit Manipulation"
-121,Best Time to Buy and Sell Stock,/problems/best-time-to-buy-and-sell-stock,N,50.5%,Easy,0.00%,"Array, Dynamic Programming"
-236,Lowest Common Ancestor of a Binary Tree,/problems/lowest-common-ancestor-of-a-binary-tree,N,45.7%,Medium,0.00%,"Tree, Depth-First Search, Binary Tree"
-22,Generate Parentheses,/problems/generate-parentheses,N,62.7%,Medium,0.00%,"String, Dynamic Programming, Backtracking"
-56,Merge Intervals,/problems/merge-intervals,N,39.3%,Medium,0.00%,"Array, Sorting"
-1307,Verbal Arithmetic Puzzle,/problems/verbal-arithmetic-puzzle,N,37.7%,Hard,0.00%,"Array, Math, String, Backtracking"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1,https://leetcode.com/problems/two-sum,Two Sum,Easy,57.1%,37.5%
+3,https://leetcode.com/problems/longest-substring-without-repeating-characters,Longest Substring Without Repeating Characters,Medium,38.5%,37.5%
+49,https://leetcode.com/problems/group-anagrams,Group Anagrams,Medium,72.2%,50.0%
+56,https://leetcode.com/problems/merge-intervals,Merge Intervals,Medium,51.1%,75.0%
+68,https://leetcode.com/problems/text-justification,Text Justification,Hard,50.4%,62.5%
+1166,https://leetcode.com/problems/design-file-system,Design File System,Medium,65.1%,50.0%
+1048,https://leetcode.com/problems/longest-string-chain,Longest String Chain,Medium,62.8%,50.0%
+2034,https://leetcode.com/problems/stock-price-fluctuation,Stock Price Fluctuation,Medium,48.9%,100.0%
+121,https://leetcode.com/problems/best-time-to-buy-and-sell-stock,Best Time to Buy and Sell Stock,Easy,56.4%,50.0%
+2933,https://leetcode.com/problems/high-access-employees,High-Access Employees,Medium,47.3%,75.0%
+2959,https://leetcode.com/problems/number-of-possible-sets-of-closing-branches,Number of Possible Sets of Closing Branches,Hard,50.6%,62.5%
+2948,https://leetcode.com/problems/make-lexicographically-smallest-array-by-swapping-elements,Make Lexicographically Smallest Array by Swapping Elements,Medium,60.2%,62.5%
+2976,https://leetcode.com/problems/minimum-cost-to-convert-string-i,Minimum Cost to Convert String I,Medium,63.3%,62.5%
+2977,https://leetcode.com/problems/minimum-cost-to-convert-string-ii,Minimum Cost to Convert String II,Hard,59.7%,62.5%
+3026,https://leetcode.com/problems/maximum-good-subarray-sum,Maximum Good Subarray Sum,Medium,21.4%,62.5%
+229,https://leetcode.com/problems/majority-element-ii,Majority Element II,Medium,55.8%,50.0%
+253,https://leetcode.com/problems/meeting-rooms-ii,Meeting Rooms II,Medium,52.5%,62.5%
+300,https://leetcode.com/problems/longest-increasing-subsequence,Longest Increasing Subsequence,Medium,59.0%,37.5%
+353,https://leetcode.com/problems/design-snake-game,Design Snake Game,Medium,40.0%,87.5%
+359,https://leetcode.com/problems/logger-rate-limiter,Logger Rate Limiter,Easy,76.8%,62.5%
+1307,https://leetcode.com/problems/verbal-arithmetic-puzzle,Verbal Arithmetic Puzzle,Hard,34.9%,62.5%
+432,https://leetcode.com/problems/all-oone-data-structure,All O`one Data Structure,Hard,44.1%,87.5%
+1366,https://leetcode.com/problems/rank-teams-by-votes,Rank Teams by Votes,Medium,60.0%,100.0%
+2598,https://leetcode.com/problems/smallest-missing-non-negative-integer-after-operations,Smallest Missing Non-negative Integer After Operations,Medium,55.9%,62.5%
+2577,https://leetcode.com/problems/minimum-time-to-visit-a-cell-in-a-grid,Minimum Time to Visit a Cell In a Grid,Hard,56.3%,62.5%
+911,https://leetcode.com/problems/online-election,Online Election,Medium,52.7%,37.5%
+2975,https://leetcode.com/problems/maximum-square-area-by-removing-fences-from-a-field,Maximum Square Area by Removing Fences From a Field,Medium,49.4%,62.5%
+3000,https://leetcode.com/problems/maximum-area-of-longest-diagonal-rectangle,Maximum Area of Longest Diagonal Rectangle,Easy,45.9%,62.5%
+362,https://leetcode.com/problems/design-hit-counter,Design Hit Counter,Medium,69.6%,37.5%
+875,https://leetcode.com/problems/koko-eating-bananas,Koko Eating Bananas,Medium,49.7%,50.0%
+242,https://leetcode.com/problems/valid-anagram,Valid Anagram,Easy,67.8%,37.5%
+79,https://leetcode.com/problems/word-search,Word Search,Medium,46.8%,62.5%
+658,https://leetcode.com/problems/find-k-closest-elements,Find K Closest Elements,Medium,49.4%,37.5%
+45,https://leetcode.com/problems/jump-game-ii,Jump Game II,Medium,42.5%,37.5%
+881,https://leetcode.com/problems/boats-to-save-people,Boats to Save People,Medium,61.4%,37.5%
+347,https://leetcode.com/problems/top-k-frequent-elements,Top K Frequent Elements,Medium,65.8%,50.0%
+128,https://leetcode.com/problems/longest-consecutive-sequence,Longest Consecutive Sequence,Medium,47.0%,37.5%
+605,https://leetcode.com/problems/can-place-flowers,Can Place Flowers,Easy,29.0%,50.0%
+1010,https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60,Pairs of Songs With Total Durations Divisible by 60,Medium,53.4%,37.5%
+354,https://leetcode.com/problems/russian-doll-envelopes,Russian Doll Envelopes,Hard,37.7%,50.0%
+177,https://leetcode.com/problems/nth-highest-salary,Nth Highest Salary,Medium,38.8%,37.5%
+2039,https://leetcode.com/problems/the-time-when-the-network-becomes-idle,The Time When the Network Becomes Idle,Medium,55.3%,50.0%
+2639,https://leetcode.com/problems/find-the-width-of-columns-of-a-grid,Find the Width of Columns of a Grid,Easy,70.4%,62.5%
+211,https://leetcode.com/problems/design-add-and-search-words-data-structure,Design Add and Search Words Data Structure,Medium,48.1%,37.5%
+236,https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree,Lowest Common Ancestor of a Binary Tree,Medium,68.7%,75.0%
+2559,https://leetcode.com/problems/count-vowel-strings-in-ranges,Count Vowel Strings in Ranges,Medium,67.8%,37.5%
+34,https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array,Find First and Last Position of Element in Sorted Array,Medium,48.3%,37.5%
+1650,https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii,Lowest Common Ancestor of a Binary Tree III,Medium,82.9%,37.5%
+53,https://leetcode.com/problems/maximum-subarray,Maximum Subarray,Medium,53.0%,37.5%
+2353,https://leetcode.com/problems/design-a-food-rating-system,Design a Food Rating System,Medium,52.9%,37.5%
+1970,https://leetcode.com/problems/last-day-where-you-can-still-cross,Last Day Where You Can Still Cross,Hard,68.6%,37.5%
+1676,https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iv,Lowest Common Ancestor of a Binary Tree IV,Medium,79.5%,62.5%
+146,https://leetcode.com/problems/lru-cache,LRU Cache,Medium,46.8%,37.5%
+2484,https://leetcode.com/problems/count-palindromic-subsequences,Count Palindromic Subsequences,Hard,41.0%,37.5%
+2561,https://leetcode.com/problems/rearranging-fruits,Rearranging Fruits,Hard,57.5%,37.5%
+1644,https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-ii,Lowest Common Ancestor of a Binary Tree II,Medium,69.5%,37.5%
+1797,https://leetcode.com/problems/design-authentication-manager,Design Authentication Manager,Medium,58.4%,37.5%
+44,https://leetcode.com/problems/wildcard-matching,Wildcard Matching,Hard,31.3%,37.5%
+297,https://leetcode.com/problems/serialize-and-deserialize-binary-tree,Serialize and Deserialize Binary Tree,Hard,60.3%,37.5%
+31,https://leetcode.com/problems/next-permutation,Next Permutation,Medium,44.7%,37.5%
+3649,https://leetcode.com/problems/number-of-perfect-pairs,Number of Perfect Pairs,Medium,33.3%,37.5%
+2939,https://leetcode.com/problems/maximum-xor-product,Maximum Xor Product,Medium,29.5%,37.5%

@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1898,Maximum Number of Removable Characters,/problems/maximum-number-of-removable-characters,N,39.3%,Medium,0.00%,No Topics Found
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1898,https://leetcode.com/problems/maximum-number-of-removable-characters,Maximum Number of Removable Characters,Medium,46.8%,100.0%

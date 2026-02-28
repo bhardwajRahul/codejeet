@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1336,Number of Transactions per Visit,/problems/number-of-transactions-per-visit,Y,51.3%,Hard,0.00%,
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1336,https://leetcode.com/problems/number-of-transactions-per-visit,Number of Transactions per Visit,Hard,47.7%,100.0%

@@ -1,27 +1,31 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-56,Merge Intervals,/problems/merge-intervals,N,46.0%,Medium,1.22%,"Array, Sorting"
-207,Course Schedule,/problems/course-schedule,N,45.4%,Medium,1.62%,"Depth-First Search, Breadth-First Search, Graph, Topological Sort"
-210,Course Schedule II,/problems/course-schedule-ii,N,48.0%,Medium,9.31%,"Depth-First Search, Breadth-First Search, Graph, Topological Sort"
-273,Integer to English Words,/problems/integer-to-english-words,N,29.9%,Hard,34.38%,"Math, String, Recursion"
-718,Maximum Length of Repeated Subarray,/problems/maximum-length-of-repeated-subarray,N,51.5%,Medium,69.00%,No Topics Found
-811,Subdomain Visit Count,/problems/subdomain-visit-count,N,75.2%,Medium,100.00%,"Array, Hash Table, String, Counting"
-864,Shortest Path to Get All Keys,/problems/shortest-path-to-get-all-keys,N,45.4%,Hard,27.53%,"Array, Bit Manipulation, Breadth-First Search, Matrix"
-2192,All Ancestors of a Node in a Directed Acyclic Graph,/problems/all-ancestors-of-a-node-in-a-directed-acyclic-graph,N,50.2%,Medium,38.00%,"Depth-First Search, Breadth-First Search, Graph, Topological Sort"
-393,UTF-8 Validation,/problems/utf-8-validation,N,37.5%,Medium,5.34%,"Array, Bit Manipulation"
-539,Minimum Time Difference,/problems/minimum-time-difference,N,51.5%,Medium,4.53%,"Array, Math, String, Sorting"
-146,LRU Cache,/problems/lru-cache,N,33.2%,Medium,1.01%,"Hash Table, Linked List, Design, Doubly-Linked List"
-200,Number of Islands,/problems/number-of-islands,N,46.8%,Medium,0.48%,"Array, Depth-First Search, Breadth-First Search, Union Find, Matrix"
-277,Find the Celebrity,/problems/find-the-celebrity,N,41.8%,Medium,0.31%,No Topics Found
-733,Flood Fill,/problems/flood-fill,N,55.3%,Easy,0.21%,"Array, Depth-First Search, Breadth-First Search, Matrix"
-220,Contains Duplicate III,/problems/contains-duplicate-iii,N,20.9%,Medium,0.20%,"Array, Sliding Window, Sorting, Bucket Sort, Ordered Set"
-285,Inorder Successor in BST,/problems/inorder-successor-in-bst,N,40.4%,Medium,0.13%,No Topics Found
-42,Trapping Rain Water,/problems/trapping-rain-water,N,48.9%,Hard,0.12%,No Topics Found
-10,Regular Expression Matching,/problems/regular-expression-matching,N,26.8%,Hard,0.03%,"String, Dynamic Programming, Recursion"
-53,Maximum Subarray,/problems/maximum-subarray,N,46.5%,Easy,0.01%,"Array, Divide and Conquer, Dynamic Programming"
-219,Contains Duplicate II,/problems/contains-duplicate-ii,N,37.7%,Easy,0.01%,"Array, Hash Table, Sliding Window"
-695,Max Area of Island,/problems/max-area-of-island,N,62.7%,Medium,0.01%,"Array, Depth-First Search, Breadth-First Search, Union Find, Matrix"
-48,Rotate Image,/problems/rotate-image,N,56.7%,Medium,0.01%,"Array, Math, Matrix"
-217,Contains Duplicate,/problems/contains-duplicate,N,56.0%,Easy,0.01%,"Array, Hash Table, Sorting"
-136,Single Number,/problems/single-number,N,65.5%,Easy,0.01%,"Array, Bit Manipulation"
-303,Range Sum Query - Immutable,/problems/range-sum-query-immutable,N,44.7%,Easy,0.00%,"Array, Design, Prefix Sum"
-325,Maximum Size Subarray Sum Equals k,/problems/maximum-size-subarray-sum-equals-k,N,46.8%,Medium,0.00%,No Topics Found
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+23,https://leetcode.com/problems/merge-k-sorted-lists,Merge k Sorted Lists,Hard,58.8%,62.5%
+539,https://leetcode.com/problems/minimum-time-difference,Minimum Time Difference,Medium,62.5%,75.0%
+56,https://leetcode.com/problems/merge-intervals,Merge Intervals,Medium,51.1%,50.0%
+136,https://leetcode.com/problems/single-number,Single Number,Easy,77.3%,62.5%
+146,https://leetcode.com/problems/lru-cache,LRU Cache,Medium,46.8%,75.0%
+3006,https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-i,Find Beautiful Indices in the Given Array I,Medium,40.5%,100.0%
+721,https://leetcode.com/problems/accounts-merge,Accounts Merge,Medium,60.9%,50.0%
+217,https://leetcode.com/problems/contains-duplicate,Contains Duplicate,Easy,64.1%,62.5%
+219,https://leetcode.com/problems/contains-duplicate-ii,Contains Duplicate II,Easy,50.8%,75.0%
+220,https://leetcode.com/problems/contains-duplicate-iii,Contains Duplicate III,Hard,24.4%,62.5%
+3008,https://leetcode.com/problems/find-beautiful-indices-in-the-given-array-ii,Find Beautiful Indices in the Given Array II,Hard,27.6%,75.0%
+245,https://leetcode.com/problems/shortest-word-distance-iii,Shortest Word Distance III,Medium,59.4%,62.5%
+427,https://leetcode.com/problems/construct-quad-tree,Construct Quad Tree,Medium,78.1%,50.0%
+273,https://leetcode.com/problems/integer-to-english-words,Integer to English Words,Hard,34.8%,62.5%
+303,https://leetcode.com/problems/range-sum-query-immutable,Range Sum Query - Immutable,Easy,71.4%,62.5%
+1232,https://leetcode.com/problems/check-if-it-is-a-straight-line,Check If It Is a Straight Line,Easy,40.0%,62.5%
+325,https://leetcode.com/problems/maximum-size-subarray-sum-equals-k,Maximum Size Subarray Sum Equals k,Medium,50.8%,62.5%
+2225,https://leetcode.com/problems/find-players-with-zero-or-one-losses,Find Players With Zero or One Losses,Medium,72.4%,37.5%
+2312,https://leetcode.com/problems/selling-pieces-of-wood,Selling Pieces of Wood,Hard,52.7%,62.5%
+2964,https://leetcode.com/problems/number-of-divisible-triplet-sums,Number of Divisible Triplet Sums,Medium,67.6%,37.5%
+2539,https://leetcode.com/problems/count-the-number-of-good-subsequences,Count the Number of Good Subsequences,Medium,48.3%,50.0%
+739,https://leetcode.com/problems/daily-temperatures,Daily Temperatures,Medium,68.3%,37.5%
+981,https://leetcode.com/problems/time-based-key-value-store,Time Based Key-Value Store,Medium,49.7%,50.0%
+5,https://leetcode.com/problems/longest-palindromic-substring,Longest Palindromic Substring,Medium,37.3%,37.5%
+1202,https://leetcode.com/problems/smallest-string-with-swaps,Smallest String With Swaps,Medium,60.3%,50.0%
+718,https://leetcode.com/problems/maximum-length-of-repeated-subarray,Maximum Length of Repeated Subarray,Medium,51.2%,37.5%
+210,https://leetcode.com/problems/course-schedule-ii,Course Schedule II,Medium,55.0%,50.0%
+3650,https://leetcode.com/problems/minimum-cost-path-with-edge-reversals,Minimum Cost Path with Edge Reversals,Medium,61.8%,62.5%
+244,https://leetcode.com/problems/shortest-word-distance-ii,Shortest Word Distance II,Medium,62.7%,50.0%
+443,https://leetcode.com/problems/string-compression,String Compression,Medium,59.5%,50.0%

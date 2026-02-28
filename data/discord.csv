@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-2301,Match Substring After Replacement,/problems/match-substring-after-replacement,N,39.3%,Hard,0.00%,"Array, Hash Table, String, String Matching"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+2301,https://leetcode.com/problems/match-substring-after-replacement,Match Substring After Replacement,Hard,43.1%,100.0%

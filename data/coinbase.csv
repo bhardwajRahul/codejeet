@@ -1,4 +1,12 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-207,Course Schedule,/problems/course-schedule,N,45.4%,Medium,38.87%,"Depth-First Search, Breadth-First Search, Graph, Topological Sort"
-210,Course Schedule II,/problems/course-schedule-ii,N,48.0%,Medium,61.13%,"Depth-First Search, Breadth-First Search, Graph, Topological Sort"
-1604,Alert Using Same Key-Card Three or More Times in a One Hour Period,/problems/alert-using-same-key-card-three-or-more-times-in-a-one-hour-period,N,47.3%,Medium,100.00%,"Array, Hash Table, String, Sorting"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+281,https://leetcode.com/problems/zigzag-iterator,Zigzag Iterator,Medium,66.5%,87.5%
+68,https://leetcode.com/problems/text-justification,Text Justification,Hard,50.4%,50.0%
+588,https://leetcode.com/problems/design-in-memory-file-system,Design In-Memory File System,Hard,48.4%,87.5%
+1166,https://leetcode.com/problems/design-file-system,Design File System,Medium,65.1%,62.5%
+2325,https://leetcode.com/problems/decode-the-message,Decode the Message,Easy,85.8%,75.0%
+2043,https://leetcode.com/problems/simple-bank-system,Simple Bank System,Medium,69.8%,100.0%
+981,https://leetcode.com/problems/time-based-key-value-store,Time Based Key-Value Store,Medium,49.7%,87.5%
+3043,https://leetcode.com/problems/find-the-length-of-the-longest-common-prefix,Find the Length of the Longest Common Prefix,Medium,57.0%,50.0%
+528,https://leetcode.com/problems/random-pick-with-weight,Random Pick with Weight,Medium,48.9%,75.0%
+121,https://leetcode.com/problems/best-time-to-buy-and-sell-stock,Best Time to Buy and Sell Stock,Easy,56.4%,50.0%
+622,https://leetcode.com/problems/design-circular-queue,Design Circular Queue,Medium,54.0%,50.0%

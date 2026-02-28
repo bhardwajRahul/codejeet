@@ -1,4 +1,5 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-36,Valid Sudoku,/problems/valid-sudoku,N,56.9%,Medium,50.00%,"Array, Hash Table, Matrix"
-2275,Largest Combination With Bitwise AND Greater Than Zero,/problems/largest-combination-with-bitwise-and-greater-than-zero,N,72.4%,Medium,100.00%,
-224,Basic Calculator,/problems/basic-calculator,N,36.8%,Hard,0.02%,"Math, String, Stack, Recursion"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+202,https://leetcode.com/problems/happy-number,Happy Number,Easy,59.2%,100.0%
+2275,https://leetcode.com/problems/largest-combination-with-bitwise-and-greater-than-zero,Largest Combination With Bitwise AND Greater Than Zero,Medium,80.8%,87.5%
+60,https://leetcode.com/problems/permutation-sequence,Permutation Sequence,Hard,52.1%,87.5%
+572,https://leetcode.com/problems/subtree-of-another-tree,Subtree of Another Tree,Easy,51.2%,87.5%

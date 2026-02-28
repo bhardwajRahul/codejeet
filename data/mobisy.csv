@@ -1,2 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-1835,Find XOR Sum of All Pairs Bitwise AND,/problems/find-xor-sum-of-all-pairs-bitwise-and,N,60.1%,Hard,0.00%,"Array, Math, Bit Manipulation"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1835,https://leetcode.com/problems/find-xor-sum-of-all-pairs-bitwise-and,Find XOR Sum of All Pairs Bitwise AND,Hard,62.5%,100.0%

@@ -1,3 +1,2 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-31,Next Permutation,/problems/next-permutation,N,37.2%,Medium,50.00%,"Array, Two Pointers"
-45,Jump Game II,/problems/jump-game-ii,N,38.6%,Medium,100.00%,"Array, Dynamic Programming, Greedy"
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+2169,https://leetcode.com/problems/count-operations-to-obtain-zero,Count Operations to Obtain Zero,Easy,79.8%,100.0%

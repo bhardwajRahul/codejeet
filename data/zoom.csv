@@ -1,4 +1,4 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-146,LRU Cache,/problems/lru-cache,N,40.5%,Medium,56.68%,"Hash Table, Linked List, Design, Doubly-Linked List"
-295,Find Median from Data Stream,/problems/find-median-from-data-stream,N,51.5%,Hard,43.32%,"Two Pointers, Design, Sorting, Heap (Priority Queue), Data Stream"
-487,Max Consecutive Ones II,/problems/max-consecutive-ones-ii,Y,49.6%,Medium,100.00%,No Topics Found
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+1141,https://leetcode.com/problems/user-activity-for-the-past-30-days-i,User Activity for the Past 30 Days I,Easy,50.5%,100.0%
+1142,https://leetcode.com/problems/user-activity-for-the-past-30-days-ii,User Activity for the Past 30 Days II,Easy,35.6%,100.0%
+212,https://leetcode.com/problems/word-search-ii,Word Search II,Hard,38.1%,62.5%

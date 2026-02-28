@@ -1,18 +1,16 @@
-ID,Title,URL,Is Premium,Acceptance %,Difficulty,Frequency %,Topics
-22,Generate Parentheses,/problems/generate-parentheses,N,71.9%,Medium,2.54%,"String, Dynamic Programming, Backtracking"
-41,First Missing Positive,/problems/first-missing-positive,N,36.6%,Hard,3.55%,"Array, Hash Table"
-75,Sort Colors,/problems/sort-colors,N,57.4%,Medium,4.64%,"Array, Two Pointers, Sorting"
-1253,Reconstruct a 2-Row Binary Matrix,/problems/reconstruct-a-2-row-binary-matrix,N,43.8%,Medium,52.32%,
-1375,Number of Times Binary String Is Prefix-Aligned,/problems/number-of-times-binary-string-is-prefix-aligned,N,65.9%,Medium,100.00%,Array
-984,String Without AAA or BBB,/problems/string-without-aaa-or-bbb,N,37.7%,Medium,0.50%,
-915,Partition Array into Disjoint Intervals,/problems/partition-array-into-disjoint-intervals,N,45.4%,Medium,0.37%,
-983,Minimum Cost For Tickets,/problems/minimum-cost-for-tickets,N,60.5%,Medium,0.27%,"Array, Dynamic Programming"
-527,Word Abbreviation,/problems/word-abbreviation,N,54.3%,Hard,0.24%,No Topics Found
-1017,Convert to Base -2,/problems/convert-to-base-2,N,59.0%,Medium,0.18%,Math
-42,Trapping Rain Water,/problems/trapping-rain-water,N,48.9%,Hard,0.04%,No Topics Found
-2,Add Two Numbers,/problems/add-two-numbers,N,33.9%,Medium,0.02%,"Linked List, Math, Recursion"
-121,Best Time to Buy and Sell Stock,/problems/best-time-to-buy-and-sell-stock,N,50.5%,Easy,0.01%,"Array, Dynamic Programming"
-234,Palindrome Linked List,/problems/palindrome-linked-list,N,39.3%,Easy,0.00%,No Topics Found
-238,Product of Array Except Self,/problems/product-of-array-except-self,N,60.1%,Medium,0.00%,"Array, Prefix Sum"
-215,Kth Largest Element in an Array,/problems/kth-largest-element-in-an-array,N,55.4%,Medium,0.00%,"Array, Divide and Conquer, Sorting, Heap (Priority Queue), Quickselect"
-1073,Adding Two Negabinary Numbers,/problems/adding-two-negabinary-numbers,N,34.2%,Medium,0.00%,
+ID,URL,Title,Difficulty,Acceptance %,Frequency %
+983,https://leetcode.com/problems/minimum-cost-for-tickets,Minimum Cost For Tickets,Medium,67.4%,100.0%
+3,https://leetcode.com/problems/longest-substring-without-repeating-characters,Longest Substring Without Repeating Characters,Medium,38.5%,62.5%
+1,https://leetcode.com/problems/two-sum,Two Sum,Easy,57.1%,87.5%
+5,https://leetcode.com/problems/longest-palindromic-substring,Longest Palindromic Substring,Medium,37.3%,62.5%
+1073,https://leetcode.com/problems/adding-two-negabinary-numbers,Adding Two Negabinary Numbers,Medium,37.6%,100.0%
+2086,https://leetcode.com/problems/minimum-number-of-food-buckets-to-feed-the-hamsters,Minimum Number of Food Buckets to Feed the Hamsters,Medium,47.9%,100.0%
+146,https://leetcode.com/problems/lru-cache,LRU Cache,Medium,46.8%,62.5%
+1253,https://leetcode.com/problems/reconstruct-a-2-row-binary-matrix,Reconstruct a 2-Row Binary Matrix,Medium,48.7%,100.0%
+20,https://leetcode.com/problems/valid-parentheses,Valid Parentheses,Easy,43.7%,62.5%
+71,https://leetcode.com/problems/simplify-path,Simplify Path,Medium,50.0%,75.0%
+739,https://leetcode.com/problems/daily-temperatures,Daily Temperatures,Medium,68.3%,75.0%
+1404,https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one,Number of Steps to Reduce a Number in Binary Representation to One,Medium,61.3%,62.5%
+721,https://leetcode.com/problems/accounts-merge,Accounts Merge,Medium,60.9%,62.5%
+560,https://leetcode.com/problems/subarray-sum-equals-k,Subarray Sum Equals K,Medium,46.8%,62.5%
+198,https://leetcode.com/problems/house-robber,House Robber,Medium,52.9%,75.0%
