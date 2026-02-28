@@ -23,7 +23,6 @@ async function readMarkdownAndFolderBySlug(slug: string): Promise<{
   content: string;
   folder: string;
   video?: string | null;
-  podcast?: string | null;
 } | null> {
   try {
     const dirents = await fs.readdir(CONTENT_ROOT, { withFileTypes: true });
@@ -40,8 +39,7 @@ async function readMarkdownAndFolderBySlug(slug: string): Promise<{
         if (!fmSlug) continue;
         if (fmSlug === slug) {
           const video = (parsed.data?.video as string | undefined)?.trim() || null;
-          const podcast = (parsed.data?.podcast as string | undefined)?.trim() || null;
-          return { content: parsed.content, folder, video, podcast };
+          return { content: parsed.content, folder, video };
         }
       } catch {
         continue;
@@ -118,7 +116,7 @@ export default async function SystemDesignDetailPage({
   const slug = decodeURIComponent(resolved.slug);
   const result = await readMarkdownAndFolderBySlug(slug);
   if (!result) return notFound();
-  const { content, folder, video, podcast } = result;
+  const { content, folder, video } = result;
 
   function toYouTubeEmbed(url: string): string | null {
     try {
@@ -136,18 +134,6 @@ export default async function SystemDesignDetailPage({
     }
   }
   const embedUrl = video ? toYouTubeEmbed(video) : null;
-  function toSpotifyEmbed(url: string): string | null {
-    try {
-      const trimmed = url.trim();
-      if (!trimmed) return null;
-      const m = trimmed.match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/i);
-      if (m) return `https://open.spotify.com/embed/episode/${m[1]}?theme=0`;
-      return null;
-    } catch {
-      return null;
-    }
-  }
-  const podcastEmbed = podcast ? toSpotifyEmbed(podcast) : null;
 
   const slugger = new Slugger();
   const toc: TocItem[] = [];
@@ -270,17 +256,6 @@ export default async function SystemDesignDetailPage({
                           allowFullScreen
                         />
                       </div>
-                    </div>
-                  )}
-                  {podcastEmbed && (
-                    <div className="my-4">
-                      <iframe
-                        src={podcastEmbed}
-                        className="w-full rounded-xl border"
-                        height={152}
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy"
-                      />
                     </div>
                   )}
                 </div>
