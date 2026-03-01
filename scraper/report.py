@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 
-OUTPUT_DIR = Path(__file__).resolve().parent / "output"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "data" / "problems"
 
 
 def main():

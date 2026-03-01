@@ -28,8 +28,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 # Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = PROJECT_ROOT / "data"
-OUTPUT_DIR = PROJECT_ROOT / "scraper" / "output"
+DATA_DIR = PROJECT_ROOT / "data" / "companies"
+OUTPUT_DIR = PROJECT_ROOT / "data" / "problems"
 
 # GraphQL query to fetch all the data we need
 GRAPHQL_QUERY = """

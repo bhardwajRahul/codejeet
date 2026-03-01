@@ -53,7 +53,7 @@ type RawCsvRecord = {
   Topics?: string;
 };
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = path.join(process.cwd(), "data", "companies");
 
 let cachedQuestions: QuestionWithDetails[] | null = null;
 let cachedCompanies: string[] | null = null;
