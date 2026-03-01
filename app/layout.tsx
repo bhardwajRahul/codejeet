@@ -1,13 +1,13 @@
-import { Space_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-space",
+  variable: "--font-jakarta",
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,10 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="./icon.svg" />
       </head>
-      <body
-        className={`${spaceGrotesk.variable} font-sans tracking-tight`}
-        suppressHydrationWarning
-      >
+      <body className={`${jakarta.variable} font-sans tracking-tight`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <div className="min-h-screen bg-background flex flex-col">
             <Navbar />

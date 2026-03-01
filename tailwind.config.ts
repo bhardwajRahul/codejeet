@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-space)", "sans-serif"],
-        mono: ["var(--font-space)", "sans-serif"],
+        sans: ["var(--font-jakarta)", "sans-serif"],
+        mono: ["var(--font-jakarta)", "sans-serif"],
       },
       colors: {
         background: "oklch(var(--background))",
