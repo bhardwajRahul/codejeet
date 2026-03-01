@@ -319,8 +319,8 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Practice Questions</CardTitle>
           <CardDescription>
-            Browse through {totalQuestions.toLocaleString()} DSA questions asked in technical
-            interviews
+            Browse through {filteredQuestions.length.toLocaleString()} DSA questions asked in
+            technical interviews
           </CardDescription>
         </CardHeader>
         <CardContent>

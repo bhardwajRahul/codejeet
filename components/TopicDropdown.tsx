@@ -54,8 +54,8 @@ export default function TopicDropdown({
         </PopoverTrigger>
         <PopoverContent align="start" className="w-[300px] p-0">
           <Command>
-            <CommandInput placeholder="Search topics..." />
-            <CommandEmpty>No topic found.</CommandEmpty>
+            <CommandInput placeholder={`Search ${(placeholder || "topics").toLowerCase()}...`} />
+            <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup className="max-h-[300px] overflow-y-auto p-0">
               {options.map((option) => (
                 <CommandItem

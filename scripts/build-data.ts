@@ -49,6 +49,7 @@ async function main() {
   console.log(`Loaded ${scraped.size} scraped problem details`);
 
   // Enrich questions with lightweight scraped metadata (no heavy HTML/markdown)
+  // Also fix Is Premium flag: if scraper couldn't get content, the question is premium
   let enriched = 0;
   const enrichedQuestions = questions.map((q) => {
     const problem = scraped.get(q.slug);
@@ -56,6 +57,7 @@ async function main() {
       enriched++;
       return {
         ...q,
+        "Is Premium": "N",
         category: problem.category || "",
         total_accepted: problem.total_accepted || 0,
         total_submissions: problem.total_submissions || 0,
@@ -65,6 +67,10 @@ async function main() {
         topics: q.topics.length > 0 ? q.topics : problem.topics || [],
         Topics: q.Topics || (problem.topics || []).join(", "),
       };
+    }
+    // No scraped content = premium question
+    if (scraped.has(q.slug)) {
+      return { ...q, "Is Premium": "Y" };
     }
     return q;
   });
