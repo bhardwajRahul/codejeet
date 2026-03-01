@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
-        mono: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        sans: ["var(--font-instrument)", "sans-serif"],
+        mono: ["var(--font-instrument)", "sans-serif"],
       },
       colors: {
         background: "oklch(var(--background))",
