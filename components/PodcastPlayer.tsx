@@ -182,7 +182,11 @@ export default function PodcastPlayer() {
                 aria-label={isPlaying ? "Pause" : "Play"}
                 className="h-12 w-12 rounded-full"
               >
-                {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+                {isPlaying ? (
+                  <Pause className="h-5 w-5" fill="currentColor" />
+                ) : (
+                  <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
+                )}
               </Button>
             </TooltipTrigger>
             <TooltipContent>{isPlaying ? "Pause" : "Play"} (Space)</TooltipContent>
