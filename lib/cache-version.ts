@@ -1,1 +1,1 @@
-export const CACHE_VERSION = "v2";
+export const CACHE_VERSION = "v3";

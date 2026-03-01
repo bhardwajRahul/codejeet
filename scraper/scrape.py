@@ -316,12 +316,8 @@ def main():
     parser = argparse.ArgumentParser(description="Scrape LeetCode problem data")
     parser.add_argument("--slug", help="Scrape a single problem by slug")
     parser.add_argument("--limit", type=int, help="Max number of problems to scrape")
-    parser.add_argument(
-        "--resume", action="store_true", help="Skip already-scraped problems"
-    )
-    parser.add_argument(
-        "--retry-failed", action="store_true", help="Retry only failed problems"
-    )
+    parser.add_argument("--resume", action="store_true", help="Skip already-scraped problems")
+    parser.add_argument("--retry-failed", action="store_true", help="Retry only failed problems")
     parser.add_argument(
         "--fix-empty",
         action="store_true",
