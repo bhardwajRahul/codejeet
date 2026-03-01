@@ -1,18 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NumberTicker from "@/components/magic-ui/number-ticker";
 import { Button } from "@/components/ui/button";
 import { DotPattern } from "@/components/magic-ui/dot-pattern";
 
-export default function Home() {
-  const [focusLabel, setFocusLabel] = useState<"DSA" | "System Design">("DSA");
+const focusLabel: "DSA" | "System Design" =
+  typeof window !== "undefined" && Math.random() < 0.5 ? "System Design" : "DSA";
 
-  useEffect(() => {
-    setFocusLabel(Math.random() < 0.5 ? "DSA" : "System Design");
-  }, []);
+export default function Home() {
   return (
     <div>
       <main>
@@ -44,10 +41,14 @@ export default function Home() {
               Suffer from <NumberTicker value={17000} />+ company-wise DSA questions like a true
               Codejeet. Kyunki naukri ke liye sab kuch chalega!
             </h2>
-            <div className="z-20 flex gap-3">
+            <div className="z-20 flex flex-wrap justify-center gap-3">
               <Link href="/dashboard">
-                <Button size="lg" className="shadow-2xl h-12 px-8 text-lg leading-none">
-                  Get Started
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="shadow-2xl h-12 px-8 text-lg leading-none"
+                >
+                  DSA
                 </Button>
               </Link>
               <Link href="/system-design">
@@ -57,6 +58,15 @@ export default function Home() {
                   className="shadow-2xl h-12 px-8 text-lg leading-none"
                 >
                   System Design
+                </Button>
+              </Link>
+              <Link href="/podcast">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="shadow-2xl h-12 px-8 text-lg leading-none"
+                >
+                  Audiobook
                 </Button>
               </Link>
             </div>

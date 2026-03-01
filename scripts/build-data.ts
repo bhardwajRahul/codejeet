@@ -106,6 +106,17 @@ async function main() {
     `Wrote ${enrichedQuestions.length} questions (${enriched} enriched), ${companies.length} companies, ${topics.length} topics to ${outPath}`
   );
   console.log(`Copied ${copied} full problem files to ${problemsOutDir}`);
+
+  // Copy podcast manifest to public/data/podcast.json
+  const manifestSrc = path.join(process.cwd(), "audiobook", "manifest.json");
+  const manifestDest = path.join(outDir, "podcast.json");
+  try {
+    const manifestData = await fs.readFile(manifestSrc, "utf8");
+    await fs.writeFile(manifestDest, manifestData);
+    console.log(`Copied podcast manifest to ${manifestDest}`);
+  } catch {
+    console.warn("No audiobook manifest found, skipping podcast.json");
+  }
 }
 
 main().catch((err) => {

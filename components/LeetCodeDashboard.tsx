@@ -125,8 +125,6 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     }));
   };
 
-  const totalQuestions = questions.length;
-
   const companyStats = useMemo(() => {
     return companies
       .map((company) => ({

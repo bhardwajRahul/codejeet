@@ -33,6 +33,7 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env
 .env.local
+.envrc
 
 # vercel
 .vercel
@@ -52,3 +53,9 @@ bun.lock
 scraper/.venv/
 scraper/output/
 __pycache__/
+
+# audiobook
+audiobook/
+
+# wrangler
+.wrangler/
