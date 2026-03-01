@@ -107,6 +107,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   const [frequencySort, setFrequencySort] = useState<"asc" | "desc" | null>(null);
   const [acceptanceSort, setAcceptanceSort] = useState<"asc" | "desc" | null>(null);
   const [timeframeFilter, setTimeframeFilter] = useState("all");
+  const [premiumFilter, setPremiumFilter] = useState("free");
   const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
   const companySearchRef = useRef<HTMLDivElement>(null);
 
@@ -171,12 +172,29 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
             .includes(topic)
         );
       const matchesTimeframe = timeframeFilter === "all" || question.timeframe === timeframeFilter;
+      const matchesPremium =
+        premiumFilter === "all" ||
+        (premiumFilter === "free" && question["Is Premium"] !== "Y") ||
+        (premiumFilter === "premium" && question["Is Premium"] === "Y");
 
       return (
-        matchesSearch && matchesDifficulty && matchesCompany && matchesTopic && matchesTimeframe
+        matchesSearch &&
+        matchesDifficulty &&
+        matchesCompany &&
+        matchesTopic &&
+        matchesTimeframe &&
+        matchesPremium
       );
     });
-  }, [questions, searchQuery, difficultyFilter, selectedCompany, selectedTopics, timeframeFilter]);
+  }, [
+    questions,
+    searchQuery,
+    difficultyFilter,
+    selectedCompany,
+    selectedTopics,
+    timeframeFilter,
+    premiumFilter,
+  ]);
 
   const filteredAndSortedQuestions = useMemo(() => {
     const result = [...filteredQuestions];
@@ -292,6 +310,11 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
 
   const handleTimeframeChange = (value: string) => {
     setTimeframeFilter(value);
+    setCurrentPage(1);
+  };
+
+  const handlePremiumChange = (value: string) => {
+    setPremiumFilter(value);
     setCurrentPage(1);
   };
 
@@ -448,6 +471,17 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                   <SelectItem value="3_months">Last 3 Months</SelectItem>
                   <SelectItem value="6_months">Last 6 Months</SelectItem>
                   <SelectItem value="more_than_6m">More than 6 Months</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={premiumFilter} onValueChange={handlePremiumChange}>
+                <SelectTrigger className="w-full md:w-44">
+                  <SelectValue placeholder="Access" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="free">Free</SelectItem>
+                  <SelectItem value="premium">Premium</SelectItem>
+                  <SelectItem value="all">All Questions</SelectItem>
                 </SelectContent>
               </Select>
 
