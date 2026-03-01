@@ -108,7 +108,7 @@ async function main() {
   console.log(`Copied ${copied} full problem files to ${problemsOutDir}`);
 
   // Copy podcast manifest to public/data/podcast.json
-  const manifestSrc = path.join(process.cwd(), "audiobook", "manifest.json");
+  const manifestSrc = path.join(process.cwd(), "data", "podcast-manifest.json");
   const manifestDest = path.join(outDir, "podcast.json");
   try {
     const manifestData = await fs.readFile(manifestSrc, "utf8");

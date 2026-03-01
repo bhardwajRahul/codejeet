@@ -1,0 +1,217 @@
+{
+  "title": "The Accidental CTO",
+  "author": "Subhash Choudhary",
+  "generated_at": "2026-02-28T21:40:16.691255+00:00",
+  "total_chapters": 23,
+  "total_speakable_chars": 346458,
+  "estimated_cost_inr": 1039.37,
+  "chapters": [
+    {
+      "index": 1,
+      "title": "Chapter 1: The 3 AM Phone Call",
+      "slug": "chapter_1_the_3_am_phone_call",
+      "chunks": 7,
+      "chars": 13707,
+      "duration_seconds": 982.78,
+      "file": "ch01_chapter_1_the_3_am_phone_call.mp3"
+    },
+    {
+      "index": 2,
+      "title": "Chapter 2: The WhatsApp PDF Problem (The Origin)",
+      "slug": "chapter_2_the_whatsapp_pdf_problem_the_origin",
+      "chunks": 10,
+      "chars": 22127,
+      "duration_seconds": 1585.32,
+      "file": "ch02_chapter_2_the_whatsapp_pdf_problem_the_origin.mp3"
+    },
+    {
+      "index": 3,
+      "title": "Chapter 3: The Great Divorce: Separating the App and the Database",
+      "slug": "chapter_3_the_great_divorce_separating_the_app_and_the_datab",
+      "chunks": 11,
+      "chars": 23822,
+      "duration_seconds": 1761.48,
+      "file": "ch03_chapter_3_the_great_divorce_separating_the_app_and_the_datab.mp3"
+    },
+    {
+      "index": 4,
+      "title": "Chapter 4: The Traffic Cop: An Introduction to Load Balancing",
+      "slug": "chapter_4_the_traffic_cop_an_introduction_to_load_balancing",
+      "chunks": 8,
+      "chars": 16503,
+      "duration_seconds": 1155.46,
+      "file": "ch04_chapter_4_the_traffic_cop_an_introduction_to_load_balancing.mp3"
+    },
+    {
+      "index": 5,
+      "title": "Chapter 5: The Bouncer at the Database Club: Read Replicas",
+      "slug": "chapter_5_the_bouncer_at_the_database_club_read_replicas",
+      "chunks": 11,
+      "chars": 24736,
+      "duration_seconds": 1771.61,
+      "file": "ch05_chapter_5_the_bouncer_at_the_database_club_read_replicas.mp3"
+    },
+    {
+      "index": 6,
+      "title": "Chapter 6: \"Don't Test on Prod, Bro!\": The Staging Environment",
+      "slug": "chapter_6_dont_test_on_prod_bro_the_staging_environment",
+      "chunks": 9,
+      "chars": 18860,
+      "duration_seconds": 1320.98,
+      "file": "ch06_chapter_6_dont_test_on_prod_bro_the_staging_environment.mp3"
+    },
+    {
+      "index": 7,
+      "title": "Chapter 7: The Need for Speed: Caching with Redis",
+      "slug": "chapter_7_the_need_for_speed_caching_with_redis",
+      "chunks": 8,
+      "chars": 17079,
+      "duration_seconds": 1266.36,
+      "file": "ch07_chapter_7_the_need_for_speed_caching_with_redis.mp3"
+    },
+    {
+      "index": 8,
+      "title": "Chapter 8: Breaking the Monolith: Our First Microservice",
+      "slug": "chapter_8_breaking_the_monolith_our_first_microservice",
+      "chunks": 9,
+      "chars": 18470,
+      "duration_seconds": 1279.73,
+      "file": "ch08_chapter_8_breaking_the_monolith_our_first_microservice.mp3"
+    },
+    {
+      "index": 9,
+      "title": "Chapter 9: The Unbreakable Promise: Data Consistency with Kafka",
+      "slug": "chapter_9_the_unbreakable_promise_data_consistency_with_kafk",
+      "chunks": 7,
+      "chars": 14987,
+      "duration_seconds": 1073.47,
+      "file": "ch09_chapter_9_the_unbreakable_promise_data_consistency_with_kafk.mp3"
+    },
+    {
+      "index": 10,
+      "title": "Chapter 10: The Shipping Container Revolution: An Introduction to Docker",
+      "slug": "chapter_10_the_shipping_container_revolution_an_introduction",
+      "chunks": 8,
+      "chars": 15941,
+      "duration_seconds": 1132.54,
+      "file": "ch10_chapter_10_the_shipping_container_revolution_an_introduction.mp3"
+    },
+    {
+      "index": 11,
+      "title": "Chapter 11: The Smart Clerk: Building World-Class Search",
+      "slug": "chapter_11_the_smart_clerk_building_world_class_search",
+      "chunks": 6,
+      "chars": 13190,
+      "duration_seconds": 972.53,
+      "file": "ch11_chapter_11_the_smart_clerk_building_world_class_search.mp3"
+    },
+    {
+      "index": 12,
+      "title": "Chapter 12: The Delivery Boy: CDNs for Static Assets",
+      "slug": "chapter_12_the_delivery_boy_cdns_for_static_assets",
+      "chunks": 5,
+      "chars": 10174,
+      "duration_seconds": 749.74,
+      "file": "ch12_chapter_12_the_delivery_boy_cdns_for_static_assets.mp3"
+    },
+    {
+      "index": 13,
+      "title": "Chapter 13: The Conductor: Orchestrating Everything with Kubernetes",
+      "slug": "chapter_13_the_conductor_orchestrating_everything_with_kuber",
+      "chunks": 11,
+      "chars": 22707,
+      "duration_seconds": 1634.33,
+      "file": "ch13_chapter_13_the_conductor_orchestrating_everything_with_kuber.mp3"
+    },
+    {
+      "index": 14,
+      "title": "Chapter 14: The Shark Tank Effect: A Trial by Fire",
+      "slug": "chapter_14_the_shark_tank_effect_a_trial_by_fire",
+      "chunks": 3,
+      "chars": 5399,
+      "duration_seconds": 377.04,
+      "file": "ch14_chapter_14_the_shark_tank_effect_a_trial_by_fire.mp3"
+    },
+    {
+      "index": 15,
+      "title": "Chapter 15: The War on Shopify: Performance as a Feature",
+      "slug": "chapter_15_the_war_on_shopify_performance_as_a_feature",
+      "chunks": 5,
+      "chars": 9707,
+      "duration_seconds": 691.25,
+      "file": "ch15_chapter_15_the_war_on_shopify_performance_as_a_feature.mp3"
+    },
+    {
+      "index": 16,
+      "title": "Chapter 16: The Whale: Onboarding an Enterprise Juggernaut",
+      "slug": "chapter_16_the_whale_onboarding_an_enterprise_juggernaut",
+      "chunks": 4,
+      "chars": 7450,
+      "duration_seconds": 524.4,
+      "file": "ch16_chapter_16_the_whale_onboarding_an_enterprise_juggernaut.mp3"
+    },
+    {
+      "index": 17,
+      "title": "Chapter 15: Our Global Brain: Designing the Dukaan Edge Network",
+      "slug": "chapter_15_our_global_brain_designing_the_dukaan_edge_networ",
+      "chunks": 12,
+      "chars": 24742,
+      "duration_seconds": 1788.58,
+      "file": "ch17_chapter_15_our_global_brain_designing_the_dukaan_edge_networ.mp3"
+    },
+    {
+      "index": 18,
+      "title": "Chapter 16: The Spotlight: From Accidental CTO to Tech Leader",
+      "slug": "chapter_16_the_spotlight_from_accidental_cto_to_tech_leader",
+      "chunks": 6,
+      "chars": 12388,
+      "duration_seconds": 880.34,
+      "file": "ch18_chapter_16_the_spotlight_from_accidental_cto_to_tech_leader.mp3"
+    },
+    {
+      "index": 19,
+      "title": "Chapter 17: Escaping the Golden Cage: From AWS to Bare Metal",
+      "slug": "chapter_17_escaping_the_golden_cage_from_aws_to_bare_metal",
+      "chunks": 5,
+      "chars": 10665,
+      "duration_seconds": 764.62,
+      "file": "ch19_chapter_17_escaping_the_golden_cage_from_aws_to_bare_metal.mp3"
+    },
+    {
+      "index": 20,
+      "title": "Chapter 16: The Autopilot: CI/CD for a Global Network",
+      "slug": "chapter_16_the_autopilot_cicd_for_a_global_network",
+      "chunks": 7,
+      "chars": 14049,
+      "duration_seconds": 1042.85,
+      "file": "ch20_chapter_16_the_autopilot_cicd_for_a_global_network.mp3"
+    },
+    {
+      "index": 21,
+      "title": "Chapter 18: The Grand Finale: A Live Failover",
+      "slug": "chapter_18_the_grand_finale_a_live_failover",
+      "chunks": 6,
+      "chars": 13289,
+      "duration_seconds": 951.14,
+      "file": "ch21_chapter_18_the_grand_finale_a_live_failover.mp3"
+    },
+    {
+      "index": 22,
+      "title": "Chapter 19: The Accidental CTO",
+      "slug": "chapter_19_the_accidental_cto",
+      "chunks": 7,
+      "chars": 14598,
+      "duration_seconds": 1048.03,
+      "file": "ch22_chapter_19_the_accidental_cto.mp3"
+    },
+    {
+      "index": 23,
+      "title": "Dedication",
+      "slug": "dedication",
+      "chunks": 1,
+      "chars": 1868,
+      "duration_seconds": 137.21,
+      "file": "ch23_dedication.mp3"
+    }
+  ]
+}

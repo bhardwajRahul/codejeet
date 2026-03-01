@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Hack", "ui-monospace", "monospace"],
-        mono: ["Hack", "ui-monospace", "monospace"],
+        sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        mono: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
       },
       colors: {
         background: "oklch(var(--background))",
