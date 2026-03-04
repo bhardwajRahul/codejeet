@@ -15,8 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="./icon.svg" />
+        <link rel="preload" href="/image1.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/image2.webp" as="image" type="image/webp" />
       </head>
-      <body className={`${jakarta.variable} font-sans tracking-tight`} suppressHydrationWarning>
+      <body className={`${jakarta.variable} font-sans tracking-normal`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <div className="min-h-screen bg-background flex flex-col">
             <Navbar />

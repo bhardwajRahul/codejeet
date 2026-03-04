@@ -72,10 +72,12 @@ export default function Home() {
             </div>
             <div className="-mt-16 w-full">
               <Image
-                src={focusLabel === "DSA" ? "/image1.png" : "/image2.png"}
+                src={focusLabel === "DSA" ? "/image1.webp" : "/image2.webp"}
                 alt="Image"
                 width={2000}
                 height={1500}
+                priority
+                sizes="(max-width: 768px) 92vw, 1200px"
                 className="w-full h-auto max-w-[92vw] md:max-w-[1200px] mx-auto rounded-2xl shadow-lg px-0 sm:px-4"
               />
             </div>
