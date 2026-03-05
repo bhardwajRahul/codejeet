@@ -8,16 +8,14 @@ import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import { capitalizeWords } from "@/utils/utils";
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 /* ------------------------------------------------------------------ */
-/*  Static params                                                      */
+/*  Static params — empty to avoid pre-rendering (SSR on demand)       */
 /* ------------------------------------------------------------------ */
 
-export async function generateStaticParams() {
-  const slugs = await getProblemSlugs();
-  return slugs.map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return [];
 }
 
 /* ------------------------------------------------------------------ */

@@ -7,16 +7,14 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 // ---------------------------------------------------------------------------
-// Static params
+// Static params — empty to avoid pre-rendering (SSR on demand at the edge)
 // ---------------------------------------------------------------------------
 
-export async function generateStaticParams() {
-  const profiles = await getAllCompanyProfiles();
-  return Object.keys(profiles).map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return [];
 }
 
 // ---------------------------------------------------------------------------

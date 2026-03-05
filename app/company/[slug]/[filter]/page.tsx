@@ -14,8 +14,7 @@ import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import { capitalizeWords } from "@/utils/utils";
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -46,9 +45,9 @@ async function resolveFilterType(filter: string): Promise<FilterType> {
 /*  Static params                                                      */
 /* ------------------------------------------------------------------ */
 
-export async function generateStaticParams() {
-  const params = await getCompanyFilterParams();
-  return params.map((p) => ({ slug: p.slug, filter: p.filter }));
+// Empty to avoid pre-rendering (SSR on demand at the edge)
+export function generateStaticParams() {
+  return [];
 }
 
 /* ------------------------------------------------------------------ */
