@@ -30,6 +30,7 @@ export default function HomeClient() {
                   alt="Cloudflare"
                   width={168}
                   height={44}
+                  loading="eager"
                   className="h-9 w-auto translate-y-[1px]"
                 />
               </div>
