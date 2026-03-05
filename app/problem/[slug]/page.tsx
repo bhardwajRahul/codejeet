@@ -80,7 +80,7 @@ export default async function ProblemPage({ params }: { params: Promise<{ slug: 
   const leetcodeUrl = `https://leetcode.com/problems/${problem.slug}/`;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <article className="container mx-auto px-4 py-8 max-w-4xl">
       {/* JSON-LD structured data */}
       <JsonLd
         data={problemJsonLd({
@@ -237,6 +237,6 @@ export default async function ProblemPage({ params }: { params: Promise<{ slug: 
           </svg>
         </a>
       </div>
-    </div>
+    </article>
   );
 }
