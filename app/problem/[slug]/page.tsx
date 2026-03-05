@@ -11,11 +11,12 @@ import { capitalizeWords } from "@/utils/utils";
 export const dynamicParams = true;
 
 /* ------------------------------------------------------------------ */
-/*  Static params — empty to avoid pre-rendering (SSR on demand)       */
+/*  Static params — pre-render all problem pages at build time         */
 /* ------------------------------------------------------------------ */
 
-export function generateStaticParams() {
-  return [];
+export async function generateStaticParams() {
+  const slugs = await getProblemSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 /* ------------------------------------------------------------------ */

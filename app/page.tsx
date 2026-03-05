@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import NumberTicker from "@/components/magic-ui/number-ticker";
 import { Button } from "@/components/ui/button";
 import { DotPattern } from "@/components/magic-ui/dot-pattern";
 
@@ -40,8 +39,8 @@ export default function Home() {
               <br className="hidden lg:block" /> selection hogi yahi se.
             </h1>
             <h2 className="text-xl text-opacity-60 tracking-normal text-center max-w-2xl mx-auto z-10">
-              Suffer from <NumberTicker value={17000} />+ company-wise DSA questions like a true
-              Codejeet. Kyunki naukri ke liye sab kuch chalega!
+              Suffer from 17,000+ company-wise DSA questions like a true Codejeet. Kyunki naukri ke
+              liye sab kuch chalega!
             </h2>
             <div className="z-20 flex flex-wrap justify-center gap-3">
               <Link href="/dashboard">

@@ -10,11 +10,12 @@ import { capitalizeWords } from "@/utils/utils";
 export const dynamicParams = true;
 
 // ---------------------------------------------------------------------------
-// Static params — empty to avoid pre-rendering (SSR on demand at the edge)
+// Static params — pre-render all comparison pages at build time
 // ---------------------------------------------------------------------------
 
-export function generateStaticParams() {
-  return [];
+export async function generateStaticParams() {
+  const pairs = await getAllComparisonPairs();
+  return Object.keys(pairs).map((pair) => ({ pair }));
 }
 
 // ---------------------------------------------------------------------------
