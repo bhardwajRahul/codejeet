@@ -1,8 +1,11 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
+  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "codejeet",
   "compatibility_date": "2026-02-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": ".open-next/worker.js",
   "assets": {
-    "directory": "./out",
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
   },
 }
