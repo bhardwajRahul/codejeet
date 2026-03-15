@@ -29,10 +29,10 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="border-b sticky top-0 z-50 bg-background">
+    <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4 container mx-auto">
-        <div className="text-lg">
-          <Link href="/" className="flex items-center">
+        <div className="text-lg relative z-10">
+          <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
             <span className={pixel.className}>
               {LOGO_LETTERS.map((l, i) => (
                 <span key={i} style={{ color: l.color }}>
@@ -94,7 +94,7 @@ const Navbar = () => {
 
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <nav className="md:hidden border-t bg-background px-4 pb-4">
+        <nav className="md:hidden border-t bg-background px-4 py-1">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import TopBanner from "@/components/TopBanner";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
@@ -39,7 +40,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${jakarta.variable} font-sans tracking-normal`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <div className="min-h-screen bg-background flex flex-col">
-            <Navbar />
+            <div className="sticky top-0 z-50 bg-background">
+              <TopBanner />
+              <Navbar />
+            </div>
             <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />
