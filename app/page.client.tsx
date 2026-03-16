@@ -1,17 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DotPattern } from "@/components/magic-ui/dot-pattern";
 
 export default function HomeClient() {
-  const [focusLabel, setFocusLabel] = useState<"DSA" | "System Design">("DSA");
-
-  useEffect(() => {
-    if (Math.random() < 0.5) setFocusLabel("System Design");
-  }, []);
+  const [focusLabel] = useState<"DSA" | "System Design">(() =>
+    Math.random() < 0.5 ? "System Design" : "DSA"
+  );
   return (
     <div>
       <main>

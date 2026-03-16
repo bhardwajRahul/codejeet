@@ -25,9 +25,18 @@ const CATEGORIES = [
 export function BlogClient() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState("all");
-  const [search, setSearch] = useState("");
+  const [category, setCategory_] = useState("all");
+  const [search, setSearch_] = useState("");
   const [page, setPage] = useState(1);
+
+  const setCategory = (v: string) => {
+    setCategory_(v);
+    setPage(1);
+  };
+  const setSearch = (v: string) => {
+    setSearch_(v);
+    setPage(1);
+  };
 
   useEffect(() => {
     fetch("/data/blog-index.json")
@@ -57,11 +66,6 @@ export function BlogClient() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setPage(1);
-  }, [category, search]);
 
   if (loading) {
     return (
