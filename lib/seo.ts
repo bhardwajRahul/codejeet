@@ -102,7 +102,7 @@ export function videoObjectJsonLd(opts: {
     description: opts.description,
     thumbnailUrl: opts.thumbnailUrl,
     embedUrl: opts.embedUrl,
-    uploadDate: opts.uploadDate ?? "2025-01-01",
+    ...(opts.uploadDate ? { uploadDate: opts.uploadDate } : {}),
   };
 }
 

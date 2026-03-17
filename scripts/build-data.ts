@@ -284,9 +284,10 @@ async function main() {
   sitemapUrls.push({ path: "/companies", priority: 0.9, changeFrequency: "weekly" });
   sitemapUrls.push({ path: "/podcast", priority: 0.6, changeFrequency: "monthly" });
 
-  // Company pages
+  // Company pages (skip companies with <3 questions — they have noindex)
   for (const slug of Object.keys(companyProfiles)) {
     const profile = companyProfiles[slug];
+    if (profile.questionCount < 3) continue;
     sitemapUrls.push({
       path: `/company/${slug}`,
       priority: profile.questionCount >= 50 ? 0.8 : 0.7,
@@ -471,11 +472,12 @@ async function main() {
     JSON.stringify(filterTypeLookup)
   );
 
-  // 9. Expand sitemap with cross-product URLs
+  // 9. Expand sitemap with cross-product URLs (skip problem-type — duplicates /problem/[slug])
   for (const p of companyFilterParams) {
+    if (p.type === "problem") continue;
     sitemapUrls.push({
       path: `/company/${p.slug}/${p.filter}`,
-      priority: p.type === "topic" ? 0.6 : p.type === "difficulty" ? 0.5 : 0.5,
+      priority: p.type === "topic" ? 0.6 : 0.5,
       changeFrequency: "monthly",
     });
   }

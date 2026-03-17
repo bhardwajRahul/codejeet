@@ -105,7 +105,7 @@ export async function generateMetadata({
     };
   }
 
-  // Problem filter
+  // Problem filter — canonical points to /problem/[slug] to avoid duplicate content
   const problem = await getProblem(filter);
   if (!problem) return { title: "Not Found" };
 
@@ -114,7 +114,8 @@ export async function generateMetadata({
     description:
       `${problem.title} is a ${problem.difficulty.toLowerCase()} LeetCode problem asked at ${displayName}. ` +
       `${problem.acceptance_rate} acceptance rate. Topics: ${problem.topics.slice(0, 4).join(", ")}.`,
-    alternates: { canonical: `https://codejeet.com/company/${slug}/${filter}` },
+    alternates: { canonical: `https://codejeet.com/problem/${filter}` },
+    robots: { index: false, follow: true },
     openGraph: {
       title: `${problem.title} \u2014 ${displayName} Interview Question | CodeJeet`,
       description: `${problem.title} at ${displayName}. ${problem.difficulty}, ${problem.acceptance_rate} acceptance.`,

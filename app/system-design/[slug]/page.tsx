@@ -203,7 +203,6 @@ export default async function SystemDesignDetailPage({
   }
   const chapters = await getChapters();
 
-  // Extract title for structured data
   const titleMatch = content.match(/^#\s+(.+)$/m) || content.match(/^##\s+(.+)$/m);
   const pageTitle = titleMatch?.[1]?.trim() ?? slug;
 

@@ -170,7 +170,6 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
         </p>
       </section>
 
-      {/* JSON-LD Structured Data */}
       <JsonLd
         data={collectionJsonLd({
           name: `${displayName} Interview Questions`,

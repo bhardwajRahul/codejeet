@@ -5,8 +5,8 @@ export const dynamic = "force-static";
 
 const SITE_URL = "https://codejeet.com";
 
-/** Fixed build date — avoids misleading per-page "now" timestamps. */
-const BUILD_DATE = new Date("2025-06-01");
+/** Fixed build date — update when content changes to signal freshness. */
+const BUILD_DATE = new Date("2026-03-18");
 
 type SitemapGroup = "static" | "company" | "problem" | "topic" | "blog" | "other";
 

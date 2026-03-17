@@ -25,18 +25,18 @@ const CATEGORIES = [
 export function BlogClient() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory_] = useState("all");
-  const [search, setSearch_] = useState("");
+  const [category, setCategory] = useState("all");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const setCategory = (v: string) => {
-    setCategory_(v);
+  function updateCategory(v: string) {
+    setCategory(v);
     setPage(1);
-  };
-  const setSearch = (v: string) => {
-    setSearch_(v);
+  }
+  function updateSearch(v: string) {
+    setSearch(v);
     setPage(1);
-  };
+  }
 
   useEffect(() => {
     fetch("/data/blog-index.json")
@@ -92,7 +92,7 @@ export function BlogClient() {
               key={cat.value}
               variant={category === cat.value ? "default" : "outline"}
               size="sm"
-              onClick={() => setCategory(cat.value)}
+              onClick={() => updateCategory(cat.value)}
             >
               {cat.label}
             </Button>
@@ -101,7 +101,7 @@ export function BlogClient() {
         <Input
           placeholder="Search posts..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => updateSearch(e.target.value)}
           className="sm:ml-auto sm:max-w-xs"
         />
       </div>
