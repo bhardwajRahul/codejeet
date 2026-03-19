@@ -2,7 +2,7 @@
 
 Browse 17,000+ company-wise LeetCode interview questions from 660+ companies. Filter by company, topic, and difficulty. Fully static, no server required.
 
-**https://codejeet.com**
+<img width="900" height="856" alt="image" src="https://github.com/user-attachments/assets/cc681e71-ce2a-4136-91b9-a496479ed98a" />
 
 ### Features
 
