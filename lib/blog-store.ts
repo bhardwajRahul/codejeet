@@ -51,6 +51,8 @@ export function getBlogSnapshot(): BlogStore {
   return store;
 }
 
+// ponytail: stable reference — a fresh object each call makes useSyncExternalStore loop forever.
+const serverSnapshot: BlogStore = { posts: [], loading: true };
 export function getBlogServerSnapshot(): BlogStore {
-  return { posts: [], loading: true };
+  return serverSnapshot;
 }

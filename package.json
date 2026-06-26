@@ -16,6 +16,8 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6",
+    "@clerk/themes": "^2.4.57",
     "@codemirror/lang-cpp": "^6.0.3",
     "@codemirror/lang-java": "^6.0.2",
     "@codemirror/lang-javascript": "^6.2.5",
@@ -82,7 +84,7 @@
     "tailwindcss": "^3.4.18",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "wrangler": "^4.69.0"
+    "wrangler": "4.103.0"
   },
   "overrides": {
     "prismjs": "^1.30.0"

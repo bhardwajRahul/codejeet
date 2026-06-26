@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Press_Start_2P } from "next/font/google";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const pixel = Press_Start_2P({ subsets: ["latin"], weight: "400" });
 
@@ -57,6 +58,19 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Sign in
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </nav>
 
         {/* Mobile hamburger */}
@@ -106,6 +120,21 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
+          <div className="px-4 py-3">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button
+                  type="button"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Sign in
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+          </div>
         </nav>
       )}
     </div>

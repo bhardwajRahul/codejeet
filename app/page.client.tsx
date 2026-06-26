@@ -1,44 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { DotPattern } from "@/components/magic-ui/dot-pattern";
 
 export default function HomeClient() {
-  const [focusLabel] = useState<"DSA" | "System Design">(() =>
-    Math.random() < 0.5 ? "System Design" : "DSA"
-  );
+  // ponytail: server renders a stable default; randomize the A/B hero image after
+  // mount so SSR and first client render match (Math.random in render = hydration mismatch).
+  const [focusLabel, setFocusLabel] = useState<"DSA" | "System Design">("DSA");
+  useEffect(() => {
+    setFocusLabel(Math.random() < 0.5 ? "System Design" : "DSA");
+  }, []);
   return (
     <div>
       <main>
         <div className="z-0 relative w-full bg-gradient-to-b from-background to-primary/10 pb-6 md:pb-40 md:min-h-screen overflow-hidden">
           <DotPattern className="absolute inset-0 z-0 [mask-image:radial-gradient(50vw_circle_at_center,white,transparent)]" />
           <div className="relative z-10 flex flex-col items-center justify-start min-h-screen space-y-4 px-4 pt-12">
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold uppercase tracking-tight">Open Source</span>
-              <span aria-hidden className="h-6 w-[2px] bg-foreground" />
-              <div className="flex items-center gap-2">
-                <span className="text-base font-semibold leading-none text-foreground whitespace-nowrap">
-                  Backed by
-                </span>
-                <Image
-                  src="/cloudflare.png"
-                  alt="Cloudflare"
-                  width={168}
-                  height={44}
-                  loading="eager"
-                  className="h-9 w-auto translate-y-[1px]"
-                />
-              </div>
-            </div>
             <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold break-words w-full max-w-[92vw] md:max-w-[1200px] px-2 mx-auto -z-10 leading-tight">
               17,000+ Company-wise LeetCode Interview Questions
             </h1>
-            <p className="text-lg text-muted-foreground text-center max-w-xl mx-auto italic">
-              Padhle {focusLabel} kahin se, selection hogi yahi se.
-            </p>
             <h2 className="text-xl text-opacity-60 tracking-normal text-center max-w-2xl mx-auto z-10">
               Filter by company, topic, and difficulty. Practice smarter for your next tech
               interview.

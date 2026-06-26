@@ -75,6 +75,8 @@ export function getDashboardSnapshot(): DashboardStore {
   return store;
 }
 
+// ponytail: stable reference — a fresh object each call makes useSyncExternalStore loop forever.
+const serverSnapshot: DashboardStore = { data: null, loading: true };
 export function getDashboardServerSnapshot(): DashboardStore {
-  return { data: null, loading: true };
+  return serverSnapshot;
 }

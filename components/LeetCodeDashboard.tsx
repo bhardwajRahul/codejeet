@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { useUser, SignedOut, SignInButton } from "@clerk/nextjs";
+import { fetchUserProgress, updateQuestionProgress, reviewStatus } from "@/utils/progressUtils";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Table,
@@ -84,6 +86,42 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   const [acceptanceSort, setAcceptanceSort] = useState<"asc" | "desc" | null>(null);
   const [premiumFilter, setPremiumFilter] = useState("free");
   const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
+  const [showDueOnly, setShowDueOnly] = useState(false);
+
+  // slug -> ISO solve date, populated from D1 for signed-in users. Drives revision.
+  const { isSignedIn } = useUser();
+  const [solvedAt, setSolvedAt] = useState<Record<string, string>>({});
+  const mergedRef = useRef(false);
+
+  // On sign-in: merge any existing local marks into the account (additive, never
+  // deletes), then adopt the server's progress as source of truth.
+  useEffect(() => {
+    if (!isSignedIn) return;
+    let cancelled = false;
+    (async () => {
+      if (!mergedRef.current) {
+        mergedRef.current = true;
+        const trueSlugs = Object.keys(checkedItems).filter((k) => checkedItems[k]);
+        if (trueSlugs.length) {
+          await Promise.all(trueSlugs.map((slug) => updateQuestionProgress(slug, true)));
+        }
+      }
+      const remote = await fetchUserProgress();
+      if (cancelled) return;
+      setSolvedAt(remote);
+      setCheckedItems((prev) => {
+        const next = { ...prev };
+        for (const slug of Object.keys(remote)) next[slug] = true;
+        localStorage.setItem("leetcode-checked-items", JSON.stringify(next));
+        return next;
+      });
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // checkedItems intentionally snapshotted at sign-in; mergedRef guards re-runs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSignedIn]);
 
   const handleCheckboxChange = (id: string, value: boolean) => {
     setCheckedItems((prev) => {
@@ -91,6 +129,14 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
       localStorage.setItem("leetcode-checked-items", JSON.stringify(next));
       return next;
     });
+    setSolvedAt((prev) => {
+      const next = { ...prev };
+      if (value) next[id] = new Date().toISOString();
+      else delete next[id];
+      return next;
+    });
+    // Fire-and-forget: never block the UI on the network.
+    if (isSignedIn) void updateQuestionProgress(id, value);
   };
 
   const companyStats = useMemo(() => {
@@ -114,6 +160,40 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     });
     return Array.from(topicsSet);
   }, [questions]);
+
+  // How "fundamental/frequent" a question is = number of DISTINCT companies that
+  // ask it (slug == ID). Drives how soon/often revision resurfaces it.
+  const freqBySlug = useMemo(() => {
+    const companiesBySlug: Record<string, Set<string>> = {};
+    for (const q of questions) {
+      (companiesBySlug[q.ID] ??= new Set()).add(q.company);
+    }
+    const out: Record<string, number> = {};
+    for (const slug in companiesBySlug) out[slug] = companiesBySlug[slug].size;
+    return out;
+  }, [questions]);
+
+  const difficultyBySlug = useMemo(() => {
+    const out: Record<string, string> = {};
+    for (const q of questions) out[q.ID] = q.Difficulty;
+    return out;
+  }, [questions]);
+
+  // Solved questions whose next spaced-repetition review date has passed.
+  const dueSlugs = useMemo(() => {
+    const now = Date.now();
+    const due = new Set<string>();
+    for (const [slug, iso] of Object.entries(solvedAt)) {
+      const { isDue } = reviewStatus(
+        iso,
+        freqBySlug[slug] ?? 1,
+        difficultyBySlug[slug] ?? "Medium",
+        now
+      );
+      if (isDue) due.add(slug);
+    }
+    return due;
+  }, [solvedAt, freqBySlug, difficultyBySlug]);
 
   const filteredQuestions = useMemo(() => {
     const queryWords = searchQuery.trim().toLowerCase().split(/\s+/);
@@ -140,10 +220,27 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
         premiumFilter === "all" ||
         (premiumFilter === "free" && question["Is Premium"] !== "Y") ||
         (premiumFilter === "premium" && question["Is Premium"] === "Y");
+      const matchesDue = !showDueOnly || dueSlugs.has(question.ID);
 
-      return matchesSearch && matchesDifficulty && matchesCompany && matchesTopic && matchesPremium;
+      return (
+        matchesSearch &&
+        matchesDifficulty &&
+        matchesCompany &&
+        matchesTopic &&
+        matchesPremium &&
+        matchesDue
+      );
     });
-  }, [questions, searchQuery, difficultyFilter, selectedCompany, selectedTopics, premiumFilter]);
+  }, [
+    questions,
+    searchQuery,
+    difficultyFilter,
+    selectedCompany,
+    selectedTopics,
+    premiumFilter,
+    showDueOnly,
+    dueSlugs,
+  ]);
 
   const filteredAndSortedQuestions = useMemo(() => {
     const result = [...filteredQuestions];
@@ -288,6 +385,16 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
             Browse through {filteredQuestions.length.toLocaleString()} DSA questions asked in
             technical interviews
           </CardDescription>
+          <SignedOut>
+            <CardDescription className="mt-1">
+              <SignInButton mode="modal">
+                <button type="button" className="text-primary hover:underline">
+                  Sign in
+                </button>
+              </SignInButton>{" "}
+              to save your progress across devices and get revision reminders.
+            </CardDescription>
+          </SignedOut>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-6">
@@ -433,6 +540,20 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                   <SelectItem value="all">All Questions</SelectItem>
                 </SelectContent>
               </Select>
+
+              {isSignedIn && dueSlugs.size > 0 && (
+                <Button
+                  type="button"
+                  variant={showDueOnly ? "default" : "outline"}
+                  className="w-full md:w-auto"
+                  onClick={() => {
+                    setShowDueOnly((v) => !v);
+                    setCurrentPage(1);
+                  }}
+                >
+                  Due for revision ({dueSlugs.size})
+                </Button>
+              )}
             </div>
 
             {loading ? (
@@ -615,6 +736,11 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                               >
                                 {question.Title}
                               </a>
+                              {dueSlugs.has(question.ID) && (
+                                <span className="ml-2 px-1.5 py-0.5 rounded text-xs font-semibold bg-amber-500/20 text-amber-700 dark:text-amber-400 align-middle">
+                                  Revise
+                                </span>
+                              )}
                             </TableCell>
                             <TableCell>
                               <div className="capitalize">{capitalizeWords(question.company)}</div>
@@ -744,6 +870,11 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                               >
                                 {question.Title}
                               </a>
+                              {dueSlugs.has(question.ID) && (
+                                <span className="ml-2 px-1.5 py-0.5 rounded text-xs font-semibold bg-amber-500/20 text-amber-700 dark:text-amber-400 align-middle">
+                                  Revise
+                                </span>
+                              )}
                               <div className="capitalize text-xs text-muted-foreground">
                                 {capitalizeWords(question.company)}
                               </div>

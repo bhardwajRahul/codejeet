@@ -8,4 +8,12 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "codejeet-progress",
+      "database_id": "68733624-7cca-48c8-8ee6-710e6791df5c",
+      "migrations_dir": "migrations",
+    },
+  ],
 }

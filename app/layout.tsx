@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -39,38 +41,45 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <JsonLd data={websiteJsonLd()} />
-        <JsonLd data={organizationJsonLd()} />
-        <JsonLd data={siteNavigationJsonLd()} />
-        {process.env.NODE_ENV === "development" && (
-          <Script
-            src="//unpkg.com/react-scan/dist/auto.global.js"
-            crossOrigin="anonymous"
-            strategy="beforeInteractive"
-          />
-        )}
-        {process.env.NODE_ENV === "development" && (
-          <Script
-            src="//unpkg.com/react-grab/dist/index.global.js"
-            crossOrigin="anonymous"
-            strategy="beforeInteractive"
-          />
-        )}
-      </head>
-      <body className={`${jakarta.variable} font-sans tracking-normal`} suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <div className="min-h-screen bg-background flex flex-col">
-            <div className="sticky top-0 z-50 bg-background">
-              <Navbar />
+    <ClerkProvider appearance={{ baseTheme: dark }}>
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <JsonLd data={websiteJsonLd()} />
+          <JsonLd data={organizationJsonLd()} />
+          <JsonLd data={siteNavigationJsonLd()} />
+          {process.env.NODE_ENV === "development" && (
+            <Script
+              src="//unpkg.com/react-scan/dist/auto.global.js"
+              crossOrigin="anonymous"
+              strategy="beforeInteractive"
+            />
+          )}
+          {process.env.NODE_ENV === "development" && (
+            <Script
+              src="//unpkg.com/react-grab/dist/index.global.js"
+              crossOrigin="anonymous"
+              strategy="beforeInteractive"
+            />
+          )}
+        </head>
+        <body className={`${jakarta.variable} font-sans tracking-normal`} suppressHydrationWarning>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="min-h-screen bg-background flex flex-col">
+              <div className="sticky top-0 z-50 bg-background">
+                <Navbar />
+              </div>
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <Toaster />
             </div>
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <Toaster />
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
