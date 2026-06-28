@@ -95,10 +95,14 @@ async function main() {
   let enriched = 0;
   const enrichedQuestions = questions.map((q) => {
     const problem = scraped.get(q.slug);
+    // Acceptance is sourced from the LeetCode-scraped problem JSON (clean), never
+    // from the CSV. Re-scraping data/problems/*.json refreshes it on next build.
+    const acStr = problem?.acceptance_rate || "";
+    const base = { ...q, acceptance_rate: acStr ? parseFloat(acStr) : 0, "Acceptance %": acStr };
     if (problem && problem.content_html) {
       enriched++;
       return {
-        ...q,
+        ...base,
         "Is Premium": "N",
         category: problem.category || "",
         total_accepted: problem.total_accepted || 0,
@@ -112,9 +116,9 @@ async function main() {
     }
     // No scraped content = premium question
     if (scraped.has(q.slug)) {
-      return { ...q, "Is Premium": "Y" };
+      return { ...base, "Is Premium": "Y" };
     }
-    return q;
+    return base;
   });
 
   const topicSet = new Set<string>();

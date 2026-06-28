@@ -1,7 +1,9 @@
-ID,URL,Title,Difficulty,Acceptance %,Frequency %
-7,https://leetcode.com/problems/reverse-integer,Reverse Integer,Medium,31.5%,87.5%
-1755,https://leetcode.com/problems/closest-subsequence-sum,Closest Subsequence Sum,Hard,43.2%,87.5%
-2747,https://leetcode.com/problems/count-zero-request-servers,Count Zero Request Servers,Medium,35.6%,87.5%
-2271,https://leetcode.com/problems/maximum-white-tiles-covered-by-a-carpet,Maximum White Tiles Covered by a Carpet,Medium,35.6%,100.0%
-509,https://leetcode.com/problems/fibonacci-number,Fibonacci Number,Easy,73.9%,87.5%
-283,https://leetcode.com/problems/move-zeroes,Move Zeroes,Easy,63.5%,87.5%
+ID,URL,Title,Difficulty,Acceptance %,Frequency %,Topics,Timeframe
+2271,https://leetcode.com/problems/maximum-white-tiles-covered-by-a-carpet,Maximum White Tiles Covered by a Carpet,Medium,,100.0%,"Array, Binary Search, Greedy, Sliding Window, Sorting, Prefix Sum",more_than_6m
+7,https://leetcode.com/problems/reverse-integer,Reverse Integer,Medium,,89.0%,Math,more_than_6m
+1755,https://leetcode.com/problems/closest-subsequence-sum,Closest Subsequence Sum,Hard,,89.0%,"Array, Two Pointers, Dynamic Programming, Bit Manipulation, Sorting, Bitmask",more_than_6m
+2747,https://leetcode.com/problems/count-zero-request-servers,Count Zero Request Servers,Medium,,89.0%,"Array, Hash Table, Sliding Window, Sorting",more_than_6m
+2271,https://leetcode.com/problems/maximum-white-tiles-covered-by-a-carpet,Maximum White Tiles Covered by a Carpet,Medium,,100.0%,"Array, Binary Search, Greedy, Sliding Window, Sorting, Prefix Sum",all
+7,https://leetcode.com/problems/reverse-integer,Reverse Integer,Medium,,88.8%,Math,all
+1755,https://leetcode.com/problems/closest-subsequence-sum,Closest Subsequence Sum,Hard,,88.8%,"Array, Two Pointers, Dynamic Programming, Bit Manipulation, Sorting, Bitmask",all
+2747,https://leetcode.com/problems/count-zero-request-servers,Count Zero Request Servers,Medium,,88.8%,"Array, Hash Table, Sliding Window, Sorting",all

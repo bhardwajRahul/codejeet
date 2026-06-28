@@ -1,4 +1,5 @@
-ID,URL,Title,Difficulty,Acceptance %,Frequency %
-78,https://leetcode.com/problems/subsets,Subsets,Medium,82.0%,87.5%
-146,https://leetcode.com/problems/lru-cache,LRU Cache,Medium,46.8%,87.5%
-189,https://leetcode.com/problems/rotate-array,Rotate Array,Medium,44.4%,100.0%
+ID,URL,Title,Difficulty,Acceptance %,Frequency %,Topics,Timeframe
+189,https://leetcode.com/problems/rotate-array,Rotate Array,Medium,,100.0%,"Array, Math, Two Pointers",more_than_6m
+78,https://leetcode.com/problems/subsets,Subsets,Medium,,90.5%,"Array, Backtracking, Bit Manipulation",more_than_6m
+189,https://leetcode.com/problems/rotate-array,Rotate Array,Medium,,100.0%,"Array, Math, Two Pointers",all
+78,https://leetcode.com/problems/subsets,Subsets,Medium,,90.5%,"Array, Backtracking, Bit Manipulation",all

@@ -51,6 +51,20 @@ type RawCsvRecord = {
   Difficulty?: string;
   "Frequency %"?: string;
   Topics?: string;
+  Timeframe?: string;
+};
+
+const VALID_TIMEFRAMES: ReadonlySet<Timeframe> = new Set<Timeframe>([
+  "30_days",
+  "3_months",
+  "6_months",
+  "more_than_6m",
+  "all",
+]);
+
+const normalizeTimeframe = (value?: string): Timeframe => {
+  const trimmed = (value || "").trim() as Timeframe;
+  return VALID_TIMEFRAMES.has(trimmed) ? trimmed : "all";
 };
 
 const DATA_DIR = path.join(process.cwd(), "data", "companies");
@@ -170,7 +184,7 @@ export async function loadAllQuestions(): Promise<{
         link: `https://leetcode.com${normalizeUrl(record.URL, slug)}`,
         company: companySlug,
         frequency: frequencyNumeric,
-        timeframe: "all",
+        timeframe: normalizeTimeframe(record.Timeframe),
         topics: topicsArray,
         "Acceptance %": ensurePercentString(record["Acceptance %"], acceptanceNumeric),
         "Frequency %": ensurePercentString(record["Frequency %"], frequencyNumeric),

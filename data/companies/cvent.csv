@@ -1,4 +1,5 @@
-ID,URL,Title,Difficulty,Acceptance %,Frequency %
-169,https://leetcode.com/problems/majority-element,Majority Element,Easy,66.1%,100.0%
-138,https://leetcode.com/problems/copy-list-with-random-pointer,Copy List with Random Pointer,Medium,62.4%,100.0%
-179,https://leetcode.com/problems/largest-number,Largest Number,Medium,42.6%,100.0%
+ID,URL,Title,Difficulty,Acceptance %,Frequency %,Topics,Timeframe
+138,https://leetcode.com/problems/copy-list-with-random-pointer,Copy List with Random Pointer,Medium,,100.0%,"Hash Table, Linked List",more_than_6m
+179,https://leetcode.com/problems/largest-number,Largest Number,Medium,,100.0%,"Array, String, Greedy, Sorting",more_than_6m
+138,https://leetcode.com/problems/copy-list-with-random-pointer,Copy List with Random Pointer,Medium,,100.0%,"Hash Table, Linked List",all
+179,https://leetcode.com/problems/largest-number,Largest Number,Medium,,100.0%,"Array, String, Greedy, Sorting",all

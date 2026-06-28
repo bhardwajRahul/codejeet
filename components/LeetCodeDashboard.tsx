@@ -84,6 +84,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [frequencySort, setFrequencySort] = useState<"asc" | "desc" | null>(null);
   const [acceptanceSort, setAcceptanceSort] = useState<"asc" | "desc" | null>(null);
+  const [timeframeFilter, setTimeframeFilter] = useState("all");
   const [premiumFilter, setPremiumFilter] = useState("free");
   const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
   const [showDueOnly, setShowDueOnly] = useState(false);
@@ -216,6 +217,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
             .map((t) => t.trim())
             .includes(topic)
         );
+      const matchesTimeframe = timeframeFilter === "all" || question.timeframe === timeframeFilter;
       const matchesPremium =
         premiumFilter === "all" ||
         (premiumFilter === "free" && question["Is Premium"] !== "Y") ||
@@ -227,6 +229,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
         matchesDifficulty &&
         matchesCompany &&
         matchesTopic &&
+        matchesTimeframe &&
         matchesPremium &&
         matchesDue
       );
@@ -237,6 +240,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     difficultyFilter,
     selectedCompany,
     selectedTopics,
+    timeframeFilter,
     premiumFilter,
     showDueOnly,
     dueSlugs,
@@ -351,6 +355,11 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
 
   const handleTopicChange = (options: string[]) => {
     setSelectedTopics(options);
+    setCurrentPage(1);
+  };
+
+  const handleTimeframeChange = (value: string) => {
+    setTimeframeFilter(value);
     setCurrentPage(1);
   };
 
@@ -529,6 +538,19 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                 setSelectedOptions={handleTopicChange}
                 placeholder="Topics"
               />
+
+              <Select value={timeframeFilter} onValueChange={handleTimeframeChange}>
+                <SelectTrigger className="w-full md:w-56">
+                  <SelectValue placeholder="Last Appeared" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="30_days">30 Days</SelectItem>
+                  <SelectItem value="3_months">3 Months</SelectItem>
+                  <SelectItem value="6_months">6 Months</SelectItem>
+                  <SelectItem value="more_than_6m">More Than 6 Months</SelectItem>
+                </SelectContent>
+              </Select>
 
               <Select value={premiumFilter} onValueChange={handlePremiumChange}>
                 <SelectTrigger className="w-full md:w-44">
