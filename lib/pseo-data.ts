@@ -38,6 +38,16 @@ async function readJson<T>(filePath: string): Promise<T> {
   return data;
 }
 
+// === Questions (full list, runtime-safe via ASSETS) ===
+
+export async function getQuestionsData(): Promise<{
+  questions: Record<string, unknown>[];
+  companies: string[];
+  topics: string[];
+}> {
+  return readJson(path.join(DATA_DIR, "questions.json"));
+}
+
 // === Company Profiles ===
 
 export interface CompanyProfile {

@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import fs from "fs/promises";
-import path from "path";
 import { notFound } from "next/navigation";
-import { getAllTopicProfiles, getTopicProfile } from "@/lib/pseo-data";
+import { getAllTopicProfiles, getTopicProfile, getQuestionsData } from "@/lib/pseo-data";
 import { topicMetadata, collectionJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
+// Prerender known topics; SSR unknown/cache-miss on demand (runtime-safe data).
+export const dynamicParams = true;
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -53,9 +51,7 @@ export async function generateMetadata({
 /* ------------------------------------------------------------------ */
 
 async function getQuestionsForTopic(questionSlugs: string[]): Promise<QuestionRecord[]> {
-  const dataPath = path.join(process.cwd(), "public", "data", "questions.json");
-  const raw = await fs.readFile(dataPath, "utf8");
-  const data = JSON.parse(raw) as { questions: QuestionRecord[] };
+  const data = (await getQuestionsData()) as unknown as { questions: QuestionRecord[] };
 
   const slugSet = new Set(questionSlugs);
   const seen = new Set<string>();
