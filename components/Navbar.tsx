@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const NAV_LINKS = [
@@ -17,7 +18,15 @@ const Navbar = () => {
     <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4 container mx-auto">
         <div className="relative z-10">
-          <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
+          <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="CodeJeet"
+              width={28}
+              height={28}
+              priority
+              className="h-7 w-7"
+            />
             <span className="font-mono text-lg font-bold tracking-tight text-foreground">
               codejeet
             </span>
