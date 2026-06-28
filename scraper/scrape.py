@@ -77,7 +77,9 @@ def setup_driver() -> uc.Chrome:
     options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1920,1080")
 
-    driver = uc.Chrome(options=options, version_main=145)
+    # Let undetected-chromedriver auto-detect the installed Chrome version
+    # (hardcoding it breaks whenever Chrome updates).
+    driver = uc.Chrome(options=options)
     return driver
 
 
