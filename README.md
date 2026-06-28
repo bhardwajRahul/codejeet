@@ -2,6 +2,8 @@
 
 Browse 17,000+ company-wise LeetCode interview questions from 660+ companies. Filter by company, topic, and difficulty. Fully static, no server required.
 
+> Company-wise interview questions are sourced from [liquidslr/interview-company-wise-problems](https://github.com/liquidslr/interview-company-wise-problems).
+
 <img width="900" height="856" alt="image" src="https://github.com/user-attachments/assets/cc681e71-ce2a-4136-91b9-a496479ed98a" />
 
 ### Features
@@ -68,10 +70,6 @@ public/system-design/ 16 markdown-based chapters
 content/              blog markdown files
 scripts/              build-data.ts (CSV → JSON prebuild)
 ```
-
-### Acknowledgements
-
-Company-wise interview questions are sourced from [liquidslr/interview-company-wise-problems](https://github.com/liquidslr/interview-company-wise-problems).
 
 ### License
 

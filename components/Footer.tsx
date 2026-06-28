@@ -9,6 +9,17 @@ const Footer = () => {
             Built with <BsSuitHeartFill className="ml-1 mr-1" />
             by shydev
           </span>
+          <span className="hidden md:block font-mono text-xs tracking-[0.1em] text-muted-foreground text-center">
+            Questions sourced from{" "}
+            <a
+              href="https://github.com/liquidslr/interview-company-wise-problems"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-foreground transition-colors"
+            >
+              liquidslr/interview-company-wise-problems
+            </a>
+          </span>
           <div className="flex items-center space-x-4 shrink-0">
             <a href="https://twitter.com/shydev69" target="_blank" rel="noopener noreferrer">
               <BsTwitterX size={24} />
