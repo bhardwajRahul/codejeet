@@ -6,13 +6,13 @@ import HomeClient from "./page.client";
 export const metadata: Metadata = {
   title: "CodeJeet - Company-wise LeetCode Interview Questions",
   description:
-    "Browse 17,000+ company-wise LeetCode DSA interview questions from 660+ companies. " +
+    "Browse 15,000+ company-wise LeetCode DSA interview questions from 700+ companies. " +
     "Filter by company, topic, and difficulty. Practice smarter for your next tech interview.",
   alternates: { canonical: "https://codejeet.com" },
   openGraph: {
     title: "CodeJeet - Company-wise LeetCode Interview Questions",
     description:
-      "Browse 17,000+ company-wise LeetCode DSA interview questions from 660+ companies.",
+      "Browse 15,000+ company-wise LeetCode DSA interview questions from 700+ companies.",
     url: "https://codejeet.com",
     type: "website",
   },
@@ -22,7 +22,7 @@ const homepageFaqs = [
   {
     question: "What is CodeJeet?",
     answer:
-      "CodeJeet is a free platform to browse 17,000+ company-wise LeetCode DSA interview questions from 660+ companies. Filter by company, topic, and difficulty to practice smarter for your next tech interview.",
+      "CodeJeet is a free platform to browse 15,000+ company-wise LeetCode DSA interview questions from 700+ companies. Filter by company, topic, and difficulty to practice smarter for your next tech interview.",
   },
   {
     question: "How do I prepare for a FAANG coding interview?",
@@ -32,7 +32,7 @@ const homepageFaqs = [
   {
     question: "Which companies' interview questions are available on CodeJeet?",
     answer:
-      "CodeJeet has interview questions from 660+ companies including Google, Amazon, Meta, Apple, Microsoft, Netflix, Goldman Sachs, Bloomberg, Uber, and many more. Each company page shows questions sorted by frequency.",
+      "CodeJeet has interview questions from 700+ companies including Google, Amazon, Meta, Apple, Microsoft, Netflix, Goldman Sachs, Bloomberg, Uber, and many more. Each company page shows questions sorted by frequency.",
   },
   {
     question: "How are the LeetCode questions organized?",
@@ -42,7 +42,7 @@ const homepageFaqs = [
   {
     question: "Is CodeJeet free to use?",
     answer:
-      "Yes, CodeJeet is completely free. All 17,000+ company-wise LeetCode questions, system design chapters, and interview preparation resources are available without any sign-up or payment.",
+      "Yes, CodeJeet is completely free. All 15,000+ company-wise LeetCode questions, system design chapters, and interview preparation resources are available without any sign-up or payment.",
   },
 ];
 

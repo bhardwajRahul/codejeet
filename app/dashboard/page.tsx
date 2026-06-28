@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Practice Questions",
   description:
-    "Browse through 17,000+ DSA questions asked in technical interviews at 660+ companies. " +
+    "Browse through 15,000+ DSA questions asked in technical interviews at 700+ companies. " +
     "Filter by company, topic, and difficulty.",
   alternates: { canonical: "https://codejeet.com/dashboard" },
 };

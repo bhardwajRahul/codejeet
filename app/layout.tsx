@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s | CodeJeet",
   },
   description:
-    "Browse 17,000+ company-wise LeetCode DSA interview questions from 660+ companies. " +
+    "Browse 15,000+ company-wise LeetCode DSA interview questions from 700+ companies. " +
     "Filter by company, topic, and difficulty. Practice smarter for your next tech interview.",
   openGraph: {
     type: "website",

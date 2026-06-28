@@ -23,7 +23,7 @@ export default function HomeClient() {
           <GridRails />
           <div className="container relative z-10 mx-auto flex flex-col items-center justify-start space-y-6 px-4 pt-16 pb-10">
             <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold break-words w-full max-w-[92vw] md:max-w-[1100px] px-2 mx-auto leading-tight tracking-tight">
-              17,000+ Company-wise LeetCode Interview Questions
+              15,000+ Company-wise LeetCode Interview Questions
             </h1>
             <h2 className="font-mono text-base text-muted-foreground tracking-normal text-center max-w-2xl mx-auto">
               Filter by company, topic, and difficulty. Practice smarter for your next tech

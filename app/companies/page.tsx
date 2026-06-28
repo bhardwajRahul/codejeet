@@ -15,12 +15,12 @@ export function generateMetadata(): Metadata {
   return {
     title: "All Companies - LeetCode Interview Questions",
     description:
-      "Browse LeetCode interview questions from 660+ companies. " +
+      "Browse LeetCode interview questions from 700+ companies. " +
       "Find company-specific problems sorted by frequency to prepare for your next tech interview.",
     alternates: { canonical: "https://codejeet.com/companies" },
     openGraph: {
       title: "All Companies - LeetCode Interview Questions | CodeJeet",
-      description: "Browse LeetCode interview questions from 660+ companies.",
+      description: "Browse LeetCode interview questions from 700+ companies.",
       type: "website",
       url: "https://codejeet.com/companies",
     },

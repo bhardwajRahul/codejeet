@@ -11,7 +11,7 @@ export function websiteJsonLd() {
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      "Browse 17,000+ company-wise LeetCode DSA interview questions from 660+ companies.",
+      "Browse 15,000+ company-wise LeetCode DSA interview questions from 700+ companies.",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -29,7 +29,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/icon.svg`,
+    logo: `${SITE_URL}/logo.png`,
     sameAs: ["https://x.com/shydev69"],
   };
 }
