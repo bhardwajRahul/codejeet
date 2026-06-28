@@ -70,3 +70,6 @@ logo-options/
 .liquidslr/
 
 .env.production.local
+
+.agents/skills/seo-audit/
+docs/superpowers/specs/
