@@ -93,7 +93,7 @@ async function main() {
   // Enrich questions with lightweight scraped metadata (no heavy HTML/markdown)
   // Also fix Is Premium flag: if scraper couldn't get content, the question is premium
   let enriched = 0;
-  const enrichedQuestions = questions.map((q) => {
+  let enrichedQuestions = questions.map((q) => {
     const problem = scraped.get(q.slug);
     // Acceptance is sourced from the LeetCode-scraped problem JSON (clean), never
     // from the CSV. Re-scraping data/problems/*.json refreshes it on next build.
@@ -120,6 +120,28 @@ async function main() {
     }
     return base;
   });
+
+  // Collapse per-timeframe duplicate rows into ONE record per (company, slug),
+  // carrying the set of recency buckets it appears in. Without this, every list
+  // view (dashboard, company pages) renders each problem up to 5x and balloons
+  // the HTML/JSON. The dashboard's recency filter uses the `timeframes` array.
+  const dedupMap = new Map<string, (typeof enrichedQuestions)[number] & { timeframes: string[] }>();
+  for (const q of enrichedQuestions) {
+    const key = `${q.company}|${q.slug}`;
+    let rec = dedupMap.get(key);
+    if (!rec) {
+      rec = { ...q, timeframes: [] };
+      dedupMap.set(key, rec);
+    }
+    if (q.timeframe && !rec.timeframes.includes(q.timeframe)) rec.timeframes.push(q.timeframe);
+    // Canonical frequency = the all-time ("all") bucket.
+    if (q.timeframe === "all") {
+      rec.frequency = q.frequency;
+      rec["Frequency %"] = q["Frequency %"];
+    }
+  }
+  for (const r of dedupMap.values()) r.timeframes.sort();
+  enrichedQuestions = Array.from(dedupMap.values());
 
   const topicSet = new Set<string>();
   for (const q of enrichedQuestions) {
@@ -149,7 +171,7 @@ async function main() {
     company: q.company,
     frequency: q.frequency,
     "Frequency %": q["Frequency %"],
-    timeframe: q.timeframe,
+    timeframes: (q as { timeframes?: string[] }).timeframes ?? [],
     topics: q.topics,
     Topics: q.Topics,
     ID: q.ID,

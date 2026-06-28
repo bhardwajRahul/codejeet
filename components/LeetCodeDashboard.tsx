@@ -39,7 +39,7 @@ export interface Question {
   link: string;
   company: string;
   frequency: number;
-  timeframe: string;
+  timeframes?: string[];
   topics: string[];
   ID: string;
   Title: string;
@@ -217,7 +217,8 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
             .map((t) => t.trim())
             .includes(topic)
         );
-      const matchesTimeframe = timeframeFilter === "all" || question.timeframe === timeframeFilter;
+      const matchesTimeframe =
+        timeframeFilter === "all" || (question.timeframes?.includes(timeframeFilter) ?? false);
       const matchesPremium =
         premiumFilter === "all" ||
         (premiumFilter === "free" && question["Is Premium"] !== "Y") ||
@@ -738,9 +739,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                           .filter(Boolean);
 
                         return (
-                          <TableRow
-                            key={`${question.id}-${question.company}-${question.timeframe || "unknown"}`}
-                          >
+                          <TableRow key={`${question.id}-${question.company}`}>
                             <TableCell className="w-4">
                               <Checkbox
                                 checked={checkedItems[question.ID] || false}
@@ -872,7 +871,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
 
                     return (
                       <Card
-                        key={`${question.id}-${question.company}-${question.timeframe || "unknown"}`}
+                        key={`${question.id}-${question.company}`}
                         className="p-4 bg-background/50 border"
                       >
                         <div className="flex items-center justify-between gap-3">
