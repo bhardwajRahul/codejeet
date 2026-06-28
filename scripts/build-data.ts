@@ -132,9 +132,32 @@ async function main() {
   const outDir = path.join(process.cwd(), "public", "data");
   await fs.mkdir(outDir, { recursive: true });
 
-  // Write main questions.json (lightweight, for dashboard listing)
+  // Write main questions.json (lightweight, for dashboard listing). Strip the
+  // heavy per-problem fields (hints, similar_questions, totals, category,
+  // content) — those live only in public/data/problems/<slug>.json. Keeping them
+  // here ballooned the file past Cloudflare's 25 MiB asset limit.
+  const slimQuestions = enrichedQuestions.map((q) => ({
+    id: q.id,
+    slug: q.slug,
+    title: q.title,
+    difficulty: q.difficulty,
+    Difficulty: q.Difficulty,
+    acceptance_rate: q.acceptance_rate,
+    "Acceptance %": q["Acceptance %"],
+    link: q.link,
+    URL: q.URL,
+    company: q.company,
+    frequency: q.frequency,
+    "Frequency %": q["Frequency %"],
+    timeframe: q.timeframe,
+    topics: q.topics,
+    Topics: q.Topics,
+    ID: q.ID,
+    Title: q.Title,
+    "Is Premium": q["Is Premium"],
+  }));
   const outPath = path.join(outDir, "questions.json");
-  await fs.writeFile(outPath, JSON.stringify({ questions: enrichedQuestions, companies, topics }));
+  await fs.writeFile(outPath, JSON.stringify({ questions: slimQuestions, companies, topics }));
 
   // Copy individual problem JSONs to public/data/problems/ (full content for problem pages)
   const problemsOutDir = path.join(outDir, "problems");
