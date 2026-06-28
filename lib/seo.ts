@@ -63,12 +63,6 @@ export function siteNavigationJsonLd() {
         name: "System Design",
         url: `${SITE_URL}/system-design`,
       },
-      {
-        "@type": "SiteNavigationElement",
-        position: 5,
-        name: "Podcast",
-        url: `${SITE_URL}/podcast`,
-      },
     ],
   };
 }

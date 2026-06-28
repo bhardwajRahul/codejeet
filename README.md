@@ -69,6 +69,10 @@ content/              blog markdown files
 scripts/              build-data.ts (CSV → JSON prebuild)
 ```
 
+### Acknowledgements
+
+Company-wise interview questions are sourced from [liquidslr/interview-company-wise-problems](https://github.com/liquidslr/interview-company-wise-problems).
+
 ### License
 
 [GPL-3.0](LICENSE)

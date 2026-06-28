@@ -2,29 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Press_Start_2P } from "next/font/google";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-const pixel = Press_Start_2P({ subsets: ["latin"], weight: "400" });
-
-const LOGO_LETTERS = [
-  { char: "c", color: "#4285F4" },
-  { char: "o", color: "#EA4335" },
-  { char: "d", color: "#FBBC05" },
-  { char: "e", color: "#34A853" },
-  { char: "j", color: "#FF6D00" },
-  { char: "e", color: "#00BCD4" },
-  { char: "e", color: "#A259FF" },
-  { char: "t", color: "#FF4081" },
-];
-
 const NAV_LINKS = [
-  { href: "/companies", label: "Companies" },
-  { href: "/learn", label: "Learn" },
   { href: "/blog", label: "Blog" },
   { href: "/dashboard", label: "Tracker" },
   { href: "/system-design", label: "System Design" },
-  { href: "/podcast", label: "Podcast" },
 ];
 
 const Navbar = () => {
@@ -33,14 +16,10 @@ const Navbar = () => {
   return (
     <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4 container mx-auto">
-        <div className="text-lg relative z-10">
+        <div className="relative z-10">
           <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center">
-            <span className={pixel.className}>
-              {LOGO_LETTERS.map((l, i) => (
-                <span key={i} style={{ color: l.color }}>
-                  {l.char}
-                </span>
-              ))}
+            <span className="font-mono text-lg font-bold tracking-tight text-foreground">
+              codejeet
             </span>
           </Link>
         </div>
@@ -53,16 +32,24 @@ const Navbar = () => {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors"
             >
               {link.label}
             </Link>
           ))}
+          <a
+            href="https://pagefy.io/"
+            target="_blank"
+            rel="noopener"
+            className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Pagefy
+          </a>
           <SignedOut>
             <SignInButton mode="modal">
               <button
                 type="button"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors"
               >
                 Sign in
               </button>
@@ -115,17 +102,26 @@ const Navbar = () => {
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className="block px-4 py-3 text-sm text-muted-foreground hover:text-foreground transition-colors border-b border-border last:border-0"
+              className="block px-4 py-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors border-b border-border last:border-0"
             >
               {link.label}
             </Link>
           ))}
+          <a
+            href="https://pagefy.io/"
+            target="_blank"
+            rel="noopener"
+            onClick={() => setMobileOpen(false)}
+            className="block px-4 py-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors border-b border-border last:border-0"
+          >
+            Pagefy
+          </a>
           <div className="px-4 py-3">
             <SignedOut>
               <SignInButton mode="modal">
                 <button
                   type="button"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Sign in
                 </button>

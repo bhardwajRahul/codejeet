@@ -4,70 +4,57 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { DotPattern } from "@/components/magic-ui/dot-pattern";
+import { Frame } from "@/components/ui/frame";
+import { GridRails, HatchDivider } from "@/components/ui/decor";
 
 export default function HomeClient() {
   // ponytail: server renders a stable default; randomize the A/B hero image after
   // mount so SSR and first client render match (Math.random in render = hydration mismatch).
   const [focusLabel, setFocusLabel] = useState<"DSA" | "System Design">("DSA");
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: SSR-safe random after mount
     setFocusLabel(Math.random() < 0.5 ? "System Design" : "DSA");
   }, []);
   return (
     <div>
       <main>
-        <div className="z-0 relative w-full bg-gradient-to-b from-background to-primary/10 pb-6 md:pb-40 md:min-h-screen overflow-hidden">
-          <DotPattern className="absolute inset-0 z-0 [mask-image:radial-gradient(50vw_circle_at_center,white,transparent)]" />
-          <div className="relative z-10 flex flex-col items-center justify-start min-h-screen space-y-4 px-4 pt-12">
-            <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold break-words w-full max-w-[92vw] md:max-w-[1200px] px-2 mx-auto -z-10 leading-tight">
+        <HatchDivider />
+        <div className="relative w-full overflow-hidden bg-background grid-field">
+          <GridRails />
+          <div className="container relative z-10 mx-auto flex flex-col items-center justify-start space-y-6 px-4 pt-16 pb-10">
+            <h1 className="text-center text-4xl md:text-5xl lg:text-6xl font-bold break-words w-full max-w-[92vw] md:max-w-[1100px] px-2 mx-auto leading-tight tracking-tight">
               17,000+ Company-wise LeetCode Interview Questions
             </h1>
-            <h2 className="text-xl text-opacity-60 tracking-normal text-center max-w-2xl mx-auto z-10">
+            <h2 className="font-mono text-base text-muted-foreground tracking-normal text-center max-w-2xl mx-auto">
               Filter by company, topic, and difficulty. Practice smarter for your next tech
               interview.
             </h2>
-            <div className="z-20 flex flex-wrap justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="shadow-2xl h-12 px-8 text-lg leading-none"
-                >
+                <Button size="lg" className="h-12 px-8 text-base leading-none">
                   DSA
                 </Button>
               </Link>
               <Link href="/system-design">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="shadow-2xl h-12 px-8 text-lg leading-none"
-                >
+                <Button size="lg" variant="outline" className="h-12 px-8 text-base leading-none">
                   System Design
                 </Button>
               </Link>
-              <Link href="/podcast">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="shadow-2xl h-12 px-8 text-lg leading-none"
-                >
-                  Audiobook
-                </Button>
-              </Link>
             </div>
-            <div className="-mt-16 w-full">
+            <Frame className="mt-6 w-full max-w-[92vw] md:max-w-[1100px] bg-card p-1.5">
               <Image
                 src={focusLabel === "DSA" ? "/image1.webp" : "/image2.webp"}
                 alt="CodeJeet dashboard showing company-wise LeetCode questions filtered by difficulty and topic"
                 width={2000}
                 height={1500}
                 priority
-                sizes="(max-width: 768px) 92vw, 1200px"
-                className="w-full h-auto max-w-[92vw] md:max-w-[1200px] mx-auto rounded-2xl shadow-lg px-0 sm:px-4"
+                sizes="(max-width: 768px) 92vw, 1100px"
+                className="w-full h-auto"
               />
-            </div>
+            </Frame>
           </div>
         </div>
+        <HatchDivider />
       </main>
     </div>
   );

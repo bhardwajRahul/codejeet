@@ -12,7 +12,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-jakarta)", "sans-serif"],
-        mono: ["var(--font-jakarta)", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       colors: {
         background: "oklch(var(--background))",

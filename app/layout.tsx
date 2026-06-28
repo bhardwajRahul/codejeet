@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -14,6 +14,11 @@ import "./globals.css";
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -62,18 +67,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             />
           )}
         </head>
-        <body className={`${jakarta.variable} font-sans tracking-normal`} suppressHydrationWarning>
+        <body
+          className={`${jakarta.variable} ${jetbrainsMono.variable} font-sans tracking-normal`}
+          suppressHydrationWarning
+        >
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+            forcedTheme="dark"
             disableTransitionOnChange
           >
             <div className="min-h-screen bg-background flex flex-col">
               <div className="sticky top-0 z-50 bg-background">
                 <Navbar />
               </div>
-              <main className="flex-1">{children}</main>
+              <main className="flex-1 overflow-x-clip">{children}</main>
               <Footer />
               <Toaster />
             </div>

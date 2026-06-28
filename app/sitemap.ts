@@ -38,6 +38,7 @@ export default async function sitemap({ id }: { id: string }): Promise<MetadataR
   const group = id as SitemapGroup;
 
   return allUrls
+    .filter((u) => !u.path.startsWith("/podcast")) // podcast hidden for now
     .filter((u) => classifyUrl(u.path) === group)
     .map((u) => ({
       url: `${SITE_URL}${u.path}`,
