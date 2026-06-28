@@ -46,14 +46,6 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <a
-            href="https://pagefy.io/"
-            target="_blank"
-            rel="noopener"
-            className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Pagefy
-          </a>
           <SignedOut>
             <SignInButton mode="modal">
               <button
@@ -116,15 +108,6 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <a
-            href="https://pagefy.io/"
-            target="_blank"
-            rel="noopener"
-            onClick={() => setMobileOpen(false)}
-            className="block px-4 py-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground transition-colors border-b border-border last:border-0"
-          >
-            Pagefy
-          </a>
           <div className="px-4 py-3">
             <SignedOut>
               <SignInButton mode="modal">
