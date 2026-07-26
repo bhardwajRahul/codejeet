@@ -6,10 +6,11 @@ import {
   subscribeToDashboard,
   getDashboardSnapshot,
   getDashboardServerSnapshot,
+  retryDashboard,
 } from "@/lib/dashboard-store";
 
 export default function DashboardClient() {
-  const { data, loading } = useSyncExternalStore(
+  const { data, loading, error } = useSyncExternalStore(
     subscribeToDashboard,
     getDashboardSnapshot,
     getDashboardServerSnapshot
@@ -17,11 +18,7 @@ export default function DashboardClient() {
 
   return (
     <div className="container mx-auto py-8">
-      <LeetCodeDashboard
-        questions={data?.questions ?? []}
-        companies={data?.companies ?? []}
-        loading={loading}
-      />
+      <LeetCodeDashboard index={data} loading={loading} error={error} onRetry={retryDashboard} />
     </div>
   );
 }

@@ -1,71 +1,103 @@
 import { CACHE_VERSION } from "@/lib/cache-version";
-import type { Question } from "@/components/LeetCodeDashboard";
+import { decodeDashboardPayload, type DashboardIndex } from "@/lib/dashboard/decode";
+import type { DashboardPayload } from "@/lib/dashboard/schema";
 
-interface DashboardData {
-  questions: Question[];
-  companies: string[];
-}
+const CACHE_PREFIX = "dashboard-cache-";
+const CACHE_KEY = `${CACHE_PREFIX}${CACHE_VERSION}`;
+const FETCH_TIMEOUT_MS = 15000;
 
-interface DashboardStore {
-  data: DashboardData | null;
+export interface DashboardStore {
+  data: DashboardIndex | null;
   loading: boolean;
+  error: string | null;
 }
 
-let store: DashboardStore = { data: null, loading: true };
+let store: DashboardStore = { data: null, loading: true, error: null };
 const listeners = new Set<() => void>();
-let fetchStarted = false;
+let started = false;
 
 function emit() {
-  listeners.forEach((l) => l());
+  listeners.forEach((listener) => listener());
 }
 
-function getCachedData(): DashboardData | null {
+function setStore(next: DashboardStore) {
+  store = next;
+  emit();
+}
+
+// A pre-v5 entry could be several megabytes and would block the new write.
+function dropStaleCaches() {
   try {
-    const cached = localStorage.getItem(`dashboard-cache-${CACHE_VERSION}`);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      if (parsed && Array.isArray(parsed.questions) && Array.isArray(parsed.companies)) {
-        return parsed;
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(CACHE_PREFIX) && key !== CACHE_KEY) {
+        localStorage.removeItem(key);
       }
     }
   } catch {}
-  return null;
 }
 
-function startFetch() {
-  if (fetchStarted) return;
-  fetchStarted = true;
+function readCache(): DashboardIndex | null {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+    const payload = JSON.parse(cached) as DashboardPayload;
+    if (payload?.v !== 1 || !Array.isArray(payload.links)) throw new Error("bad shape");
+    return decodeDashboardPayload(payload);
+  } catch {
+    try {
+      localStorage.removeItem(CACHE_KEY);
+    } catch {}
+    return null;
+  }
+}
 
-  const cached = getCachedData();
+function load() {
+  dropStaleCaches();
+
+  const cached = readCache();
   if (cached) {
-    store = { data: cached, loading: false };
-    emit();
+    setStore({ data: cached, loading: false, error: null });
     return;
   }
 
-  fetch("/data/questions.json")
+  setStore({ data: null, loading: true, error: null });
+
+  fetch("/data/dashboard.json", { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
     .then((res) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
+      return res.text();
     })
-    .then((data) => {
-      const result: DashboardData = { questions: data.questions, companies: data.companies };
+    .then((text) => {
+      // Cache the raw text so nothing is stringified twice.
+      const index = decodeDashboardPayload(JSON.parse(text) as DashboardPayload);
       try {
-        localStorage.setItem(`dashboard-cache-${CACHE_VERSION}`, JSON.stringify(result));
+        localStorage.setItem(CACHE_KEY, text);
       } catch {}
-      store = { data: result, loading: false };
-      emit();
+      setStore({ data: index, loading: false, error: null });
     })
-    .catch(() => {
-      fetchStarted = false;
-      store = { data: { questions: [], companies: [] }, loading: false };
-      emit();
+    .catch((err: unknown) => {
+      const timedOut = err instanceof Error && err.name === "TimeoutError";
+      setStore({
+        data: null,
+        loading: false,
+        error: timedOut
+          ? "That took too long. Check your connection."
+          : "Could not load questions.",
+      });
     });
+}
+
+export function retryDashboard() {
+  load();
 }
 
 export function subscribeToDashboard(callback: () => void): () => void {
   listeners.add(callback);
-  startFetch();
+  if (!started) {
+    started = true;
+    load();
+  }
   return () => {
     listeners.delete(callback);
   };
@@ -76,7 +108,7 @@ export function getDashboardSnapshot(): DashboardStore {
 }
 
 // ponytail: stable reference — a fresh object each call makes useSyncExternalStore loop forever.
-const serverSnapshot: DashboardStore = { data: null, loading: true };
+const serverSnapshot: DashboardStore = { data: null, loading: true, error: null };
 export function getDashboardServerSnapshot(): DashboardStore {
   return serverSnapshot;
 }
