@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import { spreadBlogDates } from "../lib/blog/dates";
 import { isCompareIndexable, parseComparePair } from "../lib/compare";
 import { loadAllQuestions, type QuestionWithDetails } from "../lib/data";
+import { encodeDashboardData } from "../lib/dashboard/encode";
 import { capitalizeWords } from "../utils/utils";
 
 interface ScrapedProblem {
@@ -184,6 +185,17 @@ async function main() {
   }));
   const outPath = path.join(outDir, "questions.json");
   await fs.writeFile(outPath, JSON.stringify({ questions: slimQuestions, companies, topics }));
+
+  // Compact client payload. questions.json stays as-is for the server-rendered
+  // pSEO pages; only the dashboard reads this one, at roughly a fifth the
+  // gzipped size. scripts/verify-dashboard-data.ts proves the two agree.
+  const dashboardPayload = encodeDashboardData(slimQuestions);
+  const dashboardPath = path.join(outDir, "dashboard.json");
+  await fs.writeFile(dashboardPath, JSON.stringify(dashboardPayload));
+  console.log(
+    `Wrote ${dashboardPayload.problems.length} problems, ${dashboardPayload.links.length} links, ` +
+      `${dashboardPayload.companies.length} companies to ${dashboardPath}`
+  );
 
   // Copy individual problem JSONs to public/data/problems/ (full content for problem pages)
   const problemsOutDir = path.join(outDir, "problems");
