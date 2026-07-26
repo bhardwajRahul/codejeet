@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
 import { useUser } from "@clerk/nextjs";
 import { fetchUserProgress, updateQuestionProgress } from "@/utils/progressUtils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,44 +27,25 @@ import { Progress } from "@/components/ui/progress";
 import { capitalizeWords } from "@/utils/utils";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import TopicDropdown from "@/components/TopicDropdown";
-
-const LEETCODE_BASE_URL = "https://leetcode.com";
-
-export interface Question {
-  id: number;
-  slug: string;
-  title: string;
-  difficulty: string;
-  acceptance_rate: number;
-  link: string;
-  company: string;
-  frequency: number;
-  timeframes?: string[];
-  topics: string[];
-  ID: string;
-  Title: string;
-  URL: string;
-  Difficulty: string;
-  "Acceptance %": string;
-  "Frequency %": string;
-  "Is Premium": string;
-  Topics: string;
-}
+import { toDisplayRow, type DashboardIndex } from "@/lib/dashboard/decode";
+import { computeStats, filterLinks, sortLinks, type SortOrder } from "@/lib/dashboard/query";
+import { LEETCODE_BASE_URL, type Difficulty, type Timeframe } from "@/lib/dashboard/schema";
 
 interface LeetCodeDashboardProps {
-  questions: Question[];
-  companies: string[];
+  index: DashboardIndex | null;
   loading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
 const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
-  questions = [],
-  companies = [],
+  index,
   loading = false,
+  error = null,
+  onRetry,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [difficultyFilter, setDifficultyFilter] = useState<string[]>([]);
-  const [selectedCompany] = useState("");
+  const [difficultyFilter, setDifficultyFilter] = useState<Difficulty[]>([]);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(() => {
     if (typeof window === "undefined") return {};
 
@@ -82,11 +63,16 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [frequencySort, setFrequencySort] = useState<"asc" | "desc" | null>(null);
-  const [acceptanceSort, setAcceptanceSort] = useState<"asc" | "desc" | null>(null);
-  const [timeframeFilter, setTimeframeFilter] = useState("all");
+  // Page 1 shows the most-asked questions instead of arbitrary CSV order.
+  const [frequencySort, setFrequencySort] = useState<SortOrder>("desc");
+  const [acceptanceSort, setAcceptanceSort] = useState<SortOrder>(null);
+  const [timeframeFilter, setTimeframeFilter] = useState<Timeframe>("all");
   const [premiumFilter, setPremiumFilter] = useState("free");
   const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
+
+  // React's native debounce: the input stays instant while the 15k-link filter
+  // re-runs at lower priority. The company dropdown keeps the raw value.
+  const deferredSearch = useDeferredValue(searchQuery);
 
   const { isSignedIn } = useUser();
   const mergedRef = useRef(false);
@@ -130,98 +116,47 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     if (isSignedIn) void updateQuestionProgress(id, value);
   };
 
+  // Counts come precomputed from the build, so no 11M-comparison scan on mount.
   const companyStats = useMemo(() => {
-    return companies
-      .map((company) => ({
-        name: company,
-        count: questions.filter((q) => q.company === company).length,
-      }))
+    if (!index) return [];
+    return index.companies
+      .map((name, i) => ({ name, count: index.companyCounts[i] }))
       .sort((a, b) => b.count - a.count);
-  }, [questions, companies]);
+  }, [index]);
 
-  const uniqueTopics = useMemo(() => {
-    const topicsSet = new Set<string>();
-    questions.forEach((question) => {
-      question.Topics.split(",").forEach((topic) => {
-        const trimmedTopic = topic.trim();
-        if (trimmedTopic) {
-          topicsSet.add(trimmedTopic);
-        }
-      });
+  const uniqueTopics = useMemo(() => index?.topics ?? [], [index]);
+
+  const filteredLinks = useMemo(() => {
+    if (!index) return [];
+    return filterLinks(index, {
+      search: deferredSearch,
+      difficulties: difficultyFilter,
+      topics: selectedTopics,
+      timeframe: timeframeFilter,
+      premium: premiumFilter as "free" | "premium" | "all",
     });
-    return Array.from(topicsSet);
-  }, [questions]);
+  }, [index, deferredSearch, difficultyFilter, selectedTopics, timeframeFilter, premiumFilter]);
 
-  const filteredQuestions = useMemo(() => {
-    const queryWords = searchQuery.trim().toLowerCase().split(/\s+/);
-    return questions.filter((question) => {
-      const matchesSearch = queryWords.every(
-        (word) =>
-          question.Title.toLowerCase().includes(word) ||
-          question.company.toLowerCase().includes(word) ||
-          question.Topics.toLowerCase()
-            .split(",")
-            .some((topic) => topic.trim().includes(word))
-      );
-      const matchesDifficulty =
-        difficultyFilter.length === 0 || difficultyFilter.includes(question.Difficulty);
-      const matchesCompany = !selectedCompany || question.company === selectedCompany;
-      const matchesTopic =
-        selectedTopics.length === 0 ||
-        selectedTopics.every((topic) =>
-          question.Topics.split(",")
-            .map((t) => t.trim())
-            .includes(topic)
-        );
-      const matchesTimeframe =
-        timeframeFilter === "all" || (question.timeframes?.includes(timeframeFilter) ?? false);
-      const matchesPremium =
-        premiumFilter === "all" ||
-        (premiumFilter === "free" && question["Is Premium"] !== "Y") ||
-        (premiumFilter === "premium" && question["Is Premium"] === "Y");
+  const sortedLinks = useMemo(() => {
+    if (!index) return [];
+    return sortLinks(index, filteredLinks, frequencySort, acceptanceSort);
+  }, [index, filteredLinks, frequencySort, acceptanceSort]);
 
-      return (
-        matchesSearch &&
-        matchesDifficulty &&
-        matchesCompany &&
-        matchesTopic &&
-        matchesTimeframe &&
-        matchesPremium
-      );
-    });
-  }, [
-    questions,
-    searchQuery,
-    difficultyFilter,
-    selectedCompany,
-    selectedTopics,
-    timeframeFilter,
-    premiumFilter,
-  ]);
-
-  const filteredAndSortedQuestions = useMemo(() => {
-    const result = [...filteredQuestions];
-
-    result.sort((a, b) => {
-      if (frequencySort) {
-        const freqA = parseFloat(a["Frequency %"]);
-        const freqB = parseFloat(b["Frequency %"]);
-        const freqResult = frequencySort === "asc" ? freqA - freqB : freqB - freqA;
-        if (freqResult !== 0) return freqResult;
-      }
-
-      if (acceptanceSort) {
-        const accA = parseFloat(a["Acceptance %"]);
-        const accB = parseFloat(b["Acceptance %"]);
-        const accResult = acceptanceSort === "asc" ? accA - accB : accB - accA;
-        if (accResult !== 0) return accResult;
-      }
-
-      return 0;
-    });
-
-    return result;
-  }, [filteredQuestions, frequencySort, acceptanceSort]);
+  const statistics = useMemo(() => {
+    if (!index) {
+      return {
+        total: 0,
+        totalSolved: 0,
+        easy: 0,
+        easySolved: 0,
+        medium: 0,
+        mediumSolved: 0,
+        hard: 0,
+        hardSolved: 0,
+      };
+    }
+    return computeStats(index, filteredLinks, checkedItems);
+  }, [index, filteredLinks, checkedItems]);
 
   const handleFrequencySort = () => {
     setFrequencySort((prev) => {
@@ -239,70 +174,23 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     });
   };
 
-  const statistics = useMemo(() => {
-    const uniqueQuestions = Array.from(new Set(filteredQuestions.map((q) => q.ID)));
-    const total = uniqueQuestions.length;
-
-    const solvedQuestions = new Set(
-      filteredQuestions.filter((q) => checkedItems[q.ID]).map((q) => q.ID)
-    );
-
-    const totalSolved = solvedQuestions.size;
-
-    const easyQuestions = new Set(
-      filteredQuestions.filter((q) => q.Difficulty === "Easy").map((q) => q.ID)
-    );
-    const mediumQuestions = new Set(
-      filteredQuestions.filter((q) => q.Difficulty === "Medium").map((q) => q.ID)
-    );
-    const hardQuestions = new Set(
-      filteredQuestions.filter((q) => q.Difficulty === "Hard").map((q) => q.ID)
-    );
-
-    const easySolved = new Set(
-      filteredQuestions
-        .filter((q) => q.Difficulty === "Easy" && checkedItems[q.ID])
-        .map((q) => q.ID)
-    ).size;
-
-    const mediumSolved = new Set(
-      filteredQuestions
-        .filter((q) => q.Difficulty === "Medium" && checkedItems[q.ID])
-        .map((q) => q.ID)
-    ).size;
-
-    const hardSolved = new Set(
-      filteredQuestions
-        .filter((q) => q.Difficulty === "Hard" && checkedItems[q.ID])
-        .map((q) => q.ID)
-    ).size;
-
-    return {
-      total,
-      totalSolved,
-      easy: easyQuestions.size,
-      easySolved,
-      medium: mediumQuestions.size,
-      mediumSolved,
-      hard: hardQuestions.size,
-      hardSolved,
-    };
-  }, [filteredQuestions, checkedItems]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredQuestions.length / itemsPerPage));
+  const totalPages = Math.max(1, Math.ceil(filteredLinks.length / itemsPerPage));
   const currentPageToUse = Math.min(currentPage, totalPages);
 
+  // Only the visible page is materialised into display strings.
   const currentItems = useMemo(() => {
-    const startIndex = (currentPageToUse - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredAndSortedQuestions.slice(startIndex, endIndex);
-  }, [filteredAndSortedQuestions, currentPageToUse, itemsPerPage]);
+    if (!index) return [];
+    const start = (currentPageToUse - 1) * itemsPerPage;
+    return sortedLinks
+      .slice(start, start + itemsPerPage)
+      .map((linkIndex) => toDisplayRow(index, linkIndex));
+  }, [index, sortedLinks, currentPageToUse, itemsPerPage]);
 
   const goToFirstPage = () => setCurrentPage(1);
   const goToLastPage = () => setCurrentPage(totalPages);
 
   const handleDifficultyChange = (options: string[]) => {
-    setDifficultyFilter(options);
+    setDifficultyFilter(options as Difficulty[]);
     setCurrentPage(1);
   };
 
@@ -312,7 +200,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   };
 
   const handleTimeframeChange = (value: string) => {
-    setTimeframeFilter(value);
+    setTimeframeFilter(value as Timeframe);
     setCurrentPage(1);
   };
 
@@ -609,7 +497,14 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                   </div>
                 </div>
               </>
-            ) : filteredQuestions.length === 0 ? (
+            ) : error ? (
+              <div className="flex flex-col items-center gap-3 p-8 text-center">
+                <p className="text-muted-foreground">{error}</p>
+                <Button variant="outline" size="sm" onClick={onRetry}>
+                  Retry
+                </Button>
+              </div>
+            ) : filteredLinks.length === 0 ? (
               <div className="p-4 text-center text-muted-foreground">
                 No questions found , try some other filters?
               </div>
@@ -654,65 +549,55 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {currentItems.map((question) => {
-                        const topics = question.Topics.split(",")
-                          .map((topic) => topic.trim())
-                          .filter(Boolean);
-
-                        return (
-                          <TableRow key={`${question.id}-${question.company}`}>
-                            <TableCell className="w-4">
-                              <Checkbox
-                                checked={checkedItems[question.ID] || false}
-                                onCheckedChange={(value) =>
-                                  handleCheckboxChange(question.ID, Boolean(value))
-                                }
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <a
-                                href={`${LEETCODE_BASE_URL}${question.URL}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-foreground hover:text-primary hover:underline"
-                              >
-                                {question.Title}
-                              </a>
-                            </TableCell>
-                            <TableCell>
-                              <div className="capitalize">{capitalizeWords(question.company)}</div>
-                            </TableCell>
-                            <TableCell>
-                              <DifficultyBadge
-                                difficulty={question.Difficulty as "Easy" | "Medium" | "Hard"}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex flex-wrap gap-1">
-                                {topics.length === 0 ? (
-                                  <span className="text-muted-foreground">-</span>
-                                ) : (
-                                  topics.map((topic, index) => (
-                                    <span
-                                      key={index}
-                                      className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
-                                    >
-                                      {topic}
-                                    </span>
-                                  ))
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-center">
-                              {question["Acceptance %"]}
-                            </TableCell>
-                            <TableCell className="text-center">{question["Frequency %"]}</TableCell>
-                            <TableCell className="flex items-center gap-2" aria-hidden="true">
-                              <div className="h-9 w-9 opacity-0" />
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                      {currentItems.map((row) => (
+                        <TableRow key={row.key}>
+                          <TableCell className="w-4">
+                            <Checkbox
+                              checked={checkedItems[row.slug] || false}
+                              onCheckedChange={(value) =>
+                                handleCheckboxChange(row.slug, Boolean(value))
+                              }
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <a
+                              href={`${LEETCODE_BASE_URL}${row.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-foreground hover:text-primary hover:underline"
+                            >
+                              {row.title}
+                            </a>
+                          </TableCell>
+                          <TableCell>
+                            <div className="capitalize">{capitalizeWords(row.company)}</div>
+                          </TableCell>
+                          <TableCell>
+                            <DifficultyBadge difficulty={row.difficulty} />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-wrap gap-1">
+                              {row.topics.length === 0 ? (
+                                <span className="text-muted-foreground">-</span>
+                              ) : (
+                                row.topics.map((topic) => (
+                                  <span
+                                    key={topic}
+                                    className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
+                                  >
+                                    {topic}
+                                  </span>
+                                ))
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-center">{row.acceptance}</TableCell>
+                          <TableCell className="text-center">{row.frequency}</TableCell>
+                          <TableCell className="flex items-center gap-2" aria-hidden="true">
+                            <div className="h-9 w-9 opacity-0" />
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                   <div className="hidden md:flex flex-col sm:flex-row items-center justify-between py-4 px-2 gap-4">
@@ -780,60 +665,49 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                 </div>
 
                 <div className="grid gap-4 md:hidden">
-                  {currentItems.map((question) => {
-                    const topics = question.Topics.split(",")
-                      .map((topic) => topic.trim())
-                      .filter(Boolean);
-
-                    return (
-                      <Card
-                        key={`${question.id}-${question.company}`}
-                        className="p-4 bg-background/50 border"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-2">
-                            <Checkbox
-                              checked={checkedItems[question.ID] || false}
-                              onCheckedChange={(value) =>
-                                handleCheckboxChange(question.ID, Boolean(value))
-                              }
-                            />
-                            <div>
-                              <a
-                                href={`${LEETCODE_BASE_URL}${question.URL}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-medium hover:underline"
-                              >
-                                {question.Title}
-                              </a>
-                              <div className="capitalize text-xs text-muted-foreground">
-                                {capitalizeWords(question.company)}
-                              </div>
+                  {currentItems.map((row) => (
+                    <Card key={row.key} className="p-4 bg-background/50 border">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            checked={checkedItems[row.slug] || false}
+                            onCheckedChange={(value) =>
+                              handleCheckboxChange(row.slug, Boolean(value))
+                            }
+                          />
+                          <div>
+                            <a
+                              href={`${LEETCODE_BASE_URL}${row.path}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium hover:underline"
+                            >
+                              {row.title}
+                            </a>
+                            <div className="capitalize text-xs text-muted-foreground">
+                              {capitalizeWords(row.company)}
                             </div>
                           </div>
-                          <DifficultyBadge
-                            difficulty={question.Difficulty as "Easy" | "Medium" | "Hard"}
-                          />
                         </div>
+                        <DifficultyBadge difficulty={row.difficulty} />
+                      </div>
 
-                        <div className="mt-3 flex flex-wrap gap-1">
-                          {topics.length === 0 ? (
-                            <span className="text-muted-foreground">-</span>
-                          ) : (
-                            topics.map((topic, index) => (
-                              <span
-                                key={index}
-                                className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
-                              >
-                                {topic}
-                              </span>
-                            ))
-                          )}
-                        </div>
-                      </Card>
-                    );
-                  })}
+                      <div className="mt-3 flex flex-wrap gap-1">
+                        {row.topics.length === 0 ? (
+                          <span className="text-muted-foreground">-</span>
+                        ) : (
+                          row.topics.map((topic) => (
+                            <span
+                              key={topic}
+                              className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 dark:text-blue-400"
+                            >
+                              {topic}
+                            </span>
+                          ))
+                        )}
+                      </div>
+                    </Card>
+                  ))}
 
                   <div className="flex md:hidden items-center justify-center py-4 px-2 gap-4 w-full">
                     <div className="flex items-center space-x-2">
