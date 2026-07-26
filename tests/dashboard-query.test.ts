@@ -146,9 +146,67 @@ describe("sortLinks", () => {
     const local = decodeDashboardPayload(
       encodeDashboardData([q({ "Acceptance %": "" }), q({ company: "meta" })])
     );
-    const sorted = sortLinks(local, filterLinks(local, opts()), null, "asc");
+    const allLinks = filterLinks(local, opts());
 
-    assert.equal(local.problems[local.links[sorted[0]][0]][3], null);
+    // Ascending: null must be first
+    const asc = sortLinks(local, allLinks, null, "asc");
+    assert.equal(local.problems[local.links[asc[0]][0]][3], null);
+
+    // Descending: null must be last
+    const desc = sortLinks(local, allLinks, null, "desc");
+    assert.equal(local.problems[local.links[desc[desc.length - 1]][0]][3], null);
+  });
+
+  it("sorts by acceptance when frequency rankings would differ", () => {
+    // Build a fixture where acceptance ranking (54.3 > 41.0) and frequency ranking
+    // (70 > 100 when descending) would produce different sort orders.
+    // Tests that we read acceptance column, not frequency.
+    const local = decodeDashboardPayload(
+      encodeDashboardData([
+        q({ "Acceptance %": "41.0%", "Frequency %": "100.0%" }),
+        q({ company: "amazon", "Acceptance %": "54.3%", "Frequency %": "70.0%" }),
+      ])
+    );
+    const allLinks = filterLinks(local, opts());
+    const sorted = sortLinks(local, allLinks, null, "desc");
+
+    const acceptances = sorted.map((i) => local.problems[local.links[i][0]][3]);
+    assert.deepEqual(acceptances, [54.3, 41.0]);
+  });
+
+  it("tie-breaks frequency and acceptance when both are set", () => {
+    // Two rows with the same frequency, one row with different frequency.
+    // When both sort orders are active, frequency must dominate the tie-break.
+    const local = decodeDashboardPayload(
+      encodeDashboardData([
+        q({ slug: "freq-diff", "Frequency %": "100.0%", "Acceptance %": "50.0%" }),
+        q({
+          slug: "freq-same-a",
+          company: "amazon",
+          "Frequency %": "70.0%",
+          "Acceptance %": "60.0%",
+        }),
+        q({
+          slug: "freq-same-b",
+          company: "meta",
+          "Frequency %": "70.0%",
+          "Acceptance %": "40.0%",
+        }),
+      ])
+    );
+    const allLinks = filterLinks(local, opts());
+    const sorted = sortLinks(local, allLinks, "desc", "desc");
+
+    const slugs = sorted.map((i) => local.problems[local.links[i][0]][0]);
+    assert.equal(slugs[0], "freq-diff");
+    assert.deepEqual(slugs.slice(1).sort(), ["freq-same-a", "freq-same-b"]);
+
+    // The two frequency-tied rows must be ordered by acceptance (60 > 40).
+    const tiedAcceptances = slugs.slice(1).map((slug) => {
+      const linkIndex = allLinks.find((li) => local.problems[local.links[li][0]][0] === slug)!;
+      return local.problems[local.links[linkIndex][0]][3];
+    });
+    assert.deepEqual(tiedAcceptances, [60.0, 40.0]);
   });
 
   it("does not mutate its input", () => {
