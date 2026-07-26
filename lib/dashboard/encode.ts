@@ -25,14 +25,14 @@ export interface SourceQuestion {
 // Topics, 1 on title). Keying on the full identity keeps those variants
 // separate so the encoding stays exactly lossless.
 function problemKey(question: SourceQuestion): string {
-  return [
+  return JSON.stringify([
     question.slug,
     question.title,
     question.Topics,
     question.difficulty,
     question["Acceptance %"],
     question["Is Premium"],
-  ].join(" ");
+  ]);
 }
 
 export function encodeDashboardData(questions: readonly SourceQuestion[]): DashboardPayload {

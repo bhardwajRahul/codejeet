@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { encodeDashboardData, type SourceQuestion } from "../lib/dashboard/encode";
-import { formatPercent, timeframesFromMask } from "../lib/dashboard/schema";
+import { formatPercent, maskFromTimeframes, timeframesFromMask } from "../lib/dashboard/schema";
 
 function q(overrides: Partial<SourceQuestion> = {}): SourceQuestion {
   return {
@@ -95,5 +95,12 @@ describe("encodeDashboardData", () => {
 
   it("throws on an unknown difficulty", () => {
     assert.throws(() => encodeDashboardData([q({ difficulty: "Impossible" })]), /Impossible/);
+  });
+
+  it("pins literal TIMEFRAMES bit order", () => {
+    assert.equal(maskFromTimeframes(["all"]), 1);
+    assert.equal(maskFromTimeframes(["30_days"]), 2);
+    assert.equal(maskFromTimeframes(["3_months", "all"]), 5);
+    assert.equal(maskFromTimeframes(["more_than_6m"]), 16);
   });
 });
