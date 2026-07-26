@@ -175,8 +175,9 @@ describe("sortLinks", () => {
   });
 
   it("tie-breaks frequency and acceptance when both are set", () => {
-    // Two rows with the same frequency, one row with different frequency.
-    // When both sort orders are active, frequency must dominate the tie-break.
+    // Two rows with the same frequency (in reverse source order by acceptance),
+    // one row with different frequency. When both sort orders are active,
+    // frequency must dominate, and acceptance must tie-break.
     const local = decodeDashboardPayload(
       encodeDashboardData([
         q({ slug: "freq-diff", "Frequency %": "100.0%", "Acceptance %": "50.0%" }),
@@ -184,13 +185,13 @@ describe("sortLinks", () => {
           slug: "freq-same-a",
           company: "amazon",
           "Frequency %": "70.0%",
-          "Acceptance %": "60.0%",
+          "Acceptance %": "40.0%",
         }),
         q({
           slug: "freq-same-b",
           company: "meta",
           "Frequency %": "70.0%",
-          "Acceptance %": "40.0%",
+          "Acceptance %": "60.0%",
         }),
       ])
     );
@@ -198,15 +199,10 @@ describe("sortLinks", () => {
     const sorted = sortLinks(local, allLinks, "desc", "desc");
 
     const slugs = sorted.map((i) => local.problems[local.links[i][0]][0]);
-    assert.equal(slugs[0], "freq-diff");
-    assert.deepEqual(slugs.slice(1).sort(), ["freq-same-a", "freq-same-b"]);
-
-    // The two frequency-tied rows must be ordered by acceptance (60 > 40).
-    const tiedAcceptances = slugs.slice(1).map((slug) => {
-      const linkIndex = allLinks.find((li) => local.problems[local.links[li][0]][0] === slug)!;
-      return local.problems[local.links[linkIndex][0]][3];
-    });
-    assert.deepEqual(tiedAcceptances, [60.0, 40.0]);
+    // Frequency dominates: freq-diff (100) comes first.
+    // Acceptance tie-breaks the two 70-frequency rows: freq-same-b (60) before freq-same-a (40).
+    // Correct order is the reverse of source order, catching any missing tie-break logic.
+    assert.deepEqual(slugs, ["freq-diff", "freq-same-b", "freq-same-a"]);
   });
 
   it("does not mutate its input", () => {
