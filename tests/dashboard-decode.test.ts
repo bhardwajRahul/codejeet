@@ -57,7 +57,7 @@ describe("decodeDashboardPayload", () => {
 describe("toDisplayRow", () => {
   it("rebuilds every rendered field", () => {
     assert.deepEqual(toDisplayRow(index, 0), {
-      key: "0-1",
+      key: "0",
       slug: "two-sum",
       title: "Two Sum",
       path: "/problems/two-sum",
@@ -79,9 +79,13 @@ describe("toDisplayRow", () => {
     assert.equal(row.premium, true);
   });
 
-  it("gives every row a unique key", () => {
-    const keys = index.links.map((_, i) => toDisplayRow(index, i).key);
+  it("gives every row a unique key even when two links share a problem and company", () => {
+    const local = decodeDashboardPayload(encodeDashboardData([q(), q()]));
 
-    assert.equal(new Set(keys).size, keys.length);
+    assert.equal(local.problems.length, 1);
+    assert.equal(local.links.length, 2);
+
+    const keys = local.links.map((_, i) => toDisplayRow(local, i).key);
+    assert.equal(new Set(keys).size, 2);
   });
 });

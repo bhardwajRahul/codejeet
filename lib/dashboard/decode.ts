@@ -58,7 +58,7 @@ export function toDisplayRow(index: DashboardIndex, linkIndex: number): DisplayR
   const [slug, title, difficulty, acceptance, premium, topics] = index.problems[problem];
 
   return {
-    key: `${problem}-${company}`,
+    key: String(linkIndex),
     slug,
     title,
     path: problemPath(slug),
