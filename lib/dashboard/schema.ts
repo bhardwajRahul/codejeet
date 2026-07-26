@@ -1,6 +1,6 @@
 // Compact wire format for the dashboard question table. Every field the table
 // renders is derivable from this payload, so the fat questions.json never
-// reaches the browser. See docs/superpowers/specs/2026-07-26-dashboard-data-delivery-design.md
+// reaches the browser.
 
 export const DIFFICULTIES = ["Easy", "Medium", "Hard"] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];

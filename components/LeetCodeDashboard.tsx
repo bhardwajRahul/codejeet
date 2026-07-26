@@ -35,7 +35,7 @@ interface LeetCodeDashboardProps {
   index: DashboardIndex | null;
   loading?: boolean;
   error?: string | null;
-  onRetry?: () => void;
+  onRetry: () => void;
 }
 
 const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
@@ -498,7 +498,7 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
                 </div>
               </>
             ) : error ? (
-              <div className="flex flex-col items-center gap-3 p-8 text-center">
+              <div role="alert" className="flex flex-col items-center gap-3 p-8 text-center">
                 <p className="text-muted-foreground">{error}</p>
                 <Button variant="outline" size="sm" onClick={onRetry}>
                   Retry

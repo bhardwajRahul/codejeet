@@ -15,6 +15,9 @@ export interface DashboardStore {
 let store: DashboardStore = { data: null, loading: true, error: null };
 const listeners = new Set<() => void>();
 let started = false;
+// Bumped on every load() call so a stale, late-resolving request can't clobber
+// a newer one's result (e.g. a slow failing request finishing after a retry succeeded).
+let generation = 0;
 
 function emit() {
   listeners.forEach((listener) => listener());
@@ -53,6 +56,7 @@ function readCache(): DashboardIndex | null {
 }
 
 function load() {
+  const mine = ++generation;
   dropStaleCaches();
 
   const cached = readCache();
@@ -74,9 +78,11 @@ function load() {
       try {
         localStorage.setItem(CACHE_KEY, text);
       } catch {}
+      if (mine !== generation) return;
       setStore({ data: index, loading: false, error: null });
     })
     .catch((err: unknown) => {
+      if (mine !== generation) return;
       const timedOut = err instanceof Error && err.name === "TimeoutError";
       setStore({
         data: null,
