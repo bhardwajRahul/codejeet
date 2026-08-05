@@ -63,9 +63,12 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
         }, 30_000);
         return;
       }
-      retryTimer = setTimeout(() => {
-        if (!cancelled && !syncedOnSignInRef.current) void runSync(nextAttempt);
-      }, 1000 * (nextAttempt - 1));
+      retryTimer = setTimeout(
+        () => {
+          if (!cancelled && !syncedOnSignInRef.current) void runSync(nextAttempt);
+        },
+        1000 * (nextAttempt - 1)
+      );
     };
 
     // Filled after successful GET.
@@ -82,9 +85,7 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
         committedSlugsRef.current
       );
 
-    const persistMerged = (
-      settled: ReturnType<typeof reconcileNotes>
-    ) => {
+    const persistMerged = (settled: ReturnType<typeof reconcileNotes>) => {
       saveLocalNotes(settled.merged);
       saveLocalNotesMeta(settled.mergedMeta);
       saveLocalNoteTombstones(settled.mergedTombstones);
@@ -149,7 +150,10 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
 
       // Exhausted stabilize rounds and/or had POST failures.
       persistMerged(snapshotLocal());
-      if (roundFailed || Object.entries(snapshotLocal().toUpload).some(([s, n]) => uploaded.get(s) !== n)) {
+      if (
+        roundFailed ||
+        Object.entries(snapshotLocal().toUpload).some(([s, n]) => uploaded.get(s) !== n)
+      ) {
         scheduleRetry(attempt + 1);
         return;
       }

@@ -7,7 +7,9 @@ const config = defineCloudflareConfig({
   enableCacheInterception: true,
 });
 
-export default {
+const openNextConfig = {
   ...config,
   buildCommand: "CI=true pnpm run build",
 };
+
+export default openNextConfig;

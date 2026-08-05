@@ -86,10 +86,7 @@ describe("toDisplayRow", () => {
     const premium = toDisplayRow(index, 1);
 
     assert.equal(free.url, "https://leetcode.com/problems/two-sum");
-    assert.equal(
-      premium.url,
-      "https://www.lintcode.com/problem/median-of-two-sorted-arrays/"
-    );
+    assert.equal(premium.url, "https://www.lintcode.com/problem/median-of-two-sorted-arrays/");
   });
 
   it("gives every row a unique key even when two links share a problem and company", () => {

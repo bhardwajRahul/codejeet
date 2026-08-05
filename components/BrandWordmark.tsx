@@ -14,9 +14,7 @@ type BrandLockupProps = {
 
 export function BrandLockup({ className }: BrandLockupProps) {
   return (
-    <span
-      className={cn(chango.className, "brand-lockup inline-flex items-center", className)}
-    >
+    <span className={cn(chango.className, "brand-lockup inline-flex items-center", className)}>
       <span className="brand-wordmark select-none">Codejeet</span>
     </span>
   );

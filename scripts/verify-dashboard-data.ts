@@ -70,9 +70,7 @@ async function main() {
     }
 
     if (!row.company || row.company.trim() === "") {
-      failures.push(
-        `row ${i} (${expected.ID}/${expected.company}) company displayName is empty`
-      );
+      failures.push(`row ${i} (${expected.ID}/${expected.company}) company displayName is empty`);
     }
 
     if (failures.length >= 20) break;

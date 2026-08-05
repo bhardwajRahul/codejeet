@@ -12,10 +12,7 @@ const ProblemNotesImpl = dynamic(
   {
     ssr: false,
     loading: () => (
-      <section
-        className="mb-8 rounded-[2px] border border-border bg-card p-4"
-        aria-hidden
-      >
+      <section className="mb-8 rounded-[2px] border border-border bg-card p-4" aria-hidden>
         <div className="mb-2 h-4 w-24 rounded-[2px] bg-muted" />
         <div className="h-28 rounded-[2px] bg-muted/60" />
       </section>

@@ -322,9 +322,7 @@ export function clearLocalNote(slug: string): NotesMap {
   return setLocalNote(slug, "");
 }
 
-export type FetchNotesResult =
-  | { ok: true; notes: NotesMap; updatedAt: NotesMeta }
-  | { ok: false };
+export type FetchNotesResult = { ok: true; notes: NotesMap; updatedAt: NotesMeta } | { ok: false };
 
 export async function fetchUserNotes(): Promise<FetchNotesResult> {
   try {

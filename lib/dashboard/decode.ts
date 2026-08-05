@@ -41,8 +41,8 @@ export function decodeDashboardPayload(payload: DashboardPayload): DashboardInde
     problems: payload.problems,
     links: payload.links,
     titleLower: payload.problems.map(([, title]) => title.toLowerCase()),
-    companyLower: payload.companies.map(
-      ([slug, , displayName]) => `${slug} ${displayName}`.toLowerCase()
+    companyLower: payload.companies.map(([slug, , displayName]) =>
+      `${slug} ${displayName}`.toLowerCase()
     ),
     topicSets: payload.problems.map(([, , , , , topics]) => new Set(topics)),
   };
