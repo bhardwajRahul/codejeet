@@ -44,8 +44,12 @@ export default function HomeClient() {
               className="mt-6 w-full max-w-[92vw] md:max-w-[1100px] bg-card p-1.5"
             >
               <Image
-                src={focusLabel === "DSA" ? "/image1.webp" : "/image2.webp"}
-                alt="CodeJeet dashboard showing company-wise LeetCode questions filtered by difficulty and topic"
+                src={focusLabel === "DSA" ? "/homepage-dsa.png" : "/homepage-system-design.png"}
+                alt={
+                  focusLabel === "DSA"
+                    ? "CodeJeet dashboard showing company-wise LeetCode questions filtered by difficulty and topic"
+                    : "CodeJeet system design lesson showing how to scale an app to millions of users"
+                }
                 width={2000}
                 height={1500}
                 priority

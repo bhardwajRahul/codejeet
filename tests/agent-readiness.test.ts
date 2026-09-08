@@ -45,6 +45,17 @@ describe("homepage server-rendered content", () => {
     assert.equal(source.includes("Filter by company, topic, and difficulty."), true);
     assert.equal(source.includes("Practice smarter for your next tech"), true);
   });
+
+  it("uses the refreshed DSA and system-design screenshots", () => {
+    const source = readFileSync(path.join(root, "app/page.client.tsx"), "utf8");
+    for (const image of ["homepage-dsa.png", "homepage-system-design.png"]) {
+      assert.match(source, new RegExp(`/${image}`));
+      const imagePath = path.join(root, "public", image);
+      assert.equal(existsSync(imagePath), true, `${image} must be present`);
+      const bytes = readFileSync(imagePath);
+      assert.deepEqual(Array.from(bytes.subarray(0, 8)), [137, 80, 78, 71, 13, 10, 26, 10]);
+    }
+  });
 });
 
 describe("agent 404 body", () => {
