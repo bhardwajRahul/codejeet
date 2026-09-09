@@ -48,6 +48,8 @@ describe("homepage server-rendered content", () => {
 
   it("uses the refreshed DSA and system-design screenshots", () => {
     const source = readFileSync(path.join(root, "app/page.client.tsx"), "utf8");
+    assert.equal(source.includes("Frame"), false, "homepage screenshots must not sit in a Frame");
+    assert.doesNotMatch(source, /border-border|bg-card|p-1\.5/);
     for (const image of ["homepage-dsa.png", "homepage-system-design.png"]) {
       assert.match(source, new RegExp(`/${image}`));
       const imagePath = path.join(root, "public", image);

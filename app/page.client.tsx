@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Frame } from "@/components/ui/frame";
 import { GridRails, HatchDivider } from "@/components/ui/decor";
 
 export default function HomeClient() {
@@ -39,24 +38,19 @@ export default function HomeClient() {
                 </Button>
               </Link>
             </div>
-            <Frame
-              ticks={false}
-              className="mt-6 w-full max-w-[92vw] md:max-w-[1100px] bg-card p-1.5"
-            >
-              <Image
-                src={focusLabel === "DSA" ? "/homepage-dsa.png" : "/homepage-system-design.png"}
-                alt={
-                  focusLabel === "DSA"
-                    ? "CodeJeet dashboard showing company-wise LeetCode questions filtered by difficulty and topic"
-                    : "CodeJeet system design lesson showing how to scale an app to millions of users"
-                }
-                width={2000}
-                height={1500}
-                priority
-                sizes="(max-width: 768px) 92vw, 1100px"
-                className="w-full h-auto"
-              />
-            </Frame>
+            <Image
+              src={focusLabel === "DSA" ? "/homepage-dsa.png" : "/homepage-system-design.png"}
+              alt={
+                focusLabel === "DSA"
+                  ? "CodeJeet dashboard showing company-wise LeetCode questions filtered by difficulty and topic"
+                  : "CodeJeet system design lesson showing how to scale an app to millions of users"
+              }
+              width={1845}
+              height={1327}
+              priority
+              sizes="(max-width: 768px) 92vw, 1100px"
+              className="mt-6 w-full max-w-[92vw] md:max-w-[1100px] h-auto"
+            />
           </div>
         </div>
         <HatchDivider />
