@@ -13,7 +13,20 @@ describe("Coolify container boundary", () => {
 
   it("builds a standalone non-root Node runtime on port 3000", async () => {
     const dockerfile = await readFile("Dockerfile", "utf8");
-    assert.match(dockerfile, /^FROM node:22-alpine/m);
+    const fromLines = dockerfile
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith("FROM "));
+    const fromImages = fromLines.map((line) => line.replace(/^FROM\s+/, "").split(/\s+/)[0] ?? "");
+    for (const image of fromImages) {
+      assert.equal(
+        image === "node:22-alpine" || image.startsWith("docker.io/library/node"),
+        false,
+        `FROM must not use Docker Hub short name node:22-alpine or docker.io/library/node, got: ${image}`
+      );
+    }
+    assert.match(dockerfile, /^FROM public\.ecr\.aws\/docker\/library\/node:22-alpine AS base/m);
+    assert.match(dockerfile, /^FROM base AS runner/m);
     assert.match(dockerfile, /^ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY$/m);
     assert.match(dockerfile, /^ARG NEXT_PUBLIC_R2_BASE_URL$/m);
     assert.match(dockerfile, /^ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=/m);
