@@ -116,6 +116,7 @@ export function importCompanies({ companiesDir, liquidDir }) {
 
   const slugToId = new Map();
   const existingRowsByCompany = new Map();
+  const unreadable = new Set();
   for (const file of existingFiles) {
     const companySlug = file.replace(/\.csv$/, "");
     let rows = [];
@@ -123,6 +124,8 @@ export function importCompanies({ companiesDir, liquidDir }) {
       rows = readCsv(path.join(companiesDir, file));
     } catch (e) {
       console.error(`WARN: failed to read existing ${file}: ${e.message}`);
+      unreadable.add(companySlug);
+      continue;
     }
     existingRowsByCompany.set(companySlug, rows);
     for (const r of rows) {
@@ -195,6 +198,10 @@ export function importCompanies({ companiesDir, liquidDir }) {
   const timeframeCounts = {};
 
   for (const slug of new Set([...E, ...L])) {
+    if (unreadable.has(slug) && !L.has(slug)) {
+      console.error(`WARN: leaving ${slug}.csv unchanged because it could not be read`);
+      continue;
+    }
     let rows;
     if (L.has(slug)) {
       rows = buildLiquidRows(liquidBySlug.get(slug));
