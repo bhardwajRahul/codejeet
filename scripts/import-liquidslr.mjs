@@ -20,7 +20,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
 
@@ -108,124 +108,129 @@ function readCsv(file) {
   });
 }
 
-// --- main ------------------------------------------------------------------
+// --- import ----------------------------------------------------------------
 
-syncLiquidslr();
+export function importCompanies({ companiesDir, liquidDir }) {
+  const existingFiles = fs.readdirSync(companiesDir).filter((f) => f.endsWith(".csv"));
+  const E = new Set(existingFiles.map((f) => f.replace(/\.csv$/, "")));
 
-const existingFiles = fs.readdirSync(COMPANIES_DIR).filter((f) => f.endsWith(".csv"));
-const E = new Set(existingFiles.map((f) => f.replace(/\.csv$/, "")));
-
-const slugToId = new Map();
-const existingRowsByCompany = new Map();
-for (const file of existingFiles) {
-  const companySlug = file.replace(/\.csv$/, "");
-  let rows = [];
-  try {
-    rows = readCsv(path.join(COMPANIES_DIR, file));
-  } catch (e) {
-    console.error(`WARN: failed to read existing ${file}: ${e.message}`);
-  }
-  existingRowsByCompany.set(companySlug, rows);
-  for (const r of rows) {
-    const id = (r.ID || r.id || "").toString().trim();
-    const slug = slugFromUrl(r.URL || r.url || "");
-    if (id && slug && !slugToId.has(slug)) slugToId.set(slug, id);
-  }
-}
-
-const liquidBySlug = new Map();
-for (const dir of fs
-  .readdirSync(LIQUID_DIR, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && d.name !== ".git")
-  .map((d) => d.name)) {
-  const slug = slugify(dir);
-  if (slug && !liquidBySlug.has(slug)) liquidBySlug.set(slug, dir);
-}
-const L = new Set(liquidBySlug.keys());
-
-function buildLiquidRows(folderName) {
-  const dir = path.join(LIQUID_DIR, folderName);
-  const out = [];
-  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".csv"))) {
-    const timeframe = TIMEFRAME_MAP[f.replace(/\.csv$/, "")];
-    if (!timeframe) continue;
+  const slugToId = new Map();
+  const existingRowsByCompany = new Map();
+  for (const file of existingFiles) {
+    const companySlug = file.replace(/\.csv$/, "");
     let rows = [];
     try {
-      rows = readCsv(path.join(dir, f));
+      rows = readCsv(path.join(companiesDir, file));
     } catch (e) {
-      console.error(`WARN: failed to read ${folderName}/${f}: ${e.message}`);
-      continue;
+      console.error(`WARN: failed to read existing ${file}: ${e.message}`);
     }
+    existingRowsByCompany.set(companySlug, rows);
     for (const r of rows) {
-      const link = (r.Link || r.link || "").trim();
-      const title = (r.Title || r.title || "").trim();
-      if (!link && !title) continue;
-      const slug = slugFromUrl(link);
-      out.push([
-        slug && slugToId.has(slug) ? slugToId.get(slug) : "",
-        link,
-        title,
-        titleCaseDifficulty(r.Difficulty || r.difficulty),
-        "", // Acceptance %: sourced from scraped problem JSON at build time
-        fmtFrequency(r.Frequency ?? r.frequency),
-        (r.Topics ?? r.topics ?? "").toString(),
-        timeframe,
-      ]);
+      const id = (r.ID || r.id || "").toString().trim();
+      const slug = slugFromUrl(r.URL || r.url || "");
+      if (id && slug && !slugToId.has(slug)) slugToId.set(slug, id);
     }
   }
-  return out;
-}
 
-function buildExistingRows(companySlug) {
-  return (existingRowsByCompany.get(companySlug) || []).map((r) => [
-    (r.ID ?? "").toString(),
-    (r.URL ?? "").toString(),
-    (r.Title ?? "").toString(),
-    (r.Difficulty ?? "").toString(),
-    "", // Acceptance %: sourced from scraped problem JSON at build time
-    (r["Frequency %"] ?? "").toString(),
-    "", // Topics backfilled by the build step
-    "all",
-  ]);
-}
+  const liquidBySlug = new Map();
+  for (const dir of fs
+    .readdirSync(liquidDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && d.name !== ".git")
+    .map((d) => d.name)) {
+    const slug = slugify(dir);
+    if (slug && !liquidBySlug.has(slug)) liquidBySlug.set(slug, dir);
+  }
+  const L = new Set(liquidBySlug.keys());
 
-let overlapRefreshed = 0,
-  existingKept = 0,
-  newAdded = 0,
-  totalRows = 0;
-const timeframeCounts = {};
+  function buildLiquidRows(folderName) {
+    const dir = path.join(liquidDir, folderName);
+    const out = [];
+    for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".csv"))) {
+      const timeframe = TIMEFRAME_MAP[f.replace(/\.csv$/, "")];
+      if (!timeframe) continue;
+      let rows = [];
+      try {
+        rows = readCsv(path.join(dir, f));
+      } catch (e) {
+        console.error(`WARN: failed to read ${folderName}/${f}: ${e.message}`);
+        continue;
+      }
+      for (const r of rows) {
+        const link = (r.Link || r.link || "").trim();
+        const title = (r.Title || r.title || "").trim();
+        if (!link && !title) continue;
+        const slug = slugFromUrl(link);
+        out.push([
+          slug && slugToId.has(slug) ? slugToId.get(slug) : "",
+          link,
+          title,
+          titleCaseDifficulty(r.Difficulty || r.difficulty),
+          "", // Acceptance %: sourced from scraped problem JSON at build time
+          fmtFrequency(r.Frequency ?? r.frequency),
+          (r.Topics ?? r.topics ?? "").toString(),
+          timeframe,
+        ]);
+      }
+    }
+    return out;
+  }
 
-for (const slug of new Set([...E, ...L])) {
-  let rows;
-  if (L.has(slug)) {
-    rows = buildLiquidRows(liquidBySlug.get(slug));
-    if (E.has(slug)) {
-      overlapRefreshed++;
+  function buildExistingRows(companySlug) {
+    return (existingRowsByCompany.get(companySlug) || []).map((r) => [
+      (r.ID ?? "").toString(),
+      (r.URL ?? "").toString(),
+      (r.Title ?? "").toString(),
+      (r.Difficulty ?? "").toString(),
+      "", // Acceptance %: sourced from scraped problem JSON at build time
+      (r["Frequency %"] ?? "").toString(),
+      (r.Topics ?? r.topics ?? "").toString(),
+      "all",
+    ]);
+  }
+
+  let overlapRefreshed = 0,
+    existingKept = 0,
+    newAdded = 0,
+    totalRows = 0;
+  const timeframeCounts = {};
+
+  for (const slug of new Set([...E, ...L])) {
+    let rows;
+    if (L.has(slug)) {
+      rows = buildLiquidRows(liquidBySlug.get(slug));
+      if (E.has(slug)) {
+        overlapRefreshed++;
+      } else {
+        newAdded++;
+      }
     } else {
-      newAdded++;
+      rows = buildExistingRows(slug);
+      existingKept++;
     }
-  } else {
-    rows = buildExistingRows(slug);
-    existingKept++;
+    for (const row of rows) {
+      totalRows++;
+      timeframeCounts[row[7]] = (timeframeCounts[row[7]] || 0) + 1;
+    }
+    fs.writeFileSync(
+      path.join(companiesDir, `${slug}.csv`),
+      [csvRow(OUT_HEADER), ...rows.map(csvRow)].join("\n") + "\n",
+      "utf8"
+    );
   }
-  for (const row of rows) {
-    totalRows++;
-    timeframeCounts[row[7]] = (timeframeCounts[row[7]] || 0) + 1;
-  }
-  fs.writeFileSync(
-    path.join(COMPANIES_DIR, `${slug}.csv`),
-    [csvRow(OUT_HEADER), ...rows.map(csvRow)].join("\n") + "\n",
-    "utf8"
+
+  console.log("\n==================== IMPORT REPORT ====================");
+  console.log(
+    `Companies: ${overlapRefreshed + existingKept + newAdded} (refreshed ${overlapRefreshed}, kept ${existingKept}, new ${newAdded})`
   );
+  console.log(`Total rows: ${totalRows}`);
+  for (const k of ["30_days", "3_months", "6_months", "more_than_6m", "all"]) {
+    console.log(`  ${k.padEnd(13)}: ${timeframeCounts[k] || 0}`);
+  }
+  console.log("Next: run `bun run prebuild` to regenerate public/data.");
+  console.log("======================================================");
 }
 
-console.log("\n==================== IMPORT REPORT ====================");
-console.log(
-  `Companies: ${overlapRefreshed + existingKept + newAdded} (refreshed ${overlapRefreshed}, kept ${existingKept}, new ${newAdded})`
-);
-console.log(`Total rows: ${totalRows}`);
-for (const k of ["30_days", "3_months", "6_months", "more_than_6m", "all"]) {
-  console.log(`  ${k.padEnd(13)}: ${timeframeCounts[k] || 0}`);
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  syncLiquidslr();
+  importCompanies({ companiesDir: COMPANIES_DIR, liquidDir: LIQUID_DIR });
 }
-console.log("Next: run `bun run prebuild` to regenerate public/data.");
-console.log("======================================================");
