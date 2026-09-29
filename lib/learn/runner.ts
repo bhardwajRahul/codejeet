@@ -1,6 +1,6 @@
 "use client";
 
-import { runCode } from "./multi-runner";
+import { currentRunnerGeneration, runCode } from "./multi-runner";
 import type { RunOptions, RunResult, RunnerProgress } from "./runner-types";
 import type { LessonLanguage, TestCase } from "./types";
 
@@ -54,9 +54,12 @@ export async function runAll(
   const results: TestRunOutcome[] = [];
   let passed = 0;
   const run = deps?.run ?? runCode;
+  const generation = currentRunnerGeneration();
   for (let i = 0; i < tests.length; i++) {
+    if (currentRunnerGeneration() !== generation) break;
     const test = tests[i];
     onProgress?.({ phase: "test", index: i, total: tests.length });
+    if (currentRunnerGeneration() !== generation) break;
     const opts: RunOptions = {
       language,
       source,
