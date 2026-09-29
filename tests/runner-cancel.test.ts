@@ -74,6 +74,16 @@ describe("runAll stops after the lesson runner is terminated", () => {
     terminateAllRunners();
   });
 
+  it("does not start a test when teardown happens in the test progress callback", async () => {
+    const pending = runAll("cpp", "int main(){return 0;}", tests, () => {
+      terminateAllRunners();
+    });
+    const outcome = await pending;
+
+    assert.equal(FakeWorker.created.length, 0);
+    assert.equal(outcome.results.length, 0);
+  });
+
   it("does not start remaining tests after terminateAllRunners", async () => {
     const pending = runAll("cpp", "int main(){return 0;}", tests);
     assert.equal(FakeWorker.created.length, 1);

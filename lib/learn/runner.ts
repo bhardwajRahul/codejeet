@@ -59,6 +59,7 @@ export async function runAll(
     if (currentRunnerGeneration() !== generation) break;
     const test = tests[i];
     onProgress?.({ phase: "test", index: i, total: tests.length });
+    if (currentRunnerGeneration() !== generation) break;
     const opts: RunOptions = {
       language,
       source,
