@@ -1,6 +1,15 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef, useDeferredValue } from "react";
+import React, {
+  Suspense,
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+  useDeferredValue,
+  useCallback,
+} from "react";
+import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { fetchUserProgress, updateQuestionProgress } from "@/utils/progressUtils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,7 +36,13 @@ import { Progress } from "@/components/ui/progress";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import TopicDropdown from "@/components/TopicDropdown";
 import { toDisplayRow, type DashboardIndex } from "@/lib/dashboard/decode";
-import { computeStats, filterLinks, sortLinks, type SortOrder } from "@/lib/dashboard/query";
+import {
+  computeStats,
+  dashboardQueryFromSearch,
+  filterLinks,
+  sortLinks,
+  type SortOrder,
+} from "@/lib/dashboard/query";
 import { type Difficulty, type Timeframe } from "@/lib/dashboard/schema";
 
 interface LeetCodeDashboardProps {
@@ -37,13 +52,25 @@ interface LeetCodeDashboardProps {
   onRetry: () => void;
 }
 
+// Client navigations update this hook. A popstate listener does not see them.
+function DashboardUrlSearch({ onQuery }: { onQuery: (query: string) => void }) {
+  const params = useSearchParams();
+  const serialized = params.toString();
+  useEffect(() => {
+    onQuery(dashboardQueryFromSearch(serialized.length > 0 ? `?${serialized}` : ""));
+  }, [onQuery, serialized]);
+  return null;
+}
+
 const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   index,
   loading = false,
   error = null,
   onRetry,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(
+    typeof window === "undefined" ? "" : dashboardQueryFromSearch(window.location.search)
+  );
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty[]>([]);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(() => {
     if (typeof window === "undefined") return {};
@@ -60,6 +87,13 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
     }
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const appliedUrlQuery = useRef<string | null>(null);
+  const applyUrlQuery = useCallback((query: string) => {
+    if (appliedUrlQuery.current === query) return;
+    appliedUrlQuery.current = query;
+    setSearchQuery(query);
+    setCurrentPage(1);
+  }, []);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   // Page 1 shows the most-asked questions instead of arbitrary CSV order.
@@ -231,6 +265,9 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
 
   return (
     <div className="p-6">
+      <Suspense fallback={null}>
+        <DashboardUrlSearch onQuery={applyUrlQuery} />
+      </Suspense>
       <Card className="w-full">
         <CardContent className="pt-6">
           <div className="flex flex-col gap-6">
