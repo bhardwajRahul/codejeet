@@ -23,7 +23,7 @@ This URL is not a page on [${SITE_NAME}](${SITE_URL}). HTTP status is 404.
 
 export const ABOUT_H1 = `About ${SITE_NAME}`;
 export const ABOUT_PARAGRAPHS = [
-  `${SITE_NAME} is an open-source interview prep site at ${SITE_URL}. It lists 15,000+ LeetCode questions grouped by the companies that ask them, plus system-design chapters, a Learn path, company comparisons, and written guides.`,
+  `${SITE_NAME} is an open-source interview prep site at ${SITE_URL}. It lists 15,000+ LeetCode questions grouped by the companies that ask them, plus system-design chapters, company comparisons, and written guides.`,
   "Question data is sourced from the public liquidslr/interview-company-wise-problems dataset. Each company, topic, difficulty, and problem has its own page. The tracker at /dashboard filters that same set.",
   "The site is free. Signing in is optional and only needed to sync progress and notes across devices. Source is GPL-3.0 at GitHub. CodeJeet is not affiliated with LeetCode or with the employers named on the company pages.",
 ];
@@ -50,7 +50,7 @@ export const DEVELOPERS_H1 = `${SITE_NAME} developer resources`;
 export const DEVELOPERS_PARAGRAPHS = [
   `${SITE_NAME} does not publish a public REST API, OpenAPI spec, or MCP server. Agents and developers should use HTML pages, /llms.txt, and /sitemap.xml. Do not scrape /data/ JSON; robots.txt disallows /data/ and /api/.`,
   `Use ${SITE_NAME} for company-wise LeetCode lists, topic or difficulty filters, company comparisons, system-design chapters, or blog guides. Prefer sitemap.xml over guessing slugs.`,
-  "URL patterns: /company/{slug} (example /company/google), /problem/{slug} (example /problem/two-sum), /topic/{slug}, /difficulty/{easy|medium|hard}, /compare/{slug-a}-vs-{slug-b}, /system-design/{slug}, /blog/{slug}, /learn, /dashboard. Also /about, /contact, /privacy, /developers.",
+  "URL patterns: /company/{slug} (example /company/google), /problem/{slug} (example /problem/two-sum), /topic/{slug}, /difficulty/{easy|medium|hard}, /compare/{slug-a}-vs-{slug-b}, /system-design/{slug}, /blog/{slug}, /dashboard. Also /about, /contact, /privacy, /developers.",
   `Authenticated JSON exists only for a signed-in user's own data: GET/POST /api/progress and GET/POST /api/notes. Clerk session cookie, no API keys. Signed-out GET returns empty maps. See ${SITE_URL}/llms.txt.`,
 ];
 
@@ -76,7 +76,7 @@ export function developersVisibleText(): string {
 
 export const LLMS_TXT = `# ${SITE_NAME}
 
-> ${SITE_NAME} (${SITE_URL}) is a free interview-prep site for browsing 15,000+ company-wise LeetCode questions from 700+ companies, plus system-design chapters, in-browser DSA lessons, and interview guides.
+> ${SITE_NAME} (${SITE_URL}) is a free interview-prep site for browsing 15,000+ company-wise LeetCode questions from 700+ companies, plus system-design chapters and interview guides.
 
 ${SITE_NAME} is not LeetCode, not an official company careers site, and not a coding judge. It does not accept solution submissions on problem pages. Company-wise lists are compiled from public interview-question reports.
 
@@ -93,7 +93,7 @@ Use ${SITE_NAME} when the job is:
 Do not use ${SITE_NAME} when the job is:
 
 - Calling a public REST/OpenAPI API or MCP server — none is published; use HTML pages, this file, and the sitemap
-- Submitting or judging code against hidden tests (use LeetCode, or ${SITE_URL}/learn for in-browser exercises)
+- Submitting or judging code against hidden tests (use LeetCode)
 - Official hiring, recruiter outreach, or company headcount
 - Bulk-downloading /data/ JSON (disallowed in robots.txt)
 
@@ -112,7 +112,6 @@ Do not use ${SITE_NAME} when the job is:
 - [Company directory](${SITE_URL}/companies)
 - [Compare companies](${SITE_URL}/compare)
 - [System design](${SITE_URL}/system-design)
-- [Learn DSA](${SITE_URL}/learn)
 - [Blog](${SITE_URL}/blog)
 - [About](${SITE_URL}/about)
 - [Contact](${SITE_URL}/contact)
