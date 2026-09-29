@@ -62,6 +62,61 @@ describe("progress API", () => {
     assert.equal(await invalidSlug.text(), "Invalid slug");
   });
 
+  it("rejects completed values that are not booleans", async () => {
+    const writes: unknown[][] = [];
+    const deps = dependencies({
+      setProgress: async (...args) => {
+        writes.push(args);
+      },
+    });
+
+    for (const completed of ["false", "0", "true", 0, 1, null]) {
+      const response = await handleProgressPost(
+        new Request("https://codejeet.com/api/progress", {
+          method: "POST",
+          body: JSON.stringify({ slug: "two-sum", completed }),
+        }),
+        deps
+      );
+      assert.equal(response.status, 400);
+      assert.equal(await response.text(), "Invalid completed");
+    }
+    assert.deepEqual(writes, []);
+  });
+
+  it("writes boolean true and false with the server timestamp", async () => {
+    const writes: unknown[][] = [];
+    const deps = dependencies({
+      setProgress: async (...args) => {
+        writes.push(args);
+      },
+    });
+
+    const solved = await handleProgressPost(
+      new Request("https://codejeet.com/api/progress", {
+        method: "POST",
+        body: JSON.stringify({ slug: "two-sum", completed: true }),
+      }),
+      deps
+    );
+    const cleared = await handleProgressPost(
+      new Request("https://codejeet.com/api/progress", {
+        method: "POST",
+        body: JSON.stringify({ slug: "two-sum", completed: false }),
+      }),
+      deps
+    );
+
+    assert.equal(solved.status, 200);
+    assert.deepEqual(await solved.json(), { ok: true });
+    assert.equal(cleared.status, 200);
+    assert.deepEqual(await cleared.json(), { ok: true });
+    assert.deepEqual(writes, [
+      ["user_123", "two-sum", true, "2026-06-02T10:00:00.000Z"],
+      ["user_123", "two-sum", false, "2026-06-02T10:00:00.000Z"],
+    ]);
+  });
+
   it("writes progress with the server timestamp", async () => {
     const writes: unknown[][] = [];
     const response = await handleProgressPost(

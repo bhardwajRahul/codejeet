@@ -37,7 +37,10 @@ export async function handleProgressPost(
   if (typeof slug !== "string" || slug.length === 0 || slug.length > 256) {
     return new Response("Invalid slug", { status: 400 });
   }
+  if (typeof completed !== "boolean") {
+    return new Response("Invalid completed", { status: 400 });
+  }
 
-  await dependencies.setProgress(userId, slug, Boolean(completed), dependencies.now());
+  await dependencies.setProgress(userId, slug, completed, dependencies.now());
   return Response.json({ ok: true });
 }
