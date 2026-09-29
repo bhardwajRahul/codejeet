@@ -49,14 +49,14 @@ describe("cpp runner worker exit status", () => {
     function __dynImport(specifier: unknown) {
       const url = String(specifier);
       if (url.includes("browsercc")) {
-        return {
+        return Promise.resolve({
           compile: async () => ({ module: {}, compileOutput: "" }),
-        };
+        });
       }
       if (url.includes("browser_wasi_shim")) {
-        return { WASI, File, OpenFile, ConsoleStdout, PreopenDirectory };
+        return Promise.resolve({ WASI, File, OpenFile, ConsoleStdout, PreopenDirectory });
       }
-      throw new Error(`unexpected dynamic import: ${url}`);
+      return Promise.reject(new Error(`unexpected dynamic import: ${url}`));
     }
 
     const sandbox = {
