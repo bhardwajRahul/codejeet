@@ -71,7 +71,26 @@ describe("importCompanies", () => {
     }
   });
 
-  it("loads later company files when an earlier CSV cannot be parsed", async () => {
+  it("loads every company when each CSV parses", async () => {
+    const companiesDir = await mkdtemp(path.join(tmpdir(), "codejeet-companies-"));
+    try {
+      const header = "ID,URL,Title,Difficulty,Acceptance %,Frequency %,Topics,Timeframe";
+      const good =
+        '1,https://leetcode.com/problems/two-sum,Two Sum,Easy,55.0%,12.0%,"Math, String",all';
+      await writeFile(path.join(companiesDir, "b-good.csv"), `${header}\n${good}\n`, "utf8");
+
+      const loaded = await loadAllQuestions(companiesDir);
+
+      assert.deepEqual(loaded.companies, ["b-good"]);
+      assert.equal(loaded.questions.length, 1);
+      assert.equal(loaded.questions[0].title, "Two Sum");
+      assert.equal(loaded.questions[0].company, "b-good");
+    } finally {
+      await rm(companiesDir, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses a company catalog when any CSV cannot be parsed", async () => {
     const companiesDir = await mkdtemp(path.join(tmpdir(), "codejeet-companies-"));
     const errors: string[] = [];
     const originalError = console.error;
@@ -85,14 +104,18 @@ describe("importCompanies", () => {
         '1,https://leetcode.com/problems/two-sum,Two Sum,Easy,55.0%,12.0%,"Math, String",all';
       await writeFile(path.join(companiesDir, "a-bad.csv"), BROKEN, "utf8");
       await writeFile(path.join(companiesDir, "b-good.csv"), `${header}\n${good}\n`, "utf8");
+      await writeFile(path.join(companiesDir, "c-bad.csv"), BROKEN, "utf8");
 
-      const loaded = await loadAllQuestions(companiesDir);
-
-      assert.deepEqual(loaded.companies, ["b-good"]);
-      assert.equal(loaded.questions.length, 1);
-      assert.equal(loaded.questions[0].title, "Two Sum");
-      assert.equal(loaded.questions[0].company, "b-good");
-      assert.match(errors.join("\n"), /Failed to load company a-bad\.csv:/);
+      await assert.rejects(() => loadAllQuestions(companiesDir), (err: unknown) => {
+        assert.ok(err instanceof Error);
+        assert.match(err.message, /a-bad\.csv/);
+        assert.match(err.message, /c-bad\.csv/);
+        assert.doesNotMatch(err.message, /b-good\.csv/);
+        return true;
+      });
+      const logged = errors.join("\n");
+      assert.match(logged, /Failed to load company a-bad\.csv:/);
+      assert.match(logged, /Failed to load company c-bad\.csv:/);
     } finally {
       console.error = originalError;
       await rm(companiesDir, { recursive: true, force: true });

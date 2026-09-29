@@ -134,6 +134,7 @@ export async function loadAllQuestions(companiesDir = DATA_DIR): Promise<{
 
   const questions: QuestionWithDetails[] = [];
   const companies: string[] = [];
+  const failures: string[] = [];
 
   for (const file of csvFiles) {
     const companySlug = file.replace(/\.csv$/i, "");
@@ -149,6 +150,7 @@ export async function loadAllQuestions(companiesDir = DATA_DIR): Promise<{
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
       console.error(`Failed to load company ${file}: ${detail}`);
+      failures.push(`${file}: ${detail}`);
       continue;
     }
     companies.push(companySlug);
@@ -184,6 +186,10 @@ export async function loadAllQuestions(companiesDir = DATA_DIR): Promise<{
         "Is Premium": normalizePremium(record["Is Premium"]),
       });
     });
+  }
+
+  if (failures.length > 0) {
+    throw new Error(`Failed to load ${failures.length} company file(s): ${failures.join("; ")}`);
   }
 
   if (companiesDir === DATA_DIR) {
