@@ -111,12 +111,15 @@ describe("lesson code drafts", () => {
     updateLessonDraft(course, lesson, "cpp", "late");
     assert.equal(loadLessonDraft(course, lesson, "cpp"), null);
 
+    target.dispatchEvent(new Event("beforeunload"));
+    assert.equal(loadLessonDraft(course, lesson, "cpp"), null);
+
     target.dispatchEvent(new Event("pagehide"));
     assert.equal(loadLessonDraft(course, lesson, "cpp"), "late");
 
     unbind();
     updateLessonDraft(course, lesson, "cpp", "after");
-    target.dispatchEvent(new Event("beforeunload"));
+    target.dispatchEvent(new Event("pagehide"));
     assert.equal(loadLessonDraft(course, lesson, "cpp"), "late");
     mock.timers.tick(400);
     assert.equal(loadLessonDraft(course, lesson, "cpp"), "after");

@@ -88,11 +88,11 @@ export function bindLessonDraftFlush(target: EventTarget): () => void {
   const flush = () => {
     flushLessonDraft();
   };
+  // pagehide covers refresh and close. beforeunload would drop the page from
+  // Firefox's back-forward cache for the whole lesson.
   target.addEventListener("pagehide", flush);
-  target.addEventListener("beforeunload", flush);
   return () => {
     target.removeEventListener("pagehide", flush);
-    target.removeEventListener("beforeunload", flush);
   };
 }
 
