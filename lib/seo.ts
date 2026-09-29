@@ -236,6 +236,31 @@ export function compareMetadata(data: ComparisonPair): Metadata {
   return meta;
 }
 
+type CompareSide = ComparisonPair["companyA"];
+
+export function harderCompanyName(a: CompareSide, b: CompareSide): string | null {
+  const shareA = a.difficultyDist.hard / (a.questionCount || 1);
+  const shareB = b.difficultyDist.hard / (b.questionCount || 1);
+  if (shareA === shareB) return null;
+  return shareA > shareB ? a.displayName : b.displayName;
+}
+
+export function difficultyFaqSentence(a: CompareSide, b: CompareSide): string {
+  const harder = harderCompanyName(a, b);
+  if (harder === null) {
+    return `${a.displayName} and ${b.displayName} have the same proportion of Hard problems in their interview sets.`;
+  }
+  return `${harder} has a higher proportion of Hard problems in its interview set.`;
+}
+
+export function difficultyPrepSentence(a: CompareSide, b: CompareSide): string {
+  const harder = harderCompanyName(a, b);
+  if (harder === null) {
+    return "Difficulty is tied in our data. Budget the same time for Hard problems at either company.";
+  }
+  return `${harder} skews harder in our data. Budget extra time for Hard problems if you are targeting that company.`;
+}
+
 export function buildCompareFaqs(data: ComparisonPair) {
   const { companyA, companyB, sharedCount, uniqueToACount, uniqueToBCount, topSharedTopics } = data;
   const topTopicAnswer =
@@ -245,12 +270,6 @@ export function buildCompareFaqs(data: ComparisonPair) {
           .map((t) => `${t.name} (${t.count} shared questions)`)
           .join(", ")
       : "Array, String, Hash Table, and Dynamic Programming";
-
-  const harder =
-    companyA.difficultyDist.hard / (companyA.questionCount || 1) >
-    companyB.difficultyDist.hard / (companyB.questionCount || 1)
-      ? companyA.displayName
-      : companyB.displayName;
 
   return [
     {
@@ -263,7 +282,7 @@ export function buildCompareFaqs(data: ComparisonPair) {
     },
     {
       question: `Which company asks harder LeetCode questions: ${companyA.displayName} or ${companyB.displayName}?`,
-      answer: `${companyA.displayName} has ${companyA.difficultyDist.easy} Easy, ${companyA.difficultyDist.medium} Medium, and ${companyA.difficultyDist.hard} Hard questions. ${companyB.displayName} has ${companyB.difficultyDist.easy} Easy, ${companyB.difficultyDist.medium} Medium, and ${companyB.difficultyDist.hard} Hard questions. ${harder} has a higher proportion of Hard problems in its interview set.`,
+      answer: `${companyA.displayName} has ${companyA.difficultyDist.easy} Easy, ${companyA.difficultyDist.medium} Medium, and ${companyA.difficultyDist.hard} Hard questions. ${companyB.displayName} has ${companyB.difficultyDist.easy} Easy, ${companyB.difficultyDist.medium} Medium, and ${companyB.difficultyDist.hard} Hard questions. ${difficultyFaqSentence(companyA, companyB)}`,
     },
     {
       question: `How should I prepare if interviewing at both ${companyA.displayName} and ${companyB.displayName}?`,
