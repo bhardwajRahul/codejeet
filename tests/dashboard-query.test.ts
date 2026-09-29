@@ -95,6 +95,18 @@ describe("dashboardQueryFromSearch", () => {
       ]);
     }
   });
+
+  it("clears the filtered list when a later url drops q", () => {
+    const filtered = dashboardQueryFromSearch("?q=google");
+    assert.deepEqual(titlesOf(filterLinks(index, opts({ search: filtered }))), ["Two Sum"]);
+    const cleared = dashboardQueryFromSearch("");
+    assert.equal(cleared, "");
+    assert.deepEqual(titlesOf(filterLinks(index, opts({ search: cleared }))), [
+      "Two Sum",
+      "3Sum",
+      "LRU Cache",
+    ]);
+  });
 });
 
 describe("filterLinks", () => {
