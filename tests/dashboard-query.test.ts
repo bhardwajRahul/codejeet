@@ -2,7 +2,13 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { encodeDashboardData, type SourceQuestion } from "../lib/dashboard/encode";
 import { decodeDashboardPayload } from "../lib/dashboard/decode";
-import { computeStats, filterLinks, sortLinks, type QueryOptions } from "../lib/dashboard/query";
+import {
+  computeStats,
+  dashboardQueryFromSearch,
+  filterLinks,
+  sortLinks,
+  type QueryOptions,
+} from "../lib/dashboard/query";
 
 function q(overrides: Partial<SourceQuestion> = {}): SourceQuestion {
   return {
@@ -62,6 +68,34 @@ function opts(overrides: Partial<QueryOptions> = {}): QueryOptions {
 
 const titlesOf = (linkIndexes: number[]) =>
   linkIndexes.map((i) => index.problems[index.links[i][0]][1]);
+
+describe("dashboardQueryFromSearch", () => {
+  it("reads q and filters the list to that search", () => {
+    const query = dashboardQueryFromSearch("?q=google");
+    assert.equal(query, "google");
+    assert.deepEqual(titlesOf(filterLinks(index, opts({ search: query }))), ["Two Sum"]);
+  });
+
+  it("reads q without a leading question mark", () => {
+    assert.equal(dashboardQueryFromSearch("q=google"), "google");
+  });
+
+  it("keeps internal spaces in q", () => {
+    assert.equal(dashboardQueryFromSearch("?q=two+sum"), "two sum");
+  });
+
+  it("returns an empty search when q is missing", () => {
+    for (const search of ["", "?company=google"]) {
+      const query = dashboardQueryFromSearch(search);
+      assert.equal(query, "");
+      assert.deepEqual(titlesOf(filterLinks(index, opts({ search: query }))), [
+        "Two Sum",
+        "3Sum",
+        "LRU Cache",
+      ]);
+    }
+  });
+});
 
 describe("filterLinks", () => {
   it("returns everything when nothing is set", () => {

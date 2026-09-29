@@ -11,6 +11,13 @@ export interface QueryOptions {
 
 export type SortOrder = "asc" | "desc" | null;
 
+// The dashboard page is force-static, so ?q= is applied from location.search.
+// URLSearchParams accepts a string with or without a leading ?. A missing q
+// is an empty search. The value is not trimmed; filterLinks trims later.
+export function dashboardQueryFromSearch(search: string): string {
+  return new URLSearchParams(search).get("q") ?? "";
+}
+
 // Returns indexes into index.links, never row objects. Nothing is allocated
 // per row, so this stays cheap over 15k links on every keystroke.
 export function filterLinks(index: DashboardIndex, options: QueryOptions): number[] {

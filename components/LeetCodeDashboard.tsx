@@ -27,7 +27,13 @@ import { Progress } from "@/components/ui/progress";
 import { DifficultyBadge } from "@/components/ui/difficulty-badge";
 import TopicDropdown from "@/components/TopicDropdown";
 import { toDisplayRow, type DashboardIndex } from "@/lib/dashboard/decode";
-import { computeStats, filterLinks, sortLinks, type SortOrder } from "@/lib/dashboard/query";
+import {
+  computeStats,
+  dashboardQueryFromSearch,
+  filterLinks,
+  sortLinks,
+  type SortOrder,
+} from "@/lib/dashboard/query";
 import { type Difficulty, type Timeframe } from "@/lib/dashboard/schema";
 
 interface LeetCodeDashboardProps {
@@ -43,7 +49,9 @@ const LeetCodeDashboard: React.FC<LeetCodeDashboardProps> = ({
   error = null,
   onRetry,
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(
+    typeof window === "undefined" ? "" : dashboardQueryFromSearch(window.location.search)
+  );
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty[]>([]);
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(() => {
     if (typeof window === "undefined") return {};
