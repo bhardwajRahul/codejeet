@@ -4,7 +4,13 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { subscribeToBlog, getBlogSnapshot, getBlogServerSnapshot } from "@/lib/blog-store";
+import {
+  subscribeToBlog,
+  getBlogSnapshot,
+  getBlogServerSnapshot,
+  blogStatusCopy,
+  retryBlog,
+} from "@/lib/blog-store";
 
 const ITEMS_PER_PAGE = 24;
 
@@ -16,11 +22,8 @@ const CATEGORIES = [
 ] as const;
 
 export function BlogClient() {
-  const { posts, loading } = useSyncExternalStore(
-    subscribeToBlog,
-    getBlogSnapshot,
-    getBlogServerSnapshot
-  );
+  const snapshot = useSyncExternalStore(subscribeToBlog, getBlogSnapshot, getBlogServerSnapshot);
+  const { posts, loading, error } = snapshot;
   const [category, setCategory] = useState("all");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -52,6 +55,7 @@ export function BlogClient() {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+  const status = blogStatusCopy(snapshot, filtered.length);
 
   if (loading) {
     return (
@@ -64,6 +68,17 @@ export function BlogClient() {
             <div className="h-3 bg-muted rounded w-1/4" />
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-muted-foreground">{status}</p>
+        <Button variant="outline" size="sm" className="mt-4" onClick={() => retryBlog()}>
+          Retry
+        </Button>
       </div>
     );
   }
@@ -113,7 +128,7 @@ export function BlogClient() {
           ))}
         </div>
       ) : (
-        <p className="text-muted-foreground py-12 text-center">No posts match your filters.</p>
+        <p className="text-muted-foreground py-12 text-center">{status}</p>
       )}
 
       {totalPages > 1 && (
