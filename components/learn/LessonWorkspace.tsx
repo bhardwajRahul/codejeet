@@ -1,12 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CodeEditor } from "./CodeEditor";
 import { LessonContent } from "./LessonContent";
+import { flushLessonDraft, loadLessonDraft, updateLessonDraft } from "@/lib/learn/code-draft";
 import { runAll, runSingle } from "@/lib/learn/runner";
 import { terminateAllRunners } from "@/lib/learn/multi-runner";
 import type { RunResult, RunnerProgress } from "@/lib/learn/runner-types";
@@ -32,46 +33,7 @@ interface LessonWorkspaceProps {
 
 type Tab = "tests" | "stdin" | "output";
 
-const STORAGE_PREFIX = "codejeet:learn:v2:";
 const LANGUAGE_PREF_KEY = "codejeet:learn:v2:lang";
-
-function storageKey(courseSlug: string, lessonSlug: string, language: LessonLanguage) {
-  return `${STORAGE_PREFIX}${courseSlug}/${lessonSlug}/${language}`;
-}
-
-interface SavedCode {
-  code: string;
-  savedAt: number;
-}
-
-function loadSaved(
-  courseSlug: string,
-  lessonSlug: string,
-  language: LessonLanguage
-): string | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(storageKey(courseSlug, lessonSlug, language));
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as SavedCode;
-    return parsed.code ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function saveCode(courseSlug: string, lessonSlug: string, language: LessonLanguage, code: string) {
-  if (typeof window === "undefined") return;
-  try {
-    const payload: SavedCode = { code, savedAt: Date.now() };
-    window.localStorage.setItem(
-      storageKey(courseSlug, lessonSlug, language),
-      JSON.stringify(payload)
-    );
-  } catch {
-    // ignore quota errors
-  }
-}
 
 function loadLanguagePref(): LessonLanguage | null {
   if (typeof window === "undefined") return null;
@@ -142,6 +104,9 @@ export function LessonWorkspace({
   } | null>(null);
   const [status, setStatus] = useState<RunStatus>({ kind: "idle" });
   const [, setRehydrated] = useState(false);
+  // Set by the rehydrate effect so the debounce effect does not persist the
+  // previous language's code under the language that just became active.
+  const skipDraftSchedule = useRef(false);
 
   // Hydrate language pref + starter code on mount and on lesson change.
   useEffect(() => {
@@ -155,27 +120,31 @@ export function LessonWorkspace({
 
   // Rehydrate the editor whenever the active language (or lesson) changes.
   useEffect(() => {
-    const saved = loadSaved(lesson.courseSlug, lesson.slug, language);
+    const saved = loadLessonDraft(lesson.courseSlug, lesson.slug, language);
     const next = lesson.sources[language];
+    skipDraftSchedule.current = true;
     // oxlint-disable-next-line react/set-state-in-effect
     setCode(saved && saved.length > 0 ? saved : (next?.starter ?? ""));
     setRunResult(null);
     setSubmitResult(null);
   }, [lesson, language]);
 
-  // Persist code on change (debounced).
+  // Persist code on change. Do not clear the module timer here: cleanup runs
+  // on language change and unmount and would drop the last keystrokes.
   useEffect(() => {
-    const handle = setTimeout(() => {
-      saveCode(lesson.courseSlug, lesson.slug, language, code);
-    }, 400);
-    return () => clearTimeout(handle);
+    if (skipDraftSchedule.current) {
+      skipDraftSchedule.current = false;
+      return;
+    }
+    updateLessonDraft(lesson.courseSlug, lesson.slug, language, code);
   }, [code, lesson.courseSlug, lesson.slug, language]);
 
   // Tear down language workers when the component unmounts (route change, etc).
   // Without this, pending jobs and the main-thread kill timer stay alive after
-  // the user navigates away.
+  // the user navigates away. Flush first so an in-flight debounce is saved.
   useEffect(() => {
     return () => {
+      flushLessonDraft();
       terminateAllRunners();
     };
   }, []);
@@ -240,6 +209,7 @@ export function LessonWorkspace({
   }, [solutionForLang]);
 
   const handleLanguageChange = useCallback((next: LessonLanguage) => {
+    flushLessonDraft();
     setLanguage(next);
     saveLanguagePref(next);
   }, []);
