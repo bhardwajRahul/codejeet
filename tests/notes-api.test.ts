@@ -27,6 +27,7 @@ describe("notes API", () => {
     assert.deepEqual(await response.json(), {
       notes: { "two-sum": "Use a map" },
       updatedAt: { "two-sum": "2026-06-03T10:00:00.000Z" },
+      serverTime: "2026-06-04T10:00:00.000Z",
     });
   });
 

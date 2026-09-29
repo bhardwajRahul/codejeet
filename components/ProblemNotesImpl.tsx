@@ -11,6 +11,7 @@ import {
   getLocalNotes,
   getLocalNotesMeta,
   getLocalNoteTombstones,
+  noteServerNowMs,
   reconcileNotes,
   saveLocalNotes,
   saveLocalNotesMeta,
@@ -74,6 +75,7 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
     // Filled after successful GET.
     let resultNotes: Record<string, string> = {};
     let resultUpdatedAt: Record<string, string> = {};
+    let resultServerNowMs: number | undefined;
 
     const snapshotLocal = () =>
       reconcileNotes(
@@ -82,7 +84,8 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
         getLocalNoteTombstones(),
         resultNotes,
         resultUpdatedAt,
-        committedSlugsRef.current
+        committedSlugsRef.current,
+        resultServerNowMs
       );
 
     const persistMerged = (settled: ReturnType<typeof reconcileNotes>) => {
@@ -107,6 +110,7 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
       }
       resultNotes = result.notes;
       resultUpdatedAt = result.updatedAt;
+      resultServerNowMs = noteServerNowMs(result.serverTime);
 
       // Upload until local reconcile is stable (covers concurrent save/clear mid-batch).
       // Map of slug -> last body successfully POSTed this sync.
