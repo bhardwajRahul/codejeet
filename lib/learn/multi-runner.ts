@@ -57,6 +57,12 @@ interface LanguagePool {
 
 const pools = new Map<LessonLanguage, LanguagePool>();
 let nextId = 1;
+let runnerGeneration = 0;
+
+/** Bumped only when the page tears every runner down, not when one job times out. */
+export function currentRunnerGeneration(): number {
+  return runnerGeneration;
+}
 
 /** Extra slack on top of the per-test budget before we hard-terminate. */
 const TIMEOUT_SLACK_MS = 1000;
@@ -202,6 +208,7 @@ export function runCode(options: RunOptions): Promise<RunResult> {
 
 /** Tear down all workers, e.g. on route change. Exported for tests / cleanup. */
 export function terminateAllRunners() {
+  runnerGeneration += 1;
   for (const lang of Array.from(pools.keys())) {
     terminateWorker(lang, "Runner terminated by client");
   }
