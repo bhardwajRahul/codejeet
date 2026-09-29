@@ -7,6 +7,7 @@ import {
   buildCompareFaqs,
   collectionJsonLd,
   compareMetadata,
+  difficultyPrepSentence,
   faqJsonLd,
 } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -64,12 +65,6 @@ export default async function ComparePage({ params }: { params: Promise<{ pair: 
     companyB.difficultyDist.hard,
     1
   );
-
-  const harderCompany =
-    companyA.difficultyDist.hard / (companyA.questionCount || 1) >
-    companyB.difficultyDist.hard / (companyB.questionCount || 1)
-      ? companyA.displayName
-      : companyB.displayName;
 
   const faqs = buildCompareFaqs(data);
 
@@ -134,9 +129,8 @@ export default async function ComparePage({ params }: { params: Promise<{ pair: 
             and {companyB.displayName}-specific problems from the exclusive lists below.
           </p>
           <p>
-            <strong className="text-foreground">Step 3 — Difficulty tuning:</strong> {harderCompany}{" "}
-            skews harder in our data. Budget extra time for Hard problems if you are targeting that
-            company.
+            <strong className="text-foreground">Step 3 — Difficulty tuning:</strong>{" "}
+            {difficultyPrepSentence(companyA, companyB)}
           </p>
         </div>
       </section>
