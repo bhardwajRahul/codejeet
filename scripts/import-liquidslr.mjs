@@ -116,6 +116,7 @@ export function importCompanies({ companiesDir, liquidDir }) {
 
   const slugToId = new Map();
   const existingRowsByCompany = new Map();
+  const unreadable = new Set();
   for (const file of existingFiles) {
     const companySlug = file.replace(/\.csv$/, "");
     let rows = [];
@@ -123,6 +124,8 @@ export function importCompanies({ companiesDir, liquidDir }) {
       rows = readCsv(path.join(companiesDir, file));
     } catch (e) {
       console.error(`WARN: failed to read existing ${file}: ${e.message}`);
+      unreadable.add(companySlug);
+      continue;
     }
     existingRowsByCompany.set(companySlug, rows);
     for (const r of rows) {
@@ -191,10 +194,16 @@ export function importCompanies({ companiesDir, liquidDir }) {
   let overlapRefreshed = 0,
     existingKept = 0,
     newAdded = 0,
+    unreadableKept = 0,
     totalRows = 0;
   const timeframeCounts = {};
 
   for (const slug of new Set([...E, ...L])) {
+    if (unreadable.has(slug) && !L.has(slug)) {
+      unreadableKept++;
+      console.error(`WARN: leaving ${slug}.csv unchanged because it could not be read`);
+      continue;
+    }
     let rows;
     if (L.has(slug)) {
       rows = buildLiquidRows(liquidBySlug.get(slug));
@@ -220,7 +229,7 @@ export function importCompanies({ companiesDir, liquidDir }) {
 
   console.log("\n==================== IMPORT REPORT ====================");
   console.log(
-    `Companies: ${overlapRefreshed + existingKept + newAdded} (refreshed ${overlapRefreshed}, kept ${existingKept}, new ${newAdded})`
+    `Companies: ${overlapRefreshed + existingKept + newAdded + unreadableKept} (refreshed ${overlapRefreshed}, kept ${existingKept}, new ${newAdded}, unreadable ${unreadableKept})`
   );
   console.log(`Total rows: ${totalRows}`);
   for (const k of ["30_days", "3_months", "6_months", "more_than_6m", "all"]) {
