@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { after, before, beforeEach, describe, it, mock } from "node:test";
-import { flushLessonDraft, loadLessonDraft, updateLessonDraft } from "../lib/learn/code-draft";
+import {
+  beginLessonDraft,
+  bindLessonDraftFlush,
+  flushLessonDraft,
+  loadLessonDraft,
+  updateLessonDraft,
+} from "../lib/learn/code-draft";
 
 const store = new Map<string, string>();
 
@@ -94,5 +100,46 @@ describe("lesson code drafts", () => {
 
     assert.equal(loadLessonDraft(course, lesson, "cpp"), "zz");
     assert.notEqual(loadLessonDraft(course, lesson, "python"), "zz");
+  });
+
+  it("writes the pending draft when the page hides before the debounce", () => {
+    const course = "arrays-easy";
+    const lesson = "01-largest-element";
+    const target = new EventTarget();
+    const unbind = bindLessonDraftFlush(target);
+
+    updateLessonDraft(course, lesson, "cpp", "late");
+    assert.equal(loadLessonDraft(course, lesson, "cpp"), null);
+
+    target.dispatchEvent(new Event("pagehide"));
+    assert.equal(loadLessonDraft(course, lesson, "cpp"), "late");
+
+    unbind();
+    updateLessonDraft(course, lesson, "cpp", "after");
+    target.dispatchEvent(new Event("beforeunload"));
+    assert.equal(loadLessonDraft(course, lesson, "cpp"), "late");
+    mock.timers.tick(400);
+    assert.equal(loadLessonDraft(course, lesson, "cpp"), "after");
+  });
+
+  it("beginLessonDraft returns a pending edit for the same lesson", () => {
+    const course = "arrays-easy";
+    const lesson = "01-largest-element";
+
+    updateLessonDraft(course, lesson, "cpp", "unflushed");
+    assert.equal(beginLessonDraft(course, lesson, "cpp"), "unflushed");
+  });
+
+  it("persists the outgoing lesson before a later edit of the next lesson", () => {
+    const course = "arrays-easy";
+
+    updateLessonDraft(course, "lesson-a", "cpp", "newer");
+    assert.equal(beginLessonDraft(course, "lesson-b", "cpp"), null);
+    updateLessonDraft(course, "lesson-b", "cpp", "other");
+
+    assert.equal(loadLessonDraft(course, "lesson-a", "cpp"), "newer");
+    mock.timers.tick(400);
+    assert.equal(loadLessonDraft(course, "lesson-b", "cpp"), "other");
+    assert.equal(loadLessonDraft(course, "lesson-a", "cpp"), "newer");
   });
 });

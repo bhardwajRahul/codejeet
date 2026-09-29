@@ -7,7 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CodeEditor } from "./CodeEditor";
 import { LessonContent } from "./LessonContent";
-import { flushLessonDraft, loadLessonDraft, updateLessonDraft } from "@/lib/learn/code-draft";
+import {
+  beginLessonDraft,
+  bindLessonDraftFlush,
+  flushLessonDraft,
+  updateLessonDraft,
+} from "@/lib/learn/code-draft";
 import { runAll, runSingle } from "@/lib/learn/runner";
 import { terminateAllRunners } from "@/lib/learn/multi-runner";
 import type { RunResult, RunnerProgress } from "@/lib/learn/runner-types";
@@ -119,8 +124,9 @@ export function LessonWorkspace({
   }, [lesson, defaultLanguage]);
 
   // Rehydrate the editor whenever the active language (or lesson) changes.
+  // Flush first so an in-place lesson change cannot drop the outgoing draft.
   useEffect(() => {
-    const saved = loadLessonDraft(lesson.courseSlug, lesson.slug, language);
+    const saved = beginLessonDraft(lesson.courseSlug, lesson.slug, language);
     const next = lesson.sources[language];
     skipDraftSchedule.current = true;
     // oxlint-disable-next-line react/set-state-in-effect
@@ -143,7 +149,9 @@ export function LessonWorkspace({
   // Without this, pending jobs and the main-thread kill timer stay alive after
   // the user navigates away. Flush first so an in-flight debounce is saved.
   useEffect(() => {
+    const unbind = typeof window === "undefined" ? () => undefined : bindLessonDraftFlush(window);
     return () => {
+      unbind();
       flushLessonDraft();
       terminateAllRunners();
     };

@@ -73,6 +73,29 @@ export function flushLessonDraft() {
   writeDraft(draft);
 }
 
+/** Save any pending edit, then return the stored draft for this lesson. */
+export function beginLessonDraft(
+  courseSlug: string,
+  lessonSlug: string,
+  language: LessonLanguage
+): string | null {
+  flushLessonDraft();
+  return loadLessonDraft(courseSlug, lessonSlug, language);
+}
+
+/** Flush when the page is left without a React unmount, such as refresh. */
+export function bindLessonDraftFlush(target: EventTarget): () => void {
+  const flush = () => {
+    flushLessonDraft();
+  };
+  target.addEventListener("pagehide", flush);
+  target.addEventListener("beforeunload", flush);
+  return () => {
+    target.removeEventListener("pagehide", flush);
+    target.removeEventListener("beforeunload", flush);
+  };
+}
+
 export function updateLessonDraft(
   courseSlug: string,
   lessonSlug: string,
