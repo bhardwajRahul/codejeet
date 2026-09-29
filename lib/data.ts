@@ -121,15 +121,15 @@ const normalizeUrl = (url?: string, slug?: string) => {
   return slug ? `/problems/${slug}` : "/";
 };
 
-export async function loadAllQuestions(): Promise<{
+export async function loadAllQuestions(companiesDir = DATA_DIR): Promise<{
   questions: QuestionWithDetails[];
   companies: string[];
 }> {
-  if (cachedQuestions && cachedCompanies) {
+  if (companiesDir === DATA_DIR && cachedQuestions && cachedCompanies) {
     return { questions: cachedQuestions, companies: cachedCompanies };
   }
 
-  const files = await fs.readdir(DATA_DIR);
+  const files = await fs.readdir(companiesDir);
   const csvFiles = files.filter((file) => file.toLowerCase().endsWith(".csv"));
 
   const questions: QuestionWithDetails[] = [];
@@ -137,15 +137,21 @@ export async function loadAllQuestions(): Promise<{
 
   for (const file of csvFiles) {
     const companySlug = file.replace(/\.csv$/i, "");
+    const filePath = path.join(companiesDir, file);
+    let records: RawCsvRecord[];
+    try {
+      const content = await fs.readFile(filePath, "utf8");
+      records = parse(content, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+      }) as RawCsvRecord[];
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      console.error(`Failed to load company ${file}: ${detail}`);
+      continue;
+    }
     companies.push(companySlug);
-
-    const filePath = path.join(DATA_DIR, file);
-    const content = await fs.readFile(filePath, "utf8");
-    const records = parse(content, {
-      columns: true,
-      skip_empty_lines: true,
-      trim: true,
-    }) as RawCsvRecord[];
 
     records.forEach((record, index) => {
       const slug = deriveSlug(record.URL, record.Title, record.ID, companySlug, index);
@@ -180,8 +186,10 @@ export async function loadAllQuestions(): Promise<{
     });
   }
 
-  cachedQuestions = questions;
-  cachedCompanies = companies;
+  if (companiesDir === DATA_DIR) {
+    cachedQuestions = questions;
+    cachedCompanies = companies;
+  }
 
   return { questions, companies };
 }

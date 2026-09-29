@@ -194,11 +194,13 @@ export function importCompanies({ companiesDir, liquidDir }) {
   let overlapRefreshed = 0,
     existingKept = 0,
     newAdded = 0,
+    unreadableKept = 0,
     totalRows = 0;
   const timeframeCounts = {};
 
   for (const slug of new Set([...E, ...L])) {
     if (unreadable.has(slug) && !L.has(slug)) {
+      unreadableKept++;
       console.error(`WARN: leaving ${slug}.csv unchanged because it could not be read`);
       continue;
     }
@@ -227,7 +229,7 @@ export function importCompanies({ companiesDir, liquidDir }) {
 
   console.log("\n==================== IMPORT REPORT ====================");
   console.log(
-    `Companies: ${overlapRefreshed + existingKept + newAdded} (refreshed ${overlapRefreshed}, kept ${existingKept}, new ${newAdded})`
+    `Companies: ${overlapRefreshed + existingKept + newAdded + unreadableKept} (refreshed ${overlapRefreshed}, kept ${existingKept}, new ${newAdded}, unreadable ${unreadableKept})`
   );
   console.log(`Total rows: ${totalRows}`);
   for (const k of ["30_days", "3_months", "6_months", "more_than_6m", "all"]) {
