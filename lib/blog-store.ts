@@ -1,4 +1,4 @@
-interface BlogPost {
+export interface BlogPost {
   slug: string;
   title: string;
   description: string;
@@ -6,53 +6,88 @@ interface BlogPost {
   category: string;
 }
 
-interface BlogStore {
+export interface BlogStore {
   posts: BlogPost[];
   loading: boolean;
+  error: string | null;
 }
 
-let store: BlogStore = { posts: [], loading: true };
-const listeners = new Set<() => void>();
-let fetchStarted = false;
+const LOAD_ERROR = "Couldn't load posts.";
 
-function emit() {
-  listeners.forEach((l) => l());
+export function blogStatusCopy(snapshot: BlogStore, visibleCount: number): string | null {
+  if (snapshot.error) return snapshot.error;
+  if (!snapshot.loading && visibleCount === 0) return "No posts match your filters.";
+  return null;
 }
 
-function startFetch() {
-  if (fetchStarted) return;
-  fetchStarted = true;
+export function createBlogStore(load: () => Promise<BlogPost[]>) {
+  let store: BlogStore = { posts: [], loading: true, error: null };
+  const listeners = new Set<() => void>();
+  let fetchStarted = false;
 
-  fetch("/data/blog-index.json")
-    .then((r) => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
-    .then((data: BlogPost[]) => {
-      store = { posts: data, loading: false };
-      emit();
-    })
-    .catch(() => {
+  function emit() {
+    listeners.forEach((l) => l());
+  }
+
+  function startFetch() {
+    if (fetchStarted) return;
+    fetchStarted = true;
+
+    load()
+      .then((posts) => {
+        store = { posts, loading: false, error: null };
+        emit();
+      })
+      .catch(() => {
+        fetchStarted = false;
+        store = { posts: [], loading: false, error: LOAD_ERROR };
+        emit();
+      });
+  }
+
+  return {
+    subscribe(callback: () => void) {
+      listeners.add(callback);
+      startFetch();
+      return () => {
+        listeners.delete(callback);
+      };
+    },
+    getSnapshot() {
+      return store;
+    },
+    retry() {
       fetchStarted = false;
-      store = { posts: [], loading: false };
+      store = { posts: store.posts, loading: true, error: null };
       emit();
-    });
-}
-
-export function subscribeToBlog(callback: () => void): () => void {
-  listeners.add(callback);
-  startFetch();
-  return () => {
-    listeners.delete(callback);
+      startFetch();
+    },
   };
 }
 
-export function getBlogSnapshot(): BlogStore {
-  return store;
+function loadBlogIndex(): Promise<BlogPost[]> {
+  return fetch("/data/blog-index.json").then((r) => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json() as Promise<BlogPost[]>;
+  });
 }
 
-// ponytail: stable reference — a fresh object each call makes useSyncExternalStore loop forever.
-const serverSnapshot: BlogStore = { posts: [], loading: true };
+const blogStore = createBlogStore(loadBlogIndex);
+
+export function subscribeToBlog(callback: () => void): () => void {
+  return blogStore.subscribe(callback);
+}
+
+export function getBlogSnapshot(): BlogStore {
+  return blogStore.getSnapshot();
+}
+
+export function retryBlog(): void {
+  blogStore.retry();
+}
+
+// ponytail: stable reference. A fresh object each call makes useSyncExternalStore loop forever.
+const serverSnapshot: BlogStore = { posts: [], loading: true, error: null };
 export function getBlogServerSnapshot(): BlogStore {
   return serverSnapshot;
 }
