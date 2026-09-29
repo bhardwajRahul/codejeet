@@ -16,6 +16,7 @@ const BROWSERCC_URL = `https://cdn.jsdelivr.net/npm/browsercc@${BROWSERCC_VERSIO
 const WASI_SHIM_URL = `https://esm.sh/@bjorn3/browser_wasi_shim@${WASI_SHIM_VERSION}`;
 
 let toolchainPromise = null;
+let toolchainAttempt = 0;
 let wasiShimPromise = null;
 
 function loadWasiShim() {
@@ -33,7 +34,14 @@ function loadToolchain(postProgress) {
       total: 0,
       message: "Downloading C++ toolchain (~50 MB the first time, cached after)…",
     });
-    toolchainPromise = import(BROWSERCC_URL);
+    const attempt = toolchainAttempt;
+    // A rejected import stays in this worker's module map for that exact URL.
+    const url = attempt === 0 ? BROWSERCC_URL : `${BROWSERCC_URL}?retry=${attempt}`;
+    toolchainPromise = import(url).catch((err) => {
+      toolchainPromise = null;
+      toolchainAttempt += 1;
+      throw err;
+    });
   }
   return toolchainPromise;
 }

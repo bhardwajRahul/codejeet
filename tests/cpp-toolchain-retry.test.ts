@@ -5,16 +5,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createContext, runInContext } from "node:vm";
 
-interface WorkerResult {
-  ok: boolean;
-  message?: string;
-  exitCode?: number;
-  errorKind?: string;
-}
-
 interface PostedMessage {
   type: string;
-  result?: WorkerResult;
+  result?: { ok: boolean; message?: string; stdout?: string };
 }
 
 const workerPath = path.resolve(
@@ -22,8 +15,8 @@ const workerPath = path.resolve(
   "../public/learn-runtime/cpp-runner.worker.js"
 );
 
-describe("cpp runner worker exit status", () => {
-  it("reports a nonzero WASI exit as a runtime failure and exit 0 as success", async () => {
+describe("cpp toolchain download retry", () => {
+  it("imports the toolchain again after a rejected download", async () => {
     const source = readFileSync(workerPath, "utf8");
     const dynamicImports = source.match(/\bimport\s*\(/g);
     assert.ok(dynamicImports && dynamicImports.length > 0);
@@ -32,14 +25,11 @@ describe("cpp runner worker exit status", () => {
 
     const messages: PostedMessage[] = [];
     const listeners: Array<{ type: string; fn: (event: { data?: unknown }) => unknown }> = [];
-    let starts = 0;
+    const browserccUrls: string[] = [];
 
     class WASI {
       wasiImport: Record<string, never> = {};
-      start(): void {
-        starts += 1;
-        if (starts === 1) throw { code: 1 };
-      }
+      start(): void {}
     }
     class File {}
     class OpenFile {}
@@ -49,6 +39,8 @@ describe("cpp runner worker exit status", () => {
     function __dynImport(specifier: unknown) {
       const url = String(specifier);
       if (url.includes("browsercc")) {
+        browserccUrls.push(url);
+        if (browserccUrls.length === 1) return Promise.reject(new Error("network down"));
         return Promise.resolve({
           compile: async () => ({ module: {}, compileOutput: "" }),
         });
@@ -71,14 +63,14 @@ describe("cpp runner worker exit status", () => {
       performance,
       TextEncoder,
       TextDecoder,
-      WebAssembly: {
-        instantiate: async () => ({}),
-      },
+      WebAssembly: { instantiate: async () => ({}) },
       setTimeout,
       clearTimeout,
       Map,
       __dynImport,
+      globalThis: {},
     };
+    sandbox.globalThis = sandbox;
     runInContext(rewritten, createContext(sandbox));
 
     const listener = listeners.find((entry) => entry.type === "message");
@@ -86,13 +78,7 @@ describe("cpp runner worker exit status", () => {
 
     const postRun = async (id: number) => {
       await listener.fn({
-        data: {
-          type: "run",
-          id,
-          source: "int main(){return 1;}",
-          stdin: "",
-          timeoutMs: 1000,
-        },
+        data: { type: "run", id, source: "int main(){return 0;}", stdin: "", timeoutMs: 1000 },
       });
     };
 
@@ -100,13 +86,17 @@ describe("cpp runner worker exit status", () => {
     const first = messages.filter((message) => message.type === "result").at(-1)?.result;
     assert.ok(first);
     assert.equal(first.ok, false);
-    assert.match(first.message ?? "", /code 1/);
-    assert.equal("exitCode" in first, false);
+    assert.match(first.message ?? "", /network down/);
+    assert.equal(browserccUrls.length, 1);
+    assert.equal(browserccUrls[0]?.includes("retry="), false);
 
     await postRun(2);
     const second = messages.filter((message) => message.type === "result").at(-1)?.result;
     assert.ok(second);
+    assert.equal(browserccUrls.length, 2);
+    assert.notEqual(browserccUrls[1], browserccUrls[0]);
+    assert.equal(browserccUrls[1]?.includes("retry=1"), true);
     assert.equal(second.ok, true);
-    assert.equal(second.exitCode, 0);
+    assert.equal(second.stdout, "");
   });
 });
