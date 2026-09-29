@@ -7,7 +7,7 @@ import { createContext, runInContext } from "node:vm";
 
 interface PostedMessage {
   type: string;
-  result?: { ok: boolean; message?: string };
+  result?: { ok: boolean; message?: string; stdout?: string };
 }
 
 const workerPath = path.resolve(
@@ -25,18 +25,30 @@ describe("cpp toolchain download retry", () => {
 
     const messages: PostedMessage[] = [];
     const listeners: Array<{ type: string; fn: (event: { data?: unknown }) => unknown }> = [];
-    let browserccImports = 0;
+    const browserccUrls: string[] = [];
+
+    class WASI {
+      wasiImport: Record<string, never> = {};
+      start(): void {}
+    }
+    class File {}
+    class OpenFile {}
+    class ConsoleStdout {}
+    class PreopenDirectory {}
 
     function __dynImport(specifier: unknown) {
       const url = String(specifier);
       if (url.includes("browsercc")) {
-        browserccImports += 1;
-        if (browserccImports === 1) return Promise.reject(new Error("network down"));
+        browserccUrls.push(url);
+        if (browserccUrls.length === 1) return Promise.reject(new Error("network down"));
         return Promise.resolve({
-          compile: async () => ({ module: null, compileOutput: "recovered" }),
+          compile: async () => ({ module: {}, compileOutput: "" }),
         });
       }
-      throw new Error(`unexpected dynamic import: ${url}`);
+      if (url.includes("browser_wasi_shim")) {
+        return Promise.resolve({ WASI, File, OpenFile, ConsoleStdout, PreopenDirectory });
+      }
+      return Promise.reject(new Error(`unexpected dynamic import: ${url}`));
     }
 
     const sandbox = {
@@ -75,12 +87,16 @@ describe("cpp toolchain download retry", () => {
     assert.ok(first);
     assert.equal(first.ok, false);
     assert.match(first.message ?? "", /network down/);
-    assert.equal(browserccImports, 1);
+    assert.equal(browserccUrls.length, 1);
+    assert.equal(browserccUrls[0]?.includes("retry="), false);
 
     await postRun(2);
     const second = messages.filter((message) => message.type === "result").at(-1)?.result;
     assert.ok(second);
-    assert.equal(browserccImports, 2);
-    assert.match(second.message ?? "", /Compilation failed/);
+    assert.equal(browserccUrls.length, 2);
+    assert.notEqual(browserccUrls[1], browserccUrls[0]);
+    assert.equal(browserccUrls[1]?.includes("retry=1"), true);
+    assert.equal(second.ok, true);
+    assert.equal(second.stdout, "");
   });
 });
