@@ -19,7 +19,7 @@ describe("importCompanies", () => {
       importCompanies({ companiesDir, liquidDir });
 
       const raw = await readFile(path.join(companiesDir, "acme.csv"), "utf8");
-      const rows = parse(raw, {
+      const rows = parse<Record<string, string>>(raw, {
         columns: true,
         skip_empty_lines: true,
         relax_column_count: true,
@@ -53,7 +53,7 @@ describe("importCompanies", () => {
       importCompanies({ companiesDir, liquidDir });
 
       const raw = await readFile(path.join(companiesDir, "acme.csv"), "utf8");
-      const rows = parse(raw, {
+      const rows = parse<Record<string, string>>(raw, {
         columns: true,
         skip_empty_lines: true,
         relax_column_count: true,

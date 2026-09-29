@@ -238,14 +238,14 @@ export function compareMetadata(data: ComparisonPair): Metadata {
 
 type CompareSide = ComparisonPair["companyA"];
 
-export function harderCompanyName(a: CompareSide, b: CompareSide): string | null {
+function harderCompanyName(a: CompareSide, b: CompareSide): string | null {
   const shareA = a.difficultyDist.hard / (a.questionCount || 1);
   const shareB = b.difficultyDist.hard / (b.questionCount || 1);
   if (shareA === shareB) return null;
   return shareA > shareB ? a.displayName : b.displayName;
 }
 
-export function difficultyFaqSentence(a: CompareSide, b: CompareSide): string {
+function difficultyFaqSentence(a: CompareSide, b: CompareSide): string {
   const harder = harderCompanyName(a, b);
   if (harder === null) {
     return `${a.displayName} and ${b.displayName} have the same proportion of Hard problems in their interview sets.`;

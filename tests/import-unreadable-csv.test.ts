@@ -54,7 +54,7 @@ describe("importCompanies", () => {
 
       const raw = await readFile(path.join(companiesDir, "beta.csv"), "utf8");
       assert.equal(raw.includes("Quote Not Closed") || raw === BROKEN, false);
-      const rows = parse(raw, {
+      const rows = parse<Record<string, string>>(raw, {
         columns: true,
         skip_empty_lines: true,
         relax_column_count: true,
@@ -106,13 +106,16 @@ describe("importCompanies", () => {
       await writeFile(path.join(companiesDir, "b-good.csv"), `${header}\n${good}\n`, "utf8");
       await writeFile(path.join(companiesDir, "c-bad.csv"), BROKEN, "utf8");
 
-      await assert.rejects(() => loadAllQuestions(companiesDir), (err: unknown) => {
-        assert.ok(err instanceof Error);
-        assert.match(err.message, /a-bad\.csv/);
-        assert.match(err.message, /c-bad\.csv/);
-        assert.doesNotMatch(err.message, /b-good\.csv/);
-        return true;
-      });
+      await assert.rejects(
+        () => loadAllQuestions(companiesDir),
+        (err: unknown) => {
+          assert.ok(err instanceof Error);
+          assert.match(err.message, /a-bad\.csv/);
+          assert.match(err.message, /c-bad\.csv/);
+          assert.doesNotMatch(err.message, /b-good\.csv/);
+          return true;
+        }
+      );
       const logged = errors.join("\n");
       assert.match(logged, /Failed to load company a-bad\.csv:/);
       assert.match(logged, /Failed to load company c-bad\.csv:/);

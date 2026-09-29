@@ -7,7 +7,7 @@ import matter from "gray-matter";
 // runtime. The Cloudflare worker bundle does not ship public/ in a way that is
 // readable via fs at runtime, so any fs.readdir/fs.readFile from a server
 // component throws `no such file or directory, readdir '/bundle/public/...'` in
-// production. Mirrors scripts/build-learn.ts.
+// production.
 
 const CONTENT_ROOT = path.join(process.cwd(), "public", "system-design");
 const OUT_FILE = path.join(process.cwd(), "lib", "system-design", "generated.ts");

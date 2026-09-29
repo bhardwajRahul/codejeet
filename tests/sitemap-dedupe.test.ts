@@ -36,6 +36,10 @@ function hyphenCount(urlPath: string): number {
   return urlPath.split("-").length - 1;
 }
 
+function includesPath(paths: readonly string[], urlPath: string): boolean {
+  return paths.some((candidate) => candidate === urlPath);
+}
+
 function entry(urlPath: string, priority: number) {
   return { path: urlPath, priority, changeFrequency: "monthly" as const };
 }
@@ -88,10 +92,10 @@ describe("dedupeSitemapEntries", () => {
     for (const [extra, winner] of collisions) {
       assert.ok(hyphenCount(winner) < hyphenCount(extra));
       assert.equal(paths.filter((urlPath) => urlPath === winner).length, 1);
-      assert.equal(paths.includes(extra), false);
+      assert.equal(includesPath(paths, extra), false);
     }
     for (const item of result) {
-      if (kept.includes(item.path)) assert.equal(item.priority, 0.8);
+      if (includesPath(kept, item.path)) assert.equal(item.priority, 0.8);
     }
   });
 

@@ -1,6 +1,6 @@
 # CodeJeet
 
-> CodeJeet (https://codejeet.com) is a free interview-prep site for browsing 15,000+ company-wise LeetCode questions from 700+ companies, plus system-design chapters, in-browser DSA lessons, and interview guides.
+> CodeJeet (https://codejeet.com) is a free interview-prep site for browsing 15,000+ company-wise LeetCode questions from 700+ companies, plus system-design chapters and interview guides.
 
 CodeJeet is not LeetCode, not an official company careers site, and not a coding judge. It does not accept solution submissions on problem pages. Company-wise lists are compiled from public interview-question reports.
 
@@ -17,7 +17,7 @@ Use CodeJeet when the job is:
 Do not use CodeJeet when the job is:
 
 - Calling a public REST/OpenAPI API or MCP server — none is published; use HTML pages, this file, and the sitemap
-- Submitting or judging code against hidden tests (use LeetCode, or https://codejeet.com/learn for in-browser exercises)
+- Submitting or judging code against hidden tests (use LeetCode)
 - Official hiring, recruiter outreach, or company headcount
 - Bulk-downloading /data/ JSON (disallowed in robots.txt)
 
@@ -36,7 +36,6 @@ Do not use CodeJeet when the job is:
 - [Company directory](https://codejeet.com/companies)
 - [Compare companies](https://codejeet.com/compare)
 - [System design](https://codejeet.com/system-design)
-- [Learn DSA](https://codejeet.com/learn)
 - [Blog](https://codejeet.com/blog)
 - [About](https://codejeet.com/about)
 - [Contact](https://codejeet.com/contact)

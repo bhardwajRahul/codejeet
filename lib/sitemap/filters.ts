@@ -18,7 +18,6 @@ export function classifySitemapPath(urlPath: string): string {
     urlPath === "/blog" ||
     urlPath.startsWith("/difficulty/") ||
     urlPath === "/system-design" ||
-    urlPath === "/learn" ||
     urlPath === "/about" ||
     urlPath === "/contact" ||
     urlPath === "/privacy" ||

@@ -16,7 +16,7 @@
 //   - Companies we have that liquidslr doesn't are kept (rewritten to the new schema,
 //     Timeframe="all"); companies liquidslr has that we don't are added (union).
 //
-// After running: `bun run prebuild` to regenerate public/data + lib/learn.
+// After running: `bun run prebuild` to regenerate public/data.
 
 import fs from "node:fs";
 import path from "node:path";

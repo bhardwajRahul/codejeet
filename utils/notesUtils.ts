@@ -7,7 +7,7 @@ export const NOTES_META_KEY = "leetcode-problem-notes-meta";
 export const NOTES_SERVER_CLOCK_KEY = "leetcode-problem-notes-server-clock";
 // Slugs whose current local stamp was computed from NOTES_SERVER_CLOCK_KEY.
 // A raw device-clock stamp (signed out, or after the clock steps backwards) is absent.
-export const NOTES_ANCHORED_SLUGS_KEY = "leetcode-problem-notes-anchored";
+const NOTES_ANCHORED_SLUGS_KEY = "leetcode-problem-notes-anchored";
 // slug -> ISO deletedAt for signed-out clears that must still win over cloud
 const NOTES_TOMBSTONES_KEY = "leetcode-problem-notes-deleted";
 export const MAX_NOTE_LENGTH = 2000;

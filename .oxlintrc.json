@@ -11,10 +11,8 @@
     "node_modules/**",
     ".open-next/**",
     "scraper/**",
-    "lib/learn/generated.ts",
     "lib/sitemap/generated.ts",
-    "lib/system-design/generated.ts",
-    "content/learn/**"
+    "lib/system-design/generated.ts"
   ],
   "rules": {
     "no-array-constructor": "error",
