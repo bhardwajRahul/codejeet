@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { pathToFileURL } from "node:url";
 import matter from "gray-matter";
 import { spreadBlogDates } from "../lib/blog/dates";
 import { isCompareIndexable, parseComparePair } from "../lib/compare";
@@ -66,23 +67,30 @@ function topicSlug(topic: string): string {
     .replace(/[()]/g, "");
 }
 
-async function loadScrapedProblems(): Promise<Map<string, ScrapedProblem>> {
-  const problemsDir = path.join(process.cwd(), "data", "problems");
+export async function loadScrapedProblems(
+  problemsDir = path.join(process.cwd(), "data", "problems")
+): Promise<Map<string, ScrapedProblem>> {
   const map = new Map<string, ScrapedProblem>();
-
+  let files: string[];
   try {
-    const files = await fs.readdir(problemsDir);
-    const jsonFiles = files.filter((f) => f.endsWith(".json") && !f.startsWith("_"));
+    files = await fs.readdir(problemsDir);
+  } catch {
+    console.warn("No scraped problems found in data/problems/, continuing with CSV data only");
+    return map;
+  }
 
-    for (const file of jsonFiles) {
+  const jsonFiles = files.filter((f) => f.endsWith(".json") && !f.startsWith("_"));
+  for (const file of jsonFiles) {
+    try {
       const content = await fs.readFile(path.join(problemsDir, file), "utf8");
       const data = JSON.parse(content) as ScrapedProblem;
       if (data.slug) {
         map.set(data.slug, data);
       }
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err);
+      console.error(`Failed to load scraped problem ${file}: ${detail}`);
     }
-  } catch {
-    console.warn("No scraped problems found in data/problems/, continuing with CSV data only");
   }
 
   return map;
@@ -726,7 +734,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
