@@ -1,9 +1,29 @@
+// Same company recorded under two spellings. Other hyphenated slugs stay distinct.
+const COMPANY_SLUG_ALIASES: Record<string, string> = {
+  "j-p-morgan": "jpmorgan",
+  "media-net": "medianet",
+  "apollo-io": "apolloio",
+  "booking-com": "bookingcom",
+  "machine-zone": "machinezone",
+  "otter-ai": "otterai",
+  "pony-ai": "ponyai",
+  "sumo-logic": "sumologic",
+};
+
+function canonicalCompanySlug(slug: string): string {
+  return COMPANY_SLUG_ALIASES[slug] ?? slug;
+}
+
 export function compareCollisionKey(path: string): string | null {
   const prefix = "/compare/";
   if (!path.startsWith(prefix)) return null;
   const segment = path.slice(prefix.length);
   if (segment.length === 0 || segment.includes("/")) return null;
-  return segment.split("-").join("");
+  const vs = segment.indexOf("-vs-");
+  if (vs <= 0 || vs >= segment.length - 4) return segment;
+  const left = canonicalCompanySlug(segment.slice(0, vs));
+  const right = canonicalCompanySlug(segment.slice(vs + 4));
+  return `${left}-vs-${right}`;
 }
 
 function hyphenCount(path: string): number {
