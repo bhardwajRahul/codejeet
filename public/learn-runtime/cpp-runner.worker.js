@@ -73,18 +73,30 @@ async function runWasmOnce({ module, stdin, timeoutMs }) {
     } catch (err) {
       // browser_wasi_shim throws an Error with a `code` field on proc_exit.
       if (err && typeof err === "object" && "code" in err) {
-        exitCode = Number(err.code) || 0;
+        const code = Number(err.code);
+        exitCode = Number.isFinite(code) ? code : 0;
       } else {
         throw err;
       }
     }
     clearTimeout(timeoutHandle);
+    const durationMs = performance.now() - start;
+    if (exitCode !== 0) {
+      return {
+        ok: false,
+        errorKind: "runtime",
+        stdout,
+        stderr,
+        message: `Program exited with code ${exitCode}`,
+        durationMs,
+      };
+    }
     return {
       ok: true,
       stdout,
       stderr,
       exitCode,
-      durationMs: performance.now() - start,
+      durationMs,
     };
   } catch (err) {
     clearTimeout(timeoutHandle);

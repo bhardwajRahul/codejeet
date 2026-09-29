@@ -47,11 +47,13 @@ export async function runAll(
   language: LessonLanguage,
   source: string,
   tests: TestCase[],
-  onProgress?: (p: RunnerProgress | { phase: "test"; index: number; total: number }) => void
+  onProgress?: (p: RunnerProgress | { phase: "test"; index: number; total: number }) => void,
+  deps?: { run?: typeof runCode }
 ): Promise<SubmitOutcome> {
   const start = performance.now();
   const results: TestRunOutcome[] = [];
   let passed = 0;
+  const run = deps?.run ?? runCode;
   for (let i = 0; i < tests.length; i++) {
     const test = tests[i];
     onProgress?.({ phase: "test", index: i, total: tests.length });
@@ -62,9 +64,10 @@ export async function runAll(
       onProgress,
       timeoutMs: 5000,
     };
-    const result = await runCode(opts);
+    const result = await run(opts);
     const actualStdout = result.stdout;
-    const isPass = result.ok && compareOutput(actualStdout, test.expectedStdout);
+    const isPass =
+      result.ok && result.exitCode === 0 && compareOutput(actualStdout, test.expectedStdout);
     if (isPass) passed++;
     results.push({
       test,
