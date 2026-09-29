@@ -3,6 +3,8 @@
 
 export const NOTES_LOCAL_KEY = "leetcode-problem-notes";
 export const NOTES_META_KEY = "leetcode-problem-notes-meta";
+// serverMs + localMs captured when a notes response told us the server's clock.
+export const NOTES_SERVER_CLOCK_KEY = "leetcode-problem-notes-server-clock";
 // slug -> ISO deletedAt for signed-out clears that must still win over cloud
 const NOTES_TOMBSTONES_KEY = "leetcode-problem-notes-deleted";
 export const MAX_NOTE_LENGTH = 2000;
@@ -21,6 +23,48 @@ function parseNoteTimestamp(value: unknown): number {
   if (typeof value !== "string" || !value) return 0;
   const t = Date.parse(value);
   return Number.isFinite(t) ? t : 0;
+}
+
+export function noteServerNowMs(serverTime: string | undefined): number | undefined {
+  const parsed = parseNoteTimestamp(serverTime);
+  return parsed > 0 ? parsed : undefined;
+}
+
+type ServerClockAnchor = { serverMs: number; localMs: number };
+
+function readServerClockAnchor(): ServerClockAnchor | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(NOTES_SERVER_CLOCK_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { serverMs?: unknown; localMs?: unknown };
+    if (typeof parsed.serverMs !== "number" || typeof parsed.localMs !== "number") return null;
+    if (!Number.isFinite(parsed.serverMs) || !Number.isFinite(parsed.localMs)) return null;
+    return { serverMs: parsed.serverMs, localMs: parsed.localMs };
+  } catch {
+    return null;
+  }
+}
+
+// Record the server clock against this device's clock. Later edits are stamped
+// with server time plus elapsed device time, so a fast wall clock cannot
+// outrank an edit that actually happened later.
+export function observeNoteServerTime(serverTime: string, localNowMs = Date.now()): void {
+  const serverMs = parseNoteTimestamp(serverTime);
+  if (serverMs <= 0 || typeof window === "undefined") return;
+  try {
+    const anchor: ServerClockAnchor = { serverMs, localMs: localNowMs };
+    localStorage.setItem(NOTES_SERVER_CLOCK_KEY, JSON.stringify(anchor));
+  } catch {
+    // Ignore quota failures; reconcile still receives serverTime from the fetch.
+  }
+}
+
+function currentNoteIso(): string {
+  const anchor = readServerClockAnchor();
+  const localNow = Date.now();
+  if (!anchor) return new Date(localNow).toISOString();
+  return new Date(anchor.serverMs + (localNow - anchor.localMs)).toISOString();
 }
 
 // Hard ceiling for raw POST body length before normalize (allows small overshoot).
@@ -124,7 +168,8 @@ export function reconcileNotes(
   localTombstones: NotesMeta,
   remote: NotesMap,
   remoteMeta: NotesMeta,
-  protectedSlugs: Iterable<string>
+  protectedSlugs: Iterable<string>,
+  serverNowMs?: number
 ): NotesReconciliation {
   const protectedSet = new Set<string>();
   for (const slug of protectedSlugs) {
@@ -156,7 +201,7 @@ export function reconcileNotes(
     if (protectedSet.has(slug)) {
       if (hasLocal) {
         merged[slug] = localNote;
-        mergedMeta[slug] = localMeta[slug] || new Date().toISOString();
+        mergedMeta[slug] = localMeta[slug] || currentNoteIso();
       } else if (hasTomb) {
         mergedTombstones[slug] = localTombstones[slug];
       }
@@ -164,13 +209,14 @@ export function reconcileNotes(
       continue;
     }
 
+    const tombAheadOfServer = serverNowMs != null && tombTs > serverNowMs;
     // Signed-out clear that must still beat older cloud content.
     if (hasTomb && !hasLocal) {
       if (!hasRemote) {
         // Cloud already gone; drop the tombstone.
         continue;
       }
-      if (tombTs > remoteTs) {
+      if (!tombAheadOfServer && tombTs > remoteTs) {
         toUpload[slug] = "";
         mergedTombstones[slug] = localTombstones[slug];
         continue;
@@ -182,7 +228,7 @@ export function reconcileNotes(
 
     if (hasLocal && !hasRemote) {
       merged[slug] = localNote;
-      mergedMeta[slug] = localMeta[slug] || new Date().toISOString();
+      mergedMeta[slug] = localMeta[slug] || currentNoteIso();
       toUpload[slug] = localNote;
       continue;
     }
@@ -193,15 +239,18 @@ export function reconcileNotes(
       continue;
     }
 
+    // A stamp past the server clock is the device clock, not a later edit.
+    // It must not replace or upload over the remote note.
+    const localAheadOfServer = serverNowMs != null && localTs > serverNowMs;
     // Pre-meta local edits have ts 0; if content differs, treat as newer so upgrade
     // does not silently drop signed-out work that predates NOTES_META_KEY.
     let effectiveLocalTs = localTs;
-    if (localTs === 0 && localNote !== remoteNote) {
+    if (!localAheadOfServer && localTs === 0 && localNote !== remoteNote) {
       effectiveLocalTs = remoteTs + 1;
     }
-    if (effectiveLocalTs > remoteTs) {
+    if (!localAheadOfServer && effectiveLocalTs > remoteTs) {
       merged[slug] = localNote;
-      mergedMeta[slug] = localMeta[slug] || new Date().toISOString();
+      mergedMeta[slug] = localMeta[slug] || currentNoteIso();
       if (localNote !== remoteNote) toUpload[slug] = localNote;
     } else {
       merged[slug] = remoteNote;
@@ -304,13 +353,13 @@ export function setLocalNote(slug: string, text: string): NotesMap {
   const meta = { ...getLocalNotesMeta() };
   const tombstones = { ...getLocalNoteTombstones() };
   if (Object.hasOwn(next, slug)) {
-    meta[slug] = new Date().toISOString();
+    meta[slug] = currentNoteIso();
     delete tombstones[slug];
   } else {
     delete meta[slug];
     // Deletion marker so a remount before sign-in still wins over older cloud.
     if (isValidSlug(slug)) {
-      tombstones[slug] = new Date().toISOString();
+      tombstones[slug] = currentNoteIso();
     }
   }
   saveLocalNotesMeta(meta);
@@ -322,16 +371,20 @@ export function clearLocalNote(slug: string): NotesMap {
   return setLocalNote(slug, "");
 }
 
-export type FetchNotesResult = { ok: true; notes: NotesMap; updatedAt: NotesMeta } | { ok: false };
+export type FetchNotesResult =
+  | { ok: true; notes: NotesMap; updatedAt: NotesMeta; serverTime?: string }
+  | { ok: false };
 
 export async function fetchUserNotes(): Promise<FetchNotesResult> {
   try {
     const res = await fetch("/api/notes");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    const serverTime = typeof data.serverTime === "string" ? data.serverTime : undefined;
+    if (serverTime) observeNoteServerTime(serverTime);
     const raw = data.notes;
     if (typeof raw !== "object" || raw === null) {
-      return { ok: true, notes: {}, updatedAt: {} };
+      return { ok: true, notes: {}, updatedAt: {}, serverTime };
     }
     const map: NotesMap = {};
     for (const [key, value] of Object.entries(raw)) {
@@ -348,7 +401,7 @@ export async function fetchUserNotes(): Promise<FetchNotesResult> {
         }
       }
     }
-    return { ok: true, notes: map, updatedAt };
+    return { ok: true, notes: map, updatedAt, serverTime };
   } catch (error) {
     console.error("fetchUserNotes failed:", error);
     return { ok: false };

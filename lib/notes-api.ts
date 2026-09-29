@@ -15,7 +15,8 @@ export async function handleNotesGet(dependencies: NotesApiDependencies): Promis
   const userId = await dependencies.getUserId();
   if (!userId) return Response.json({ notes: {}, updatedAt: {} });
 
-  return Response.json(await dependencies.listNotes(userId));
+  const listed = await dependencies.listNotes(userId);
+  return Response.json({ ...listed, serverTime: dependencies.now() });
 }
 
 export async function handleNotesPost(

@@ -6,6 +6,7 @@ import {
   MAX_SLUG_LENGTH,
   NOTES_LOCAL_KEY,
   NOTES_META_KEY,
+  NOTES_SERVER_CLOCK_KEY,
   clearLocalNote,
   clearNoteFromMap,
   getLocalNote,
@@ -16,6 +17,7 @@ import {
   mergeNotesMaps,
   mergeNotesMapsRespectingLocal,
   normalizeNote,
+  observeNoteServerTime,
   parseNotesPostBody,
   reconcileNotes,
   setLocalNote,
@@ -246,6 +248,74 @@ describe("reconcileNotes (LWW + protected)", () => {
     assert.equal(rec.merged["two-sum"], "edited on other device");
     assert.equal(Object.hasOwn(rec.toUpload, "two-sum"), false);
     assert.equal(Object.hasOwn(rec.mergedTombstones, "two-sum"), false);
+  });
+});
+
+describe("note clock skew", () => {
+  const serverNow = Date.parse("2026-06-01T00:01:00.000Z");
+  const remoteAt = "2026-06-01T00:00:00.000Z";
+
+  it("does not let a fast-clock stamp replace or upload over a server note", () => {
+    const local: NotesMap = { "two-sum": "stale fast clock" };
+    const localMeta: NotesMeta = { "two-sum": "2030-01-01T00:00:00.000Z" };
+    const remote: NotesMap = { "two-sum": "real later edit" };
+    const remoteMeta: NotesMeta = { "two-sum": remoteAt };
+    const rec = reconcileNotes(local, localMeta, {}, remote, remoteMeta, [], serverNow);
+    assert.equal(rec.merged["two-sum"], "real later edit");
+    assert.equal(Object.hasOwn(rec.toUpload, "two-sum"), false);
+  });
+
+  it("still uploads a fast-clock note that the server does not have", () => {
+    const rec = reconcileNotes(
+      { offline: "signed out on a fast clock" },
+      { offline: "2030-01-01T00:00:00.000Z" },
+      {},
+      {},
+      {},
+      [],
+      serverNow
+    );
+    assert.equal(rec.merged.offline, "signed out on a fast clock");
+    assert.equal(rec.toUpload.offline, "signed out on a fast clock");
+  });
+
+  it("keeps a trustworthy later local edit when server time is known", () => {
+    const local: NotesMap = { "two-sum": "signed-out revision" };
+    const localMeta: NotesMeta = { "two-sum": "2026-06-01T00:00:30.000Z" };
+    const remote: NotesMap = { "two-sum": "older cloud" };
+    const remoteMeta: NotesMeta = { "two-sum": remoteAt };
+    const rec = reconcileNotes(local, localMeta, {}, remote, remoteMeta, [], serverNow);
+    assert.equal(rec.merged["two-sum"], "signed-out revision");
+    assert.equal(rec.toUpload["two-sum"], "signed-out revision");
+  });
+
+  it("stamps an edit after a server observation on the server timeline", () => {
+    installMemoryLocalStorage().clear();
+    const originalNow = Date.now;
+    let wall = Date.parse("2030-01-01T00:00:00.000Z");
+    Date.now = () => wall;
+    try {
+      observeNoteServerTime("2026-01-01T00:00:00.000Z");
+      wall += 20_000;
+      setLocalNote("two-sum", "edited after the other device");
+      const stamped = getLocalNotesMeta()["two-sum"];
+      assert.equal(stamped, "2026-01-01T00:00:20.000Z");
+
+      const rec = reconcileNotes(
+        { "two-sum": "edited after the other device" },
+        { "two-sum": stamped },
+        {},
+        { "two-sum": "other device" },
+        { "two-sum": "2026-01-01T00:00:10.000Z" },
+        [],
+        Date.parse("2026-01-01T00:00:30.000Z")
+      );
+      assert.equal(rec.merged["two-sum"], "edited after the other device");
+      assert.equal(rec.toUpload["two-sum"], "edited after the other device");
+      assert.equal(localStorage.getItem(NOTES_SERVER_CLOCK_KEY) !== null, true);
+    } finally {
+      Date.now = originalNow;
+    }
   });
 });
 
