@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { dedupeSitemapEntries } from "@/lib/sitemap/dedupe";
 import { SITEMAP_ENTRIES } from "@/lib/sitemap/generated";
 import { STATIC_TRUST_PAGES, TRUST_PAGES_LAST_MODIFIED } from "@/lib/sitemap/static-pages";
 import { SITE_URL } from "@/lib/site";
@@ -9,10 +10,11 @@ const BUILD_DATE = new Date("2026-07-07");
 const TRUST_PAGE_PATHS = new Set(STATIC_TRUST_PAGES.map((entry) => entry.path));
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const seen = new Set(SITEMAP_ENTRIES.map((entry) => entry.path));
+  const entries = dedupeSitemapEntries(SITEMAP_ENTRIES);
+  const seen = new Set(entries.map((entry) => entry.path));
   const extras = STATIC_TRUST_PAGES.filter((entry) => !seen.has(entry.path));
   return [
-    ...SITEMAP_ENTRIES.map((entry) => ({
+    ...entries.map((entry) => ({
       url: `${SITE_URL}${entry.path}`,
       lastModified: TRUST_PAGE_PATHS.has(entry.path) ? TRUST_PAGES_LAST_MODIFIED : BUILD_DATE,
       changeFrequency: entry.changeFrequency,
