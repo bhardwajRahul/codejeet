@@ -45,6 +45,44 @@ describe("createBlogStore", () => {
     assert.equal(blogStatusCopy(loaded, 1), null);
   });
 
+  it("drops an older load that finishes after a newer one starts", async () => {
+    const pending: {
+      resolve: (posts: (typeof post)[]) => void;
+      reject: (error: Error) => void;
+    }[] = [];
+    const blog = createBlogStore(
+      () =>
+        new Promise((resolve, reject) => {
+          pending.push({ resolve, reject });
+        }),
+    );
+
+    blog.subscribe(() => {});
+    pending[0].reject(new Error("HTTP 500"));
+    await flush();
+    assert.equal(blog.getSnapshot().error, "Couldn't load posts.");
+
+    blog.subscribe(() => {});
+    assert.equal(pending.length, 2);
+    assert.equal(blog.getSnapshot().loading, true);
+    assert.equal(blog.getSnapshot().error, null);
+
+    blog.retry();
+    assert.equal(pending.length, 3);
+    pending[2].resolve([post]);
+    await flush();
+    assert.equal(blog.getSnapshot().posts.length, 1);
+    assert.equal(blog.getSnapshot().error, null);
+
+    pending[1].reject(new Error("late"));
+    await flush();
+    const settled = blog.getSnapshot();
+    assert.equal(settled.loading, false);
+    assert.equal(settled.error, null);
+    assert.equal(settled.posts.length, 1);
+    assert.equal(blogStatusCopy(settled, 1), null);
+  });
+
   it("keeps the empty filter copy when the index loads with no posts", async () => {
     const blog = createBlogStore(() => Promise.resolve([]));
     blog.subscribe(() => {});

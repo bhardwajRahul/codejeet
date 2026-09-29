@@ -24,21 +24,34 @@ export function createBlogStore(load: () => Promise<BlogPost[]>) {
   let store: BlogStore = { posts: [], loading: true, error: null };
   const listeners = new Set<() => void>();
   let fetchStarted = false;
+  let requestGen = 0;
 
   function emit() {
     listeners.forEach((l) => l());
   }
 
+  function apply(next: BlogStore) {
+    if (next.posts === store.posts && next.loading === store.loading && next.error === store.error) {
+      return;
+    }
+    store = next;
+    emit();
+  }
+
   function startFetch() {
     if (fetchStarted) return;
     fetchStarted = true;
+    const gen = ++requestGen;
+    apply({ posts: store.posts, loading: true, error: null });
 
     load()
       .then((posts) => {
+        if (gen !== requestGen) return;
         store = { posts, loading: false, error: null };
         emit();
       })
       .catch(() => {
+        if (gen !== requestGen) return;
         fetchStarted = false;
         store = { posts: [], loading: false, error: LOAD_ERROR };
         emit();
