@@ -223,19 +223,16 @@ export function reconcileNotes(
   remote: NotesMap,
   remoteMeta: NotesMeta,
   protectedSlugs: Iterable<string>,
-  serverNowMs?: number,
-  anchoredSlugs?: ReadonlySet<string>
+  serverNowMs?: number
 ): NotesReconciliation {
   const protectedSet = new Set<string>();
   for (const slug of protectedSlugs) {
     if (isValidSlug(slug)) protectedSet.add(slug);
   }
 
-  const anchored = anchoredSlugs ?? getAnchoredNoteSlugs();
-  // Only a stamp produced from the server-clock anchor can be "ahead" because
-  // the device clock jumped. A signed-out wall-clock stamp has no such evidence.
-  const distrusted = (slug: string, ts: number) =>
-    serverNowMs != null && anchored.has(slug) && ts > serverNowMs;
+  // A stamp past the observed server clock is not evidence the edit happened
+  // later, whether or not it came from the server-clock anchor.
+  const aheadOfServer = (ts: number) => serverNowMs != null && ts > serverNowMs;
 
   const merged: NotesMap = {};
   const mergedMeta: NotesMeta = {};
@@ -270,7 +267,7 @@ export function reconcileNotes(
       continue;
     }
 
-    const tombAheadOfServer = distrusted(slug, tombTs);
+    const tombAheadOfServer = aheadOfServer(tombTs);
     // Signed-out clear that must still beat older cloud content.
     if (hasTomb && !hasLocal) {
       if (!hasRemote) {
@@ -300,9 +297,8 @@ export function reconcileNotes(
       continue;
     }
 
-    // An anchored stamp past the server clock means the device clock jumped
-    // forward after we observed server time. It must not replace the remote note.
-    const localAheadOfServer = distrusted(slug, localTs);
+    // A stamp past the server clock must not replace or upload over the remote note.
+    const localAheadOfServer = aheadOfServer(localTs);
     // Pre-meta local edits have ts 0; if content differs, treat as newer so upgrade
     // does not silently drop signed-out work that predates NOTES_META_KEY.
     let effectiveLocalTs = localTs;

@@ -7,7 +7,6 @@ import {
   MAX_NOTE_LENGTH,
   clearLocalNote,
   fetchUserNotes,
-  getAnchoredNoteSlugs,
   getLocalNote,
   getLocalNotes,
   getLocalNotesMeta,
@@ -86,8 +85,7 @@ export function ProblemNotesImpl({ slug }: ProblemNotesImplProps) {
         resultNotes,
         resultUpdatedAt,
         committedSlugsRef.current,
-        resultServerNowMs,
-        getAnchoredNoteSlugs()
+        resultServerNowMs
       );
 
     const persistMerged = (settled: ReturnType<typeof reconcileNotes>) => {
