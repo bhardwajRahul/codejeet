@@ -15,6 +15,7 @@ interface PendingJob {
   execTimeoutMs: number;
   execStartedAt: number | null;
   killTimer: ReturnType<typeof setTimeout> | null;
+  stallTimer: ReturnType<typeof setTimeout> | null;
 }
 
 interface LanguageRuntime {
@@ -60,6 +61,19 @@ let nextId = 1;
 /** Extra slack on top of the per-test budget before we hard-terminate. */
 const TIMEOUT_SLACK_MS = 1000;
 
+/**
+ * Bound for toolchain download and compile, which happen before phase "running".
+ * Longer than a test's execution budget so a normal first-time download is not failed.
+ */
+export const TOOLCHAIN_STALL_MS = 120_000;
+
+function clearJobTimers(job: PendingJob) {
+  if (job.killTimer) clearTimeout(job.killTimer);
+  if (job.stallTimer) clearTimeout(job.stallTimer);
+  job.killTimer = null;
+  job.stallTimer = null;
+}
+
 function getPool(language: LessonLanguage): LanguagePool {
   let pool = pools.get(language);
   if (!pool) {
@@ -81,7 +95,7 @@ function terminateWorker(language: LessonLanguage, reason: string) {
     pool.worker = null;
   }
   for (const [, job] of pool.pending) {
-    if (job.killTimer) clearTimeout(job.killTimer);
+    clearJobTimers(job);
     job.resolve({
       ok: false,
       errorKind: "timeout",
@@ -115,15 +129,21 @@ function ensureWorker(language: LessonLanguage): Worker {
       // main thread. We can't rely on a setTimeout *inside* the worker because
       // each language's run loop is synchronous and blocks the worker's event
       // loop — any infinite loop in user code would otherwise hang the UI.
-      if (msg.progress.phase === "running" && !job.killTimer && runtime.needsMainThreadKillTimer) {
-        job.execStartedAt = performance.now();
-        job.killTimer = setTimeout(() => {
-          terminateWorker(language, `Execution exceeded ${job.execTimeoutMs}ms timeout`);
-        }, job.execTimeoutMs + TIMEOUT_SLACK_MS);
+      if (msg.progress.phase === "running" && runtime.needsMainThreadKillTimer) {
+        if (job.stallTimer) {
+          clearTimeout(job.stallTimer);
+          job.stallTimer = null;
+        }
+        if (!job.killTimer) {
+          job.execStartedAt = performance.now();
+          job.killTimer = setTimeout(() => {
+            terminateWorker(language, `Execution exceeded ${job.execTimeoutMs}ms timeout`);
+          }, job.execTimeoutMs + TIMEOUT_SLACK_MS);
+        }
       }
       job.onProgress?.(msg.progress);
     } else if (msg.type === "result") {
-      if (job.killTimer) clearTimeout(job.killTimer);
+      clearJobTimers(job);
       pool.pending.delete(msg.id);
       job.resolve(msg.result);
     }
@@ -131,7 +151,7 @@ function ensureWorker(language: LessonLanguage): Worker {
   w.addEventListener("error", (event) => {
     const message = event.message || `${runtime.displayName} runtime worker crashed`;
     for (const [, job] of pool.pending) {
-      if (job.killTimer) clearTimeout(job.killTimer);
+      clearJobTimers(job);
       job.resolve({
         ok: false,
         errorKind: "internal",
@@ -153,14 +173,22 @@ export function runCode(options: RunOptions): Promise<RunResult> {
   const worker = ensureWorker(options.language);
   const execTimeoutMs = options.timeoutMs ?? 5000;
   const pool = getPool(options.language);
+  const runtime = RUNTIMES[options.language];
   return new Promise<RunResult>((resolve) => {
-    pool.pending.set(id, {
+    const job: PendingJob = {
       resolve,
       onProgress: options.onProgress,
       execTimeoutMs,
       execStartedAt: null,
       killTimer: null,
-    });
+      stallTimer: null,
+    };
+    if (runtime.needsMainThreadKillTimer) {
+      job.stallTimer = setTimeout(() => {
+        terminateWorker(options.language, "Toolchain download or compile stalled");
+      }, TOOLCHAIN_STALL_MS);
+    }
+    pool.pending.set(id, job);
     const req: RunnerRequest = {
       id,
       type: "run",
