@@ -9,7 +9,9 @@ import {
   NOTES_SERVER_CLOCK_KEY,
   clearLocalNote,
   clearNoteFromMap,
+  getAnchoredNoteSlugs,
   getLocalNote,
+  getLocalNotes,
   getLocalNotesMeta,
   getNoteFromMap,
   isValidSlug,
@@ -255,13 +257,67 @@ describe("note clock skew", () => {
   const serverNow = Date.parse("2026-06-01T00:01:00.000Z");
   const remoteAt = "2026-06-01T00:00:00.000Z";
 
-  it("does not let a fast-clock stamp replace or upload over a server note", () => {
+  it("does not let an anchored fast-clock stamp replace or upload over a server note", () => {
     const local: NotesMap = { "two-sum": "stale fast clock" };
     const localMeta: NotesMeta = { "two-sum": "2030-01-01T00:00:00.000Z" };
     const remote: NotesMap = { "two-sum": "real later edit" };
     const remoteMeta: NotesMeta = { "two-sum": remoteAt };
-    const rec = reconcileNotes(local, localMeta, {}, remote, remoteMeta, [], serverNow);
+    const rec = reconcileNotes(
+      local,
+      localMeta,
+      {},
+      remote,
+      remoteMeta,
+      [],
+      serverNow,
+      new Set(["two-sum"])
+    );
     assert.equal(rec.merged["two-sum"], "real later edit");
+    assert.equal(Object.hasOwn(rec.toUpload, "two-sum"), false);
+  });
+
+  it("keeps a signed-out fast-clock edit that was not stamped from the server clock", () => {
+    const rec = reconcileNotes(
+      { "two-sum": "signed out later" },
+      { "two-sum": "2030-01-01T00:00:00.000Z" },
+      {},
+      { "two-sum": "older cloud" },
+      { "two-sum": remoteAt },
+      [],
+      serverNow,
+      new Set()
+    );
+    assert.equal(rec.merged["two-sum"], "signed out later");
+    assert.equal(rec.toUpload["two-sum"], "signed out later");
+  });
+
+  it("keeps a signed-out clear that was not stamped from the server clock", () => {
+    const rec = reconcileNotes(
+      {},
+      {},
+      { "two-sum": "2030-01-01T00:00:00.000Z" },
+      { "two-sum": "cloud" },
+      { "two-sum": remoteAt },
+      [],
+      serverNow,
+      new Set()
+    );
+    assert.equal(rec.toUpload["two-sum"], "");
+    assert.equal(Object.hasOwn(rec.merged, "two-sum"), false);
+  });
+
+  it("does not let an anchored fast-clock clear erase a server note", () => {
+    const rec = reconcileNotes(
+      {},
+      {},
+      { "two-sum": "2030-01-01T00:00:00.000Z" },
+      { "two-sum": "cloud" },
+      { "two-sum": remoteAt },
+      [],
+      serverNow,
+      new Set(["two-sum"])
+    );
+    assert.equal(rec.merged["two-sum"], "cloud");
     assert.equal(Object.hasOwn(rec.toUpload, "two-sum"), false);
   });
 
@@ -313,6 +369,36 @@ describe("note clock skew", () => {
       assert.equal(rec.merged["two-sum"], "edited after the other device");
       assert.equal(rec.toUpload["two-sum"], "edited after the other device");
       assert.equal(localStorage.getItem(NOTES_SERVER_CLOCK_KEY) !== null, true);
+      assert.equal(getAnchoredNoteSlugs().has("two-sum"), true);
+    } finally {
+      Date.now = originalNow;
+    }
+  });
+
+  it("stamps from the wall clock when the device clock steps backwards", () => {
+    installMemoryLocalStorage().clear();
+    const originalNow = Date.now;
+    let wall = Date.parse("2030-01-01T00:00:00.000Z");
+    Date.now = () => wall;
+    try {
+      observeNoteServerTime("2026-06-01T00:00:00.000Z");
+      wall = Date.parse("2026-06-02T00:00:00.000Z");
+      setLocalNote("two-sum", "edited after the clock correction");
+      assert.equal(getLocalNotesMeta()["two-sum"], "2026-06-02T00:00:00.000Z");
+      assert.equal(localStorage.getItem(NOTES_SERVER_CLOCK_KEY), null);
+      assert.equal(getAnchoredNoteSlugs().has("two-sum"), false);
+
+      const rec = reconcileNotes(
+        getLocalNotes(),
+        getLocalNotesMeta(),
+        {},
+        { "two-sum": "older cloud" },
+        { "two-sum": "2026-06-01T00:00:00.000Z" },
+        [],
+        Date.parse("2026-06-02T00:01:00.000Z")
+      );
+      assert.equal(rec.merged["two-sum"], "edited after the clock correction");
+      assert.equal(rec.toUpload["two-sum"], "edited after the clock correction");
     } finally {
       Date.now = originalNow;
     }

@@ -5,6 +5,9 @@ export const NOTES_LOCAL_KEY = "leetcode-problem-notes";
 export const NOTES_META_KEY = "leetcode-problem-notes-meta";
 // serverMs + localMs captured when a notes response told us the server's clock.
 export const NOTES_SERVER_CLOCK_KEY = "leetcode-problem-notes-server-clock";
+// Slugs whose current local stamp was computed from NOTES_SERVER_CLOCK_KEY.
+// A raw device-clock stamp (signed out, or after the clock steps backwards) is absent.
+export const NOTES_ANCHORED_SLUGS_KEY = "leetcode-problem-notes-anchored";
 // slug -> ISO deletedAt for signed-out clears that must still win over cloud
 const NOTES_TOMBSTONES_KEY = "leetcode-problem-notes-deleted";
 export const MAX_NOTE_LENGTH = 2000;
@@ -60,11 +63,62 @@ export function observeNoteServerTime(serverTime: string, localNowMs = Date.now(
   }
 }
 
-function currentNoteIso(): string {
+function clearServerClockAnchor(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(NOTES_SERVER_CLOCK_KEY);
+  } catch {
+    // Ignore quota failures.
+  }
+}
+
+// anchored: the stamp came from a live server-clock anchor.
+// dropAnchor: the device clock moved backwards, so the saved offset is no longer usable.
+function stampFromClock(): { iso: string; anchored: boolean; dropAnchor: boolean } {
   const anchor = readServerClockAnchor();
   const localNow = Date.now();
-  if (!anchor) return new Date(localNow).toISOString();
-  return new Date(anchor.serverMs + (localNow - anchor.localMs)).toISOString();
+  const wall = new Date(localNow).toISOString();
+  if (!anchor) return { iso: wall, anchored: false, dropAnchor: false };
+  const elapsed = localNow - anchor.localMs;
+  if (elapsed < 0) return { iso: wall, anchored: false, dropAnchor: true };
+  return {
+    iso: new Date(anchor.serverMs + elapsed).toISOString(),
+    anchored: true,
+    dropAnchor: false,
+  };
+}
+
+function currentNoteIso(): string {
+  return stampFromClock().iso;
+}
+
+function readAnchoredSlugSet(): Set<string> {
+  return new Set(
+    Object.keys(readStringMap(NOTES_ANCHORED_SLUGS_KEY)).filter((slug) => isValidSlug(slug))
+  );
+}
+
+export function getAnchoredNoteSlugs(): ReadonlySet<string> {
+  return readAnchoredSlugSet();
+}
+
+function writeAnchoredSlug(slug: string, anchored: boolean): void {
+  if (!isValidSlug(slug) || typeof window === "undefined") return;
+  try {
+    const map = readStringMap(NOTES_ANCHORED_SLUGS_KEY);
+    if (anchored) map[slug] = "1";
+    else delete map[slug];
+    localStorage.setItem(NOTES_ANCHORED_SLUGS_KEY, JSON.stringify(map));
+  } catch {
+    // Ignore quota failures. Unmarked stamps stay on ordinary last-write-wins.
+  }
+}
+
+function commitLocalStamp(slug: string): string {
+  const stamp = stampFromClock();
+  if (stamp.dropAnchor) clearServerClockAnchor();
+  writeAnchoredSlug(slug, stamp.anchored);
+  return stamp.iso;
 }
 
 // Hard ceiling for raw POST body length before normalize (allows small overshoot).
@@ -169,12 +223,19 @@ export function reconcileNotes(
   remote: NotesMap,
   remoteMeta: NotesMeta,
   protectedSlugs: Iterable<string>,
-  serverNowMs?: number
+  serverNowMs?: number,
+  anchoredSlugs?: ReadonlySet<string>
 ): NotesReconciliation {
   const protectedSet = new Set<string>();
   for (const slug of protectedSlugs) {
     if (isValidSlug(slug)) protectedSet.add(slug);
   }
+
+  const anchored = anchoredSlugs ?? getAnchoredNoteSlugs();
+  // Only a stamp produced from the server-clock anchor can be "ahead" because
+  // the device clock jumped. A signed-out wall-clock stamp has no such evidence.
+  const distrusted = (slug: string, ts: number) =>
+    serverNowMs != null && anchored.has(slug) && ts > serverNowMs;
 
   const merged: NotesMap = {};
   const mergedMeta: NotesMeta = {};
@@ -209,7 +270,7 @@ export function reconcileNotes(
       continue;
     }
 
-    const tombAheadOfServer = serverNowMs != null && tombTs > serverNowMs;
+    const tombAheadOfServer = distrusted(slug, tombTs);
     // Signed-out clear that must still beat older cloud content.
     if (hasTomb && !hasLocal) {
       if (!hasRemote) {
@@ -239,9 +300,9 @@ export function reconcileNotes(
       continue;
     }
 
-    // A stamp past the server clock is the device clock, not a later edit.
-    // It must not replace or upload over the remote note.
-    const localAheadOfServer = serverNowMs != null && localTs > serverNowMs;
+    // An anchored stamp past the server clock means the device clock jumped
+    // forward after we observed server time. It must not replace the remote note.
+    const localAheadOfServer = distrusted(slug, localTs);
     // Pre-meta local edits have ts 0; if content differs, treat as newer so upgrade
     // does not silently drop signed-out work that predates NOTES_META_KEY.
     let effectiveLocalTs = localTs;
@@ -353,13 +414,13 @@ export function setLocalNote(slug: string, text: string): NotesMap {
   const meta = { ...getLocalNotesMeta() };
   const tombstones = { ...getLocalNoteTombstones() };
   if (Object.hasOwn(next, slug)) {
-    meta[slug] = currentNoteIso();
+    meta[slug] = commitLocalStamp(slug);
     delete tombstones[slug];
   } else {
     delete meta[slug];
     // Deletion marker so a remount before sign-in still wins over older cloud.
     if (isValidSlug(slug)) {
-      tombstones[slug] = currentNoteIso();
+      tombstones[slug] = commitLocalStamp(slug);
     }
   }
   saveLocalNotesMeta(meta);
