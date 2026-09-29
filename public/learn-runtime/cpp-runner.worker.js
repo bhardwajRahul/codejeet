@@ -33,7 +33,10 @@ function loadToolchain(postProgress) {
       total: 0,
       message: "Downloading C++ toolchain (~50 MB the first time, cached after)…",
     });
-    toolchainPromise = import(BROWSERCC_URL);
+    toolchainPromise = import(BROWSERCC_URL).catch((err) => {
+      toolchainPromise = null;
+      throw err;
+    });
   }
   return toolchainPromise;
 }
